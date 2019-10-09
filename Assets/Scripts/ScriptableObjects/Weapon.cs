@@ -8,7 +8,7 @@ public class Weapon : ScriptableObject
     public int damage;
     public GameObject projectile;
 
-    public void Fire(Node origin, Node target, string hitTag)
+    public virtual void Fire(Node origin, Node target, string hitTag)
     {
         Vector3 direction = target.transform.position - origin.transform.position;
 
