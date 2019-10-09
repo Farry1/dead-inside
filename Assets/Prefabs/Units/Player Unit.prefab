@@ -147,8 +147,8 @@ GameObject:
   - component: {fileID: 6672107977936763498}
   - component: {fileID: 6672107977936763499}
   - component: {fileID: 3855868428183498912}
-  m_Layer: 0
-  m_Name: Unit
+  m_Layer: 13
+  m_Name: Player Unit
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,13 +185,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitState: 0
   maxActionPoints: 2
-  maxSteps: 1
+  maxSteps: 3
   health: 3
-  equippedWeapon: {fileID: 0}
+  equippedWeapon: {fileID: 11400000, guid: 3c361b8ba935d9a4986fd41f20805920, type: 2}
   currentNode: {fileID: 0}
   currentPath: []
-  actionState: 0
-  actions: []
+  actionState: 2
+  actions:
+  - {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb, type: 2}
+  - {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0, type: 2}
   relatedUIPanel: {fileID: 0}
 --- !u!114 &3855868428183498912
 MonoBehaviour:
