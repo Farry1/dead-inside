@@ -16113,16 +16113,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unit 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763508, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763508, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
     - target: {fileID: 6672107977936763498, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16178,56 +16168,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: availableActions.Array.size
-      value: 2
+    - target: {fileID: 763021006, guid: ff711a2ad6c0c9c42994ec5db1569a49, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: actions.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: maxSteps
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: availableActions.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb,
-        type: 2}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: availableActions.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 5013175f99b76b5479f938774df2ebda,
-        type: 2}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: actionState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: actions.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb,
-        type: 2}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: actions.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0,
-        type: 2}
-    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
-        type: 3}
-      propertyPath: equippedWeapon
-      value: 
-      objectReference: {fileID: 11400000, guid: 3c361b8ba935d9a4986fd41f20805920,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff711a2ad6c0c9c42994ec5db1569a49, type: 3}
 --- !u!1001 &2122599656
