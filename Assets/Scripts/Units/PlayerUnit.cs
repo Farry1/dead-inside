@@ -14,9 +14,12 @@ public class PlayerUnit : Unit
 
     bool isPlayerTurn;
 
+    CameraMovement camera;
+
     protected override void Start()
     {
         base.Start();
+        camera = FindObjectOfType<CameraMovement>();
     }
 
     protected override void Update()
@@ -160,7 +163,7 @@ public class PlayerUnit : Unit
                 }
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
                 Debug.Log("Turn Off");
-                
+
                 break;
 
             case PlayerActionState.MoveSelection:
@@ -181,12 +184,15 @@ public class PlayerUnit : Unit
 
     public override void OnSelect()
     {
+
+
         if (unitState != UnitState.Selected && isPlayerTurn)
         {
             PlayerUnitsController.Instance.UnselectSelectedUnits();
             PlayerUnitsController.Instance.SelectUnit(this);
             StageUIController.Instance.SetPlayerActionContainer(true);
             unitState = PlayerUnit.UnitState.Selected;
+            camera.cameraLookAt = this.transform.root.gameObject;
 
             StageUIController.Instance.CreateActionMenu(actions);
             // StageUIController.Instance.playerMoveButton.interactable = !moveActionAvailable;
