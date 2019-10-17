@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class TileMap : MonoBehaviour
+public class Dijkstra : MonoBehaviour
 {
     // public List<Node> currentPath;
 
     private Node[] graph;
 
-    private static TileMap _instance;
-    public static TileMap Instance { get { return _instance; } }
+    private static Dijkstra _instance;
+    public static Dijkstra Instance { get { return _instance; } }
 
     private void Awake()
     {
@@ -145,7 +145,7 @@ public class TileMap : MonoBehaviour
         return currentPath;
     }
 
-    public void Dijkstra(Node source, int maxSteps)
+    public void GetNodesInRange(Node source, int range)
     {
         source = PlayerUnitsController.Instance.selectedPlayerUnit.currentNode;
 
@@ -195,7 +195,7 @@ public class TileMap : MonoBehaviour
                     previous[v] = u;
                 }
 
-                v.IndicateNavigation((int)distance[v], maxSteps);
+                v.IndicateNavigation((int)distance[v], range);
             }
         }
     }

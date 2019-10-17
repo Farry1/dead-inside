@@ -4,19 +4,22 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "MoveAction", menuName = "Actions/ShootAction")]
 public class PlayerShootAction : Action
-{
-    // Start is called before the first frame update
-    PlayerUnit unit
+{    
+    Unit unit
     {
         get
         {
-            return PlayerUnitsController.Instance.selectedPlayerUnit;
+            if (StageManager.Instance.stageState == StageManager.StageState.PlayerTurn)
+                return PlayerUnitsController.Instance.selectedPlayerUnit;
+            else
+                return null;
         }
     }
 
 
     public override void Execute()
     {
-        unit.SwitchActionState(PlayerUnit.PlayerActionState.Aiming);
+        if (unit != null)
+            unit.SwitchActionState(Unit.ActionState.PreparingRangeAttack);        
     }
 }

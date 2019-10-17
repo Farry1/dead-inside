@@ -27,7 +27,7 @@ public class Node : MonoBehaviour
 
         if (stepsRequired <= maxSteps)
         {
-            surfaceIndicator.gameObject.SetActive(true);            
+            surfaceIndicator.gameObject.SetActive(true);
             surfaceIndicator.material.color = Color.green;
 
             visibleSurfaceIndicator.gameObject.SetActive(true);
@@ -59,5 +59,25 @@ public class Node : MonoBehaviour
     public float DistanceTo(Vector3 position)
     {
         return Vector3.Distance(transform.position, position);
+    }
+
+    public static Vector3 GetOppositePlanarDirection(Node currentNode, Node targetNode)
+    {
+        currentNode.HighlightField(Color.yellow);
+
+        Debug.Log(currentNode.name);
+
+        Vector3 origin = currentNode.transform.position;
+        Vector3 destination = targetNode.transform.position;
+
+        targetNode.HighlightField(Color.green);
+
+
+
+        Vector3 direction = origin - destination;
+
+        Debug.DrawRay(origin, direction, Color.red, 5f);
+
+        return direction;
     }
 }

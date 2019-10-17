@@ -13,13 +13,14 @@ public class NodeGenerator : MonoBehaviour
 
         foreach (Node node in nodes)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 12; i++)
             {
-                Vector3 rayDirection = node.transform.forward;
+                Vector3 rayDirection = Vector3.zero;
                 switch (i)
                 {
                     //Rays On a Plane
                     case 0:
+                        rayDirection = node.transform.forward;
                         break;
                     case 1:
                         rayDirection = node.transform.forward * -1;
@@ -30,43 +31,43 @@ public class NodeGenerator : MonoBehaviour
                     case 3:
                         rayDirection = node.transform.right * -1;
                         break;
-                    case 4:
-                        rayDirection = (node.transform.forward + node.transform.right).normalized;
-                        break;
-                    case 5:
-                        rayDirection = (node.transform.forward + node.transform.right).normalized * -1;
-                        break;
-                    case 6:
-                        rayDirection = (node.transform.forward + node.transform.right * -1).normalized;
-                        break;
-                    case 7:
-                        rayDirection = (node.transform.forward + node.transform.right * -1).normalized * -1;
-                        break;
+                    //case 4:
+                    //    rayDirection = (node.transform.forward + node.transform.right).normalized;
+                    //    break;
+                    //case 5:
+                    //    rayDirection = (node.transform.forward + node.transform.right).normalized * -1;
+                    //    break;
+                    //case 6:
+                    //    rayDirection = (node.transform.forward + node.transform.right * -1).normalized;
+                    //    break;
+                    //case 7:
+                    //    rayDirection = (node.transform.forward + node.transform.right * -1).normalized * -1;
+                    //    break;
 
 
                     //Diagonal Rays
-                    case 8:
+                    case 4:
                         rayDirection = (node.transform.forward + node.transform.up).normalized;
                         break;
-                    case 9:
+                    case 5:
                         rayDirection = (node.transform.forward + node.transform.up * -1).normalized;
                         break;
-                    case 10:
+                    case 6:
                         rayDirection = (node.transform.right + node.transform.up).normalized;
                         break;
-                    case 11:
+                    case 7:
                         rayDirection = (node.transform.right + node.transform.up * -1).normalized;
                         break;
-                    case 12:
+                    case 8:
                         rayDirection = (node.transform.forward * -1 + node.transform.up).normalized;
                         break;
-                    case 13:
+                    case 9:
                         rayDirection = (node.transform.forward * -1 + node.transform.up * -1).normalized;
                         break;
-                    case 14:
+                    case 10:
                         rayDirection = (node.transform.right * -1 + node.transform.up).normalized;
                         break;
-                    case 15:
+                    case 11:
                         rayDirection = (node.transform.right * -1 + node.transform.up * -1).normalized;
                         break;
                 }
@@ -74,7 +75,7 @@ public class NodeGenerator : MonoBehaviour
                 float castDistance = 1.5f;
                 Color rayColor = Color.red;
 
-                if (i > 7)
+                if (i > 4)
                 {
                     castDistance = 0.7f;
                     rayColor = Color.blue;

@@ -6,7 +6,11 @@ using UnityEngine;
 public class Weapon : ScriptableObject
 {
     public int damage;
+    public int maxAmmo = 3;
+    public int currentAmmo;
+    public int recoil = 0;
     public GameObject projectile;
+    public List<Action> attachedActions = new List<Action>();
 
     public virtual void Fire(Node origin, Node target, string hitTag)
     {

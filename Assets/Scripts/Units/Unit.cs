@@ -7,17 +7,23 @@ public class Unit : MonoBehaviour, ISelectable
 {
     public enum UnitState { Idle, Selected, Dead };
     public UnitState unitState = UnitState.Idle;
+
+    public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving }
+    public ActionState actionState;
+
+    public List<Action> actions = new List<Action>();
+
     protected Health healthController;
 
     public int maxActionPoints = 2;
     protected int currentActionPoints = 2;
     public int maxSteps = 1;
     public int health = 3;
-    public Weapon equippedWeapon;
+    public Weapon equippedRangeWeapon;
 
 
-    public Node currentNode = null;
-    public List<Node> currentPath = null;
+    [HideInInspector] public Node currentNode = null;
+    [HideInInspector] public List<Node> currentPath = null;
 
     protected float t;
     protected Vector3 startPosition;
@@ -52,6 +58,18 @@ public class Unit : MonoBehaviour, ISelectable
         }
 
         transform.position = currentNode.transform.position;
+        FindAttachedActions();
+    }
+
+    private void FindAttachedActions()
+    {
+        if (equippedRangeWeapon != null)
+        {
+            foreach (Action weaponAction in equippedRangeWeapon.attachedActions)
+            {
+                actions.Add(weaponAction);
+            }
+        }
     }
 
     Node FindClosestNode()
@@ -94,6 +112,12 @@ public class Unit : MonoBehaviour, ISelectable
         unitState = state;
     }
 
+
+    protected void OnMouseDown()
+    {
+        OnSelect();
+    }
+
     public virtual void OnSelect()
     {
 
@@ -122,5 +146,10 @@ public class Unit : MonoBehaviour, ISelectable
                 Destroy(projectile.gameObject);
             }
         }
+    }
+
+    public virtual void SwitchActionState(ActionState a)
+    {
+
     }
 }

@@ -69,11 +69,12 @@
     <Compile Include="Assets\Scripts\GameManager\StageUIController.cs" />
     <Compile Include="Assets\Scripts\InputController.cs" />
     <Compile Include="Assets\Scripts\Interfaces\ISelectable.cs" />
+    <Compile Include="Assets\Scripts\Navigation\Dijkstra.cs" />
     <Compile Include="Assets\Scripts\Navigation\Node.cs" />
     <Compile Include="Assets\Scripts\Navigation\NodeGenerator.cs" />
-    <Compile Include="Assets\Scripts\Navigation\TileMap.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\Action.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\PlayerAction.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\PlayerMoveAction.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\PlayerShootAction.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\Weapon.cs" />

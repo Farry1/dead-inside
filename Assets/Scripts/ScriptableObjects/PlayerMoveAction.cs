@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MoveAction", menuName = "Actions/Movement")]
-public class PlayerMoveAction : Action
+[CreateAssetMenu(fileName = "MoveAction", menuName = "Actions/Player/Movement")]
+public class PlayerMoveAction : PlayerAction
 {
     PlayerUnit unit
     {
@@ -16,6 +16,6 @@ public class PlayerMoveAction : Action
 
     public override void Execute()
     {
-        unit.SwitchActionState(PlayerUnit.PlayerActionState.MoveSelection);
+        unit.SwitchActionState(PlayerUnit.ActionState.MovePreparation);       
     }
 }

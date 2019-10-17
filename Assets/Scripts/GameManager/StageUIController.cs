@@ -104,7 +104,7 @@ public class StageUIController : MonoBehaviour
         }
     }
 
-    public void CreateActionMenu(List<Action> availableActions)
+    public void CreatePlayerActionMenu(List<Action> availableActions)
     {
         Debug.Log("Creating Actions Menu");
         foreach (Action action in availableActions)

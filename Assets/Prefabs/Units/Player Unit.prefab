@@ -123,7 +123,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 763021006}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.26
   m_Height: 1.17
   m_Direction: 1
@@ -182,6 +182,7 @@ GameObject:
   - component: {fileID: 6672107977936763498}
   - component: {fileID: 6672107977936763499}
   - component: {fileID: 3855868428183498912}
+  - component: {fileID: 143468066}
   m_Layer: 13
   m_Name: Player Unit
   m_TagString: Player
@@ -246,6 +247,20 @@ MonoBehaviour:
     type: 3}
   healthContainer: {fileID: 3148626312556121316}
   health: 3
+--- !u!136 &143468066
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6672107977936763508}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.25
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &6672107979738438293
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6672107979738438292
 Transform:
   m_ObjectHideFlags: 0
@@ -334,7 +349,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 6672107979738438293}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1

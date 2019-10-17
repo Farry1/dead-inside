@@ -87,29 +87,13 @@ public class PlayerUnitsController : MonoBehaviour
                     if (hitNode != null && selectedPlayerUnit != null)
                     {
                         selectedPlayerUnit.PrecalculatePathTo(hitNode);
-                        selectedPlayerUnit.Shoot(hitNode);
-                       
+                        selectedPlayerUnit.Shoot(hitNode);                       
                     }                    
                 }
                 break;
             }
         }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            RaycastHit leftClickHit;
-            if (Physics.Raycast(mousePositionRay, out leftClickHit))
-            {
-                //A Selectable is clicked
-                ISelectable selectable = leftClickHit.collider.GetComponentInParent<ISelectable>();
-                if (selectable != null)
-                {
-                    selectable.OnSelect();
-                }
-            }
-            // TileMap.Instance.selectedUnit.Move();
-        }
-
+        
         void SetMovement(Ray navigateRay)
         {
             if (Input.GetMouseButtonDown(0))
@@ -125,56 +109,10 @@ public class PlayerUnitsController : MonoBehaviour
                 }
             }
         }
-
-        // Draw Debug Path
-        if (selectedPlayerUnit != null &&
-            selectedPlayerUnit.actionState == PlayerUnit.PlayerActionState.MoveSelection &&
-            selectedPlayerUnit.currentPath != null &&
-            selectedPlayerUnit.actionState != PlayerUnit.PlayerActionState.Moving)
-        {
-            int currentNode = 0;
-
-            while (currentNode < selectedPlayerUnit.currentPath.Count - 1)
-            {
-                Vector3 start = selectedPlayerUnit.currentPath[currentNode].transform.position;
-                Vector3 end = selectedPlayerUnit.currentPath[currentNode + 1].transform.position;
-                Debug.DrawLine(start, end, Color.cyan);
-                currentNode++;
-            }
-
-            DrawPath();
-        }
-
-
     }
 
 
-    void DrawPath()
-    {
-        List<Transform> transforms = new List<Transform>();
-
-        foreach (Node v in selectedPlayerUnit.currentPath)
-        {
-            transforms.Add(v.transform);
-        }
-
-        int seg = transforms.Count();
-        Vector3[] vP = new Vector3[transforms.Count()];
-
-        for (int i = 0; i < transforms.Count(); i++)
-        {
-            vP[i] = transforms[i].position;
-        }
-        for (int i = 0; i < seg; i++)
-        {
-            float t = i / (float)seg;
-            lineRenderer.positionCount = seg;
-            lineRenderer.SetPositions(vP);
-        }
-
-    }
-
-    public void UnselectSelectedUnits()
+    public void UnselectSelectedPlayerUnits()
     {
         StageUIController.Instance.SetPlayerActionContainer(false);
 
@@ -187,7 +125,7 @@ public class PlayerUnitsController : MonoBehaviour
         }
 
         selectedPlayerUnit = null;
-        TileMap.Instance.Clear();
+        Dijkstra.Instance.Clear();
     }
 
     public PlayerUnit GetSelectedUnit()
@@ -211,6 +149,6 @@ public class PlayerUnitsController : MonoBehaviour
     void IsEnemyTurn()
     {
         isPlayerTurn = false;
-        UnselectSelectedUnits();
+        UnselectSelectedPlayerUnits();
     }
 }

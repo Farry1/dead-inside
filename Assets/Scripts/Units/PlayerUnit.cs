@@ -6,20 +6,16 @@ using UnityEngine.UI;
 
 public class PlayerUnit : Unit
 {
-    public enum PlayerActionState { MoveSelection, Aiming, None, Moving }
-    public PlayerActionState actionState;
-
-    public List<Action> actions = new List<Action>();
-    public GameObject relatedUIPanel;
+    [HideInInspector] public GameObject relatedUIPanel;
 
     bool isPlayerTurn;
 
-    CameraMovement camera;
+
 
     protected override void Start()
     {
         base.Start();
-        camera = FindObjectOfType<CameraMovement>();
+
     }
 
     protected override void Update()
@@ -44,26 +40,31 @@ public class PlayerUnit : Unit
 
                 switch (actionState)
                 {
-                    case PlayerActionState.None:
+                    case ActionState.None:
                         if (rightMouseUp)
-                            PlayerUnitsController.Instance.UnselectSelectedUnits();
+                            PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
 
                         break;
 
 
-                    case PlayerActionState.MoveSelection:
+                    case ActionState.MovePreparation:
+
+                        DrawPath();
                         if (rightMouseUp)
                         {
-                            SwitchActionState(PlayerActionState.None);
+                            SwitchActionState(ActionState.None);
                             currentPath = null;
                         }
 
                         break;
 
-                    case PlayerActionState.Aiming:
+                    case ActionState.Moving:
+                        break;
+
+                    case ActionState.PreparingRangeAttack:
                         if (rightMouseUp)
                         {
-                            SwitchActionState(PlayerActionState.None);
+                            SwitchActionState(ActionState.None);
                         }
                         break;
                 }
@@ -72,6 +73,8 @@ public class PlayerUnit : Unit
                 break;
         }
     }
+
+
 
     IEnumerator MoveNextTile()
     {
@@ -89,10 +92,10 @@ public class PlayerUnit : Unit
         {
             //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
             currentPath = null;
-            actionState = PlayerActionState.None;
+            actionState = ActionState.None;
             StageUIController.Instance.playerMoveButton.interactable = true;
             if (unitState == UnitState.Selected && currentActionPoints > 0)
-                TileMap.Instance.Dijkstra(currentNode, maxSteps);
+                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -101,16 +104,15 @@ public class PlayerUnit : Unit
 
     public void Move()
     {
-        TileMap.Instance.Clear();
-        if (actionState == PlayerActionState.MoveSelection &&
-            actionState != PlayerActionState.Moving &&
+        Dijkstra.Instance.Clear();
+        if (actionState == ActionState.MovePreparation &&
+            actionState != ActionState.Moving &&
             currentPath != null &&
             currentActionPoints > 0)
         {
-            actionState = PlayerActionState.Moving;
+            actionState = ActionState.Moving;
             StartCoroutine(MoveCoroutine());
             currentActionPoints--;
-
         }
     }
 
@@ -126,81 +128,126 @@ public class PlayerUnit : Unit
     public void PrecalculatePathTo(Node target)
     {
         if (unitState == UnitState.Selected &&
-            actionState == PlayerActionState.MoveSelection &&
+            actionState == ActionState.MovePreparation &&
             currentActionPoints > 0)
         {
-            currentPath = TileMap.Instance.GeneratePathTo(currentNode, target, maxSteps);
+            currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, target, maxSteps);
         }
     }
 
     public void Shoot(Node v)
     {
-        if (actionState == PlayerActionState.Aiming)
+        if (actionState == ActionState.PreparingRangeAttack)
         {
-            TileMap.Instance.Clear();
+            Dijkstra.Instance.Clear();
             v.HighlightField(Color.red);
+
+            Node recoilTarget;
+
+            Node.GetOppositePlanarDirection(currentNode, v);
 
             if (Input.GetMouseButtonUp(0))
             {
-                if (equippedWeapon != null && currentActionPoints > 0)
+                if (equippedRangeWeapon != null && currentActionPoints > 0)
                 {
-                    equippedWeapon.Fire(currentNode, v, "Enemy");
+                    equippedRangeWeapon.Fire(currentNode, v, "Enemy");
                     currentActionPoints--;
-                    actionState = PlayerActionState.None;
+                    actionState = ActionState.None;
                 }
             }
         }
     }
 
-    public void SwitchActionState(PlayerActionState a)
+    public override void SwitchActionState(ActionState a)
     {
         switch (a)
         {
-            case PlayerActionState.None:
+            case ActionState.None:
                 if (currentActionPoints > 0)
                 {
-                    TileMap.Instance.Dijkstra(currentNode, maxSteps);
+                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
                 }
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
                 Debug.Log("Turn Off");
 
                 break;
 
-            case PlayerActionState.MoveSelection:
+            case ActionState.MovePreparation:
                 if (currentActionPoints > 0)
                 {
-                    TileMap.Instance.Dijkstra(currentNode, maxSteps);
+                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
                     PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(true);
                 }
                 break;
 
-            case PlayerActionState.Aiming:
-                TileMap.Instance.Clear();
+            case ActionState.PreparingRangeAttack:
+                Dijkstra.Instance.Clear();
                 break;
         }
 
         actionState = a;
     }
 
+
+
     public override void OnSelect()
     {
-
+        base.OnSelect();
 
         if (unitState != UnitState.Selected && isPlayerTurn)
         {
-            PlayerUnitsController.Instance.UnselectSelectedUnits();
+            PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
             PlayerUnitsController.Instance.SelectUnit(this);
             StageUIController.Instance.SetPlayerActionContainer(true);
             unitState = PlayerUnit.UnitState.Selected;
-            camera.cameraLookAt = this.transform.root.gameObject;
 
-            StageUIController.Instance.CreateActionMenu(actions);
+            StageUIController.Instance.CreatePlayerActionMenu(actions);
             // StageUIController.Instance.playerMoveButton.interactable = !moveActionAvailable;
 
             if (currentActionPoints > 0)
-                TileMap.Instance.Dijkstra(currentNode, maxSteps);
+                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
         }
     }
+
+    private void DrawPath()
+    {
+        if (currentPath != null)
+        {
+            //Draw Debug Path
+            int currentNode = 0;
+
+            while (currentNode < currentPath.Count - 1)
+            {
+                Vector3 start = currentPath[currentNode].transform.position;
+                Vector3 end = currentPath[currentNode + 1].transform.position;
+                Debug.DrawLine(start, end, Color.cyan);
+                currentNode++;
+            }
+
+            //Draw actual Path
+            List<Transform> transforms = new List<Transform>();
+
+            foreach (Node v in currentPath)
+            {
+                transforms.Add(v.transform);
+            }
+
+            int seg = transforms.Count();
+            Vector3[] vP = new Vector3[transforms.Count()];
+
+            for (int i = 0; i < transforms.Count(); i++)
+            {
+                vP[i] = transforms[i].position;
+            }
+            for (int i = 0; i < seg; i++)
+            {
+                float t = i / (float)seg;
+                PlayerUnitsController.Instance.lineRenderer.positionCount = seg;
+                PlayerUnitsController.Instance.lineRenderer.SetPositions(vP);
+            }
+        }
+    }
+
 
     public override void SwitchUnitState(UnitState state)
     {

@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4334851116237302146}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -48,10 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitState: 0
+  actionState: 2
+  actions: []
   maxActionPoints: 2
   maxSteps: 3
   health: 3
-  equippedWeapon: {fileID: 0}
+  equippedRangeWeapon: {fileID: 0}
   currentNode: {fileID: 0}
   currentPath: []
 --- !u!114 &1036418276397528881
@@ -69,7 +71,7 @@ MonoBehaviour:
   healthIconPrefab: {fileID: 812751513252275120, guid: e0743342ed0d8f947948c669f00b3374,
     type: 3}
   healthContainer: {fileID: 8014470545802042614}
-  health: 3
+  health: 5
 --- !u!136 &1849323693039312150
 CapsuleCollider:
   m_ObjectHideFlags: 0
