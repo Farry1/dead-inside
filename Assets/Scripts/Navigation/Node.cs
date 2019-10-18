@@ -93,11 +93,7 @@ public class Node : MonoBehaviour
         Debug.Log(direction);
 
         Vector3 lockedDirection = Vector3.zero;
-
-        if (direction.x <= -0.9)
-        {
-            lockedDirection += Vector3.right * -1;
-        }
+        
 
 
 
