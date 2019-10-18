@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grid
-  m_Shader: {fileID: -6465566751694194690, guid: 71bfb4827e13d0d42b3f8e4116457e06,
+  m_Shader: {fileID: -6465566751694194690, guid: 7fa9745f5dfecca409b7969d61df5f5e,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -34,7 +34,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_F22B94F9:
-        m_Texture: {fileID: 2800000, guid: b78ff27e4ab4ba54fa043f95cf68cfa7, type: 3}
+        m_Texture: {fileID: 2800000, guid: d3ef7cba69da4664fb320dca017b1c82, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
