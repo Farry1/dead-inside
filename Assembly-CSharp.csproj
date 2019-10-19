@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\ScriptableObjects\PlayerMoveAction.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\PlayerShootAction.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Units\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Units\EnemyUnit.cs" />
     <Compile Include="Assets\Scripts\Units\EnemyUnitsController.cs" />
     <Compile Include="Assets\Scripts\Units\Health.cs" />

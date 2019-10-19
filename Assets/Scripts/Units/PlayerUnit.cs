@@ -70,8 +70,17 @@ public class PlayerUnit : Unit
                 }
                 break;
             case UnitState.Dead:
+                PlayerUnitsController.Instance.units.Remove(this);
+                Destroy(this.gameObject);
+
                 break;
         }
+    }
+
+    void OnDestroy()
+    {
+        StageUIController.Instance.UpdateUnitPanel();
+        StageUIController.Instance.ClearPlayerActions();
     }
 
     IEnumerator MoveNextTile()
@@ -111,7 +120,7 @@ public class PlayerUnit : Unit
             currentPath != null &&
             currentActionPoints > 0)
         {
-            actionState = ActionState.Moving;
+            SwitchActionState(ActionState.Moving);
             StartCoroutine(MoveCoroutine());
             currentActionPoints--;
         }
@@ -120,6 +129,8 @@ public class PlayerUnit : Unit
 
     IEnumerator MoveCoroutine()
     {
+
+
         while (currentPath != null && currentPath.Count() > 1)
         {
             yield return StartCoroutine(MoveNextTile());
@@ -140,45 +151,91 @@ public class PlayerUnit : Unit
     {
         if (actionState == ActionState.PreparingRangeAttack)
         {
+            //Clear all previous highlighted fields 
             Dijkstra.Instance.Clear();
-            v.HighlightField(Color.red);
 
+            //Highlight Target Node
+            v.HighlightField(Color.yellow);
+
+            //Calculate Recoid Direction and get the node, where the unit would land after a shot
             Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
             Node recoilTarget = CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
 
+            //If a valid recoil target is found, hightlight it blue
+            if (recoilTarget != null)
+                recoilTarget.HighlightField(Color.blue);
+
+
+            //Get Unit on target tile
             Unit unitOntargetTile = v.unitOnTile;
 
-            if(unitOntargetTile != null)
+            //If there is a unit check with a raycast if it's hit
+            if (unitOntargetTile != null && UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
             {
-                Ray shootRay = new Ray(transform.position, unitOntargetTile.transform.position);
-                RaycastHit shootHit;
+                v.HighlightField(Color.red);
+            }
 
-                Debug.DrawRay(shootRay.origin, shootRay.direction * 5, Color.red, 2f);
 
-                if (Physics.Raycast(shootRay, out shootHit))
+            //If the mouse is clicked
+            if (Input.GetMouseButtonUp(0))
+            {
+                //If we have a weapon and action points left
+                if (equippedRangeWeapon != null && currentActionPoints > 0)
                 {
+                    //Shoot!                    
+                    equippedRangeWeapon.Fire(currentNode, v);
 
-
-                    if (shootHit.collider.tag == "Enemey")
+                    if (unitOntargetTile != null &&
+                        UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                     {
-                        Debug.Log("Enemy Hit!");
+                        unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
+                    }
+
+                    currentActionPoints--;
+
+                    //If we have a recoil target, move to that position
+                    if (recoilTarget != null)
+                    {
+                        currentNode = recoilTarget;
+                        StartCoroutine(MoveWithRecoil(recoilTarget));
+                    }
+                    //If not you fly over the edge and die in space
+                    else
+                    {
+                        StartCoroutine(DieLonesomeInSpace(recoilDirection));
                     }
                 }
             }
-   
+        }
+    }
 
+    IEnumerator DieLonesomeInSpace(Vector3 direction)
+    {
+        SetMoveDestination(direction * 5f, 2f);
+        yield return new WaitForSeconds(2f);
+        SwitchUnitState(UnitState.Dead);
 
-            if (Input.GetMouseButtonUp(0))
+    }
+
+    private bool UnitIsHitWithRaycast(Unit unit, Vector3 start)
+    {
+        Vector3 direction = unit.raycastTarget.position - start;
+        Ray shootRay = new Ray(gunbarrel.position, direction * 10);
+
+        Debug.DrawRay(shootRay.origin, shootRay.direction, Color.red, 2f);
+
+        RaycastHit shootHit;
+
+        if (Physics.SphereCast(shootRay, 0.1f, out shootHit))
+        {
+            if (shootHit.collider.gameObject.GetComponent<Unit>() == unit)
             {
-                if (equippedRangeWeapon != null && currentActionPoints > 0)
-                {
-                    equippedRangeWeapon.Fire(currentNode, v, "Enemy");
-                    currentActionPoints--;
-                    currentNode = recoilTarget;
-                    StartCoroutine(MoveWithRecoil(recoilTarget));
-                }
+                Debug.Log("Hit!");
+                return true;
             }
         }
+
+        return false;
     }
 
     Node CalculateRecoilTarget(int steps, Vector3 recoilDirection)
@@ -245,7 +302,7 @@ public class PlayerUnit : Unit
             case ActionState.None:
                 if (currentActionPoints > 0)
                 {
-                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);                    
                 }
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
 
@@ -261,6 +318,11 @@ public class PlayerUnit : Unit
 
             case ActionState.PreparingRangeAttack:
                 Dijkstra.Instance.Clear();
+                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                break;
+
+            case ActionState.Moving:
+                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
                 break;
         }
 
@@ -278,7 +340,7 @@ public class PlayerUnit : Unit
             PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
             PlayerUnitsController.Instance.SelectUnit(this);
             StageUIController.Instance.SetPlayerActionContainer(true);
-            unitState = PlayerUnit.UnitState.Selected;
+            unitState = UnitState.Selected;
 
             StageUIController.Instance.CreatePlayerActionMenu(actions);
             // StageUIController.Instance.playerMoveButton.interactable = !moveActionAvailable;

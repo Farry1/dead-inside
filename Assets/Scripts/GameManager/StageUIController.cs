@@ -17,7 +17,8 @@ public class StageUIController : MonoBehaviour
     public GameObject playerActionsContainer;
     public GameObject playerInfoContainer;
     public Text stateIndicator;
-    public GameObject GameOverScreen;
+    public GameObject WinPanel;
+    public GameObject LosePanel;
 
     [Header("UI Buttons")]
     public Button playerMoveButton;
@@ -54,7 +55,15 @@ public class StageUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Todo: Make this better
         EnemyUnitsController.Instance.CheckForWin();
+
+        if (CheckForLose())
+        {
+            LosePanel.SetActive(true);
+            StageManager.Instance.stageState = StageManager.StageState.Lost;
+        }
+
         InGameMenu();
 
         switch (stageManager.stageState)
@@ -77,6 +86,18 @@ public class StageUIController : MonoBehaviour
         }
     }
 
+    bool CheckForLose()
+    {
+
+        if (PlayerUnitsController.Instance.units.Count == 0)
+        {
+            return true;
+        }
+        else
+            return false;
+
+    }
+
     public void SetPlayerActionContainer(bool state)
     {
         playerActionsContainer.SetActive(state);
@@ -88,11 +109,23 @@ public class StageUIController : MonoBehaviour
         foreach (PlayerUnit unit in PlayerUnitsController.Instance.units)
         {
             GameObject unitPanel = GameObject.Instantiate(unitPanelPrefab, playerInfoContainer.transform);
-            unit.relatedUIPanel = unitPanel;
-
-            //actionButton.GetComponentInChildren<Text>().text = action.actionName;
-            //actionButton.GetComponentInChildren<Button>().onClick.AddListener(action.Execute);
+            if (unitPanel != null)
+            {
+                unitPanel.gameObject.name = "UnitPanel";
+                unit.relatedUIPanel = unitPanel;
+            }
         }
+    }
+
+    public void UpdateUnitPanel()
+    {
+        GameObject[] unitPanels = GameObject.FindGameObjectsWithTag("UnitPanel");
+        foreach (GameObject unitPanel in unitPanels)
+        {
+            Destroy(unitPanel);
+        }
+
+        CreateUnitPanel();
     }
 
     public void ClearPlayerActions()
@@ -102,6 +135,8 @@ public class StageUIController : MonoBehaviour
         {
             Destroy(b.gameObject);
         }
+
+        playerActionsContainer.SetActive(false);
     }
 
     public void CreatePlayerActionMenu(List<Action> availableActions)

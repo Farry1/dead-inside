@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 6198278438124158600}
   m_Layer: 5
   m_Name: UnitPanel
-  m_TagString: Untagged
+  m_TagString: UnitPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

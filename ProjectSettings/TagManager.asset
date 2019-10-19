@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Node
   - Enemy
+  - UnitPanel
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - PlayerProjectile
   - Enemy
   - Player
-  - 
+  - Projectile
   - 
   - 
   - 

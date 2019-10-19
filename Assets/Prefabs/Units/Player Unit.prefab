@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2329558090935773202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7653096844297386090}
+  m_Layer: 13
+  m_Name: RaycastTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7653096844297386090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2329558090935773202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6672107977936763498}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3148626312556121316
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,6 +73,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102f16ab872d514b8981e912e9ee009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5766019015301820359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8699540971072871136}
+  m_Layer: 13
+  m_Name: Gunbarrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8699540971072871136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5766019015301820359}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6672107977936763498}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6672107977936763508
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,6 +135,8 @@ Transform:
   m_Children:
   - {fileID: 6672107979738438292}
   - {fileID: 169716807441471301}
+  - {fileID: 8699540971072871136}
+  - {fileID: 7653096844297386090}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -92,12 +154,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitState: 0
   actionState: 2
+  gunbarrel: {fileID: 8699540971072871136}
+  raycastTarget: {fileID: 7653096844297386090}
   actions:
   - {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb, type: 2}
   - {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0, type: 2}
+  healthController: {fileID: 0}
   maxActionPoints: 2
   maxSteps: 3
-  health: 3
   equippedRangeWeapon: {fileID: 0}
   currentNode: {fileID: 0}
   currentPath: []

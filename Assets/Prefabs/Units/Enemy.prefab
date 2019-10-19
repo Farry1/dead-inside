@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4334851116237302144}
   - component: {fileID: 1036418276397528881}
   - component: {fileID: 1849323693039312150}
+  - component: {fileID: 1950127963894630606}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -32,6 +33,8 @@ Transform:
   m_Children:
   - {fileID: 4334851116653182916}
   - {fileID: 3258750447903039280}
+  - {fileID: 5024676868331948298}
+  - {fileID: 3762374742743722546}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,10 +52,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitState: 0
   actionState: 2
+  gunbarrel: {fileID: 5024676868331948298}
+  raycastTarget: {fileID: 3762374742743722546}
   actions: []
+  healthController: {fileID: 0}
   maxActionPoints: 2
   maxSteps: 3
-  health: 3
   equippedRangeWeapon: {fileID: 0}
   currentNode: {fileID: 0}
   currentPath: []
@@ -86,6 +91,18 @@ CapsuleCollider:
   m_Height: 1.07
   m_Direction: 1
   m_Center: {x: 0, y: 0.48, z: 0}
+--- !u!114 &1950127963894630606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334851116237302146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7449a56a686a044a160bca79dd59de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4334851116653182917
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +196,36 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7430542962702098194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3762374742743722546}
+  m_Layer: 0
+  m_Name: RaycastTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3762374742743722546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430542962702098194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4334851116237302145}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8014470545802042614
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,3 +269,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6102f16ab872d514b8981e912e9ee009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8303714663540968027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5024676868331948298}
+  m_Layer: 0
+  m_Name: Gunbarrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5024676868331948298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8303714663540968027}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4334851116237302145}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -35,7 +35,7 @@ public class Dijkstra : MonoBehaviour
     {
 
     }
-   
+
 
     void ChangeSelectedUnit()
     {
@@ -46,7 +46,7 @@ public class Dijkstra : MonoBehaviour
     {
         float cost = node.movementCost;
 
-        if (node.canBeEntered)
+        if (node.canBeEntered && node.unitOnTile == null)
         {
             if (Vector3.Distance(node.transform.position, targetNode.transform.position) > 1.1f)
             {
@@ -56,12 +56,17 @@ public class Dijkstra : MonoBehaviour
         else
             cost = Mathf.Infinity;
 
+
         return cost;
     }
 
     public List<Node> GeneratePathTo(Node source, Node target, int maxSteps)
     {
-        PlayerUnitsController.Instance.selectedPlayerUnit.currentPath = null;
+        //if theres a unit on the target tile
+        if (target.unitOnTile != null)
+        {
+            target = ValidateTarget(target, source);
+        }
 
         Dictionary<Node, float> distance = new Dictionary<Node, float>();
         Dictionary<Node, Node> previous = new Dictionary<Node, Node>();
@@ -84,11 +89,11 @@ public class Dijkstra : MonoBehaviour
             unvisitedNodes.Add(v);
         }
 
+
         while (unvisitedNodes.Count > 0)
         {
             Node u = null;
 
-            //TODO: make sorting this faster
             foreach (Node possibleU in unvisitedNodes)
             {
                 if (u == null || distance[possibleU] < distance[u])
@@ -145,6 +150,15 @@ public class Dijkstra : MonoBehaviour
         return currentPath;
     }
 
+
+    Node ValidateTarget(Node source, Node target)
+    {
+        //Todo: Make this better. So that characters cannot clip into each other diagonally
+        List<Node> validatedNodes = source.edges.Where(h => h.unitOnTile == null).ToList();
+        return validatedNodes[0];
+    }
+
+
     public void GetNodesInRange(Node source, int range)
     {
         source = PlayerUnitsController.Instance.selectedPlayerUnit.currentNode;
@@ -194,13 +208,13 @@ public class Dijkstra : MonoBehaviour
                     distance[v] = alt;
                     previous[v] = u;
                 }
-
-                v.IndicateNavigation((int)distance[v], range);
+                
+                v.IndicateNavigation((int)distance[v], range, v);
             }
         }
     }
 
-    
+
 
     public void Clear()
     {

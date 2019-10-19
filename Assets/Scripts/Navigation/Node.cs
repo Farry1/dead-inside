@@ -23,11 +23,16 @@ public class Node : MonoBehaviour
         stepCounterText.text = "0";
     }
 
-    public void IndicateNavigation(int stepsRequired, int maxSteps)
+    private void Update()
     {
+
+    }
+
+    public void IndicateNavigation(int stepsRequired, int maxSteps, Node v)
+    {        
         stepCounterText.text = stepsRequired.ToString();
 
-        if (stepsRequired <= maxSteps)
+        if (stepsRequired <= maxSteps && v.unitOnTile == false)
         {
             surfaceIndicator.gameObject.SetActive(true);
             surfaceIndicator.material.color = Color.green;
@@ -45,10 +50,10 @@ public class Node : MonoBehaviour
     public void HighlightField(Color color)
     {
         surfaceIndicator.gameObject.SetActive(true);
-        visibleSurfaceIndicator.material.color = color;
 
         visibleSurfaceIndicator.gameObject.SetActive(true);
         visibleSurfaceIndicator.material = materials[1];
+        visibleSurfaceIndicator.material.SetColor("_MainColor", color);
     }
 
     public void HideNavigationIndicator()

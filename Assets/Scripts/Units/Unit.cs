@@ -8,17 +8,21 @@ public class Unit : MonoBehaviour, ISelectable
     public enum UnitState { Idle, Selected, Dead };
     public UnitState unitState = UnitState.Idle;
 
+
+
     public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving }
     public ActionState actionState;
 
+    public Transform gunbarrel;
+    public Transform raycastTarget;
+
     public List<Action> actions = new List<Action>();
 
-    protected Health healthController;
+    [HideInInspector] public Health healthController;
 
     public int maxActionPoints = 2;
     protected int currentActionPoints = 2;
     public int maxSteps = 1;
-    public int health = 3;
     public Weapon equippedRangeWeapon;
 
 
@@ -102,6 +106,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     public void SetMoveDestination(Vector3 destination, float time)
     {
+        Debug.Log("SetDestination");
         t = 0;
         startPosition = transform.position;
         timeToReachTarget = time;
@@ -120,6 +125,11 @@ public class Unit : MonoBehaviour, ISelectable
     }
 
     public virtual void OnSelect()
+    {
+
+    }
+
+    public virtual void Die()
     {
 
     }

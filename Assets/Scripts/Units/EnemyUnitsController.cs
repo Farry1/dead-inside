@@ -59,9 +59,10 @@ public class EnemyUnitsController : MonoBehaviour
         foreach (EnemyUnit enemyUnit in enemyUnits)
         {
             Debug.Log("Do Evil Stuff");
-            yield return new WaitForSeconds(1);
+            yield return (enemyUnit.MakeTurn());
+            
         }
-
+        yield return new WaitForSeconds(1);
         StageManager.Instance.EndEnemyTurn();
     }
 
@@ -69,8 +70,8 @@ public class EnemyUnitsController : MonoBehaviour
     {
         if (AllEnemiesDead())
         {
-            StageUIController.Instance.GameOverScreen.SetActive(true);
-        }
+            StageUIController.Instance.WinPanel.SetActive(true);
+        }        
     }
 
     private bool AllEnemiesDead()
@@ -82,4 +83,6 @@ public class EnemyUnitsController : MonoBehaviour
         else
             return false;
     }
+
+   
 }
