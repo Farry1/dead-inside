@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   damage: 2
+  maxAmmo: 3
+  currentAmmo: 0
+  recoil: 1
   projectile: {fileID: 5202598076933370690, guid: b8a9c63a5c296df49ba0dd25c39ccfc0,
     type: 3}
   attachedActions:

@@ -20,7 +20,6 @@ public class Weapon : ScriptableObject
 
         GameObject p = Instantiate(projectile, origin.transform.position + new Vector3(0, 0.5f, 0), Quaternion.LookRotation(direction));
         p.GetComponent<Rigidbody>().velocity = p.transform.forward * 8;
-        p.GetComponent<Projectile>().damage = damage;
         p.transform.tag = hitTag;
         p.transform.gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
     }

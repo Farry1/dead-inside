@@ -15,6 +15,8 @@ public class Node : MonoBehaviour
 
     public Material[] materials;
 
+    public Unit unitOnTile;
+
 
     private void Start()
     {
@@ -63,96 +65,94 @@ public class Node : MonoBehaviour
 
     public static Vector3 GetOppositePlanarDirection(Node currentNode, Node targetNode)
     {
-
+        //Origin and Destination of Ray
         Vector3 origin = currentNode.transform.position;
         Vector3 destination = targetNode.transform.position;
 
+        //Get opposite Direction
+        Vector3 direction = destination - origin;
 
-
-
-        Vector3 direction = origin - destination;
-
-        Debug.DrawRay(origin, currentNode.transform.up, Color.blue, 2f);
-
+        //Lock Ray on current plane
         Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
 
         planarDirection = planarDirection.normalized;
-        Color debugColor = Color.red;
 
+        //Lock rays in 45 Degree Angles
         planarDirection = LockAnglesOn45Degrees(planarDirection);
+        return planarDirection;
+    }
 
-
-        Debug.DrawRay(origin, planarDirection, debugColor, 5f);
-
-        return direction;
+    public Unit GetUnitOnTile()
+    {
+        return unitOnTile;
     }
 
     public static Vector3 LockAnglesOn45Degrees(Vector3 direction)
     {
+        Vector3 lockedDirection = direction;
 
-        Debug.Log(direction);
+        if (direction.x < -0.9)
+        {
+            lockedDirection.x = 1;
+        }
+        else if ((direction.x > -0.9) && (direction.x <= -0.3))
+        {
+            lockedDirection.x = 0.7f;
+        }
+        else if ((direction.x > -0.3) && (direction.x <= 0.3))
+        {
+            lockedDirection.x = 0f;
+        }
+        else if ((direction.x > 0.3) && (direction.x <= 0.9))
+        {
+            lockedDirection.x = -0.7f;
+        }
+        else if (direction.x > 0.9f)
+        {
+            lockedDirection.x = -1f;
+        }
 
-        Vector3 lockedDirection = Vector3.zero;
-        
+        if (direction.y < -0.9)
+        {
+            lockedDirection.y = 1;
+        }
+        else if ((direction.y > -0.9) && (direction.y <= -0.3))
+        {
+            lockedDirection.y = 0.7f;
+        }
+        else if ((direction.y > -0.3) && (direction.y <= 0.3))
+        {
+            lockedDirection.y = 0f;
+        }
+        else if ((direction.y > 0.3) && (direction.y <= 0.9))
+        {
+            lockedDirection.y = -0.7f;
+        }
+        else if (direction.y > 0.9f)
+        {
+            lockedDirection.y = -1f;
+        }
 
-
-
-        //if (planarDirection.x <= -0.9)
-        //{
-        //    debugColor = Color.yellow;
-        //    planarDirection = -currentNode.transform.right;
-
-        //}
-        //else if ((planarDirection.x > -0.9) && (planarDirection.x <= -0.3))
-        //{
-
-        //    if (planarDirection.z > 0)
-        //    {
-        //        planarDirection = currentNode.transform.right * -1 + currentNode.transform.forward;
-        //        debugColor = Color.green;
-        //    }
-        //    else
-        //    {
-        //        //planarDirection = currentNode.transform.right * -1 + currentNode.transform.forward;
-        //    }
-
-        //}
-        //else if ((planarDirection.x > -0.3) && (planarDirection.x <= 0.3))
-        //{
-
-        //    if (planarDirection.z > 0)
-        //    {
-        //        //planarDirection = new Vector3(0f, 0f, 1f);
-        //    }
-        //    else
-        //    {
-        //        //planarDirection = new Vector3(0f, 0f, -1f);
-        //    }
-
-        //}
-        //else if ((planarDirection.x > 0.3) && (planarDirection.x <= 0.9))
-        //{
-
-        //    if (planarDirection.z > 0)
-        //    {
-        //        //planarDirection = new Vector3(0.7f, 0f, 0.7f);
-        //    }
-        //    else
-        //    {
-        //        //planarDirection = new Vector3(0.7f, 0f, -0.7f);
-        //    }
-
-        //}
-        //else if (planarDirection.x > 0.9)
-        //{
-
-        //    //planarDirection = new Vector3(1f, 0f, 0f);
-        //}
-
-        // planarDirection = currentNode.transform.localRotation * planarDirection;
-
-
-        return direction;
+        if (direction.z < -0.9)
+        {
+            lockedDirection.z = 1;
+        }
+        else if ((direction.z > -0.9) && (direction.z <= -0.3))
+        {
+            lockedDirection.z = 0.7f;
+        }
+        else if ((direction.z > -0.3) && (direction.z <= 0.3))
+        {
+            lockedDirection.z = 0f;
+        }
+        else if ((direction.z > 0.3) && (direction.z <= 0.9))
+        {
+            lockedDirection.z = -0.7f;
+        }
+        else if (direction.z > 0.9f)
+        {
+            lockedDirection.z = -1f;
+        }
+        return lockedDirection;
     }
-
 }

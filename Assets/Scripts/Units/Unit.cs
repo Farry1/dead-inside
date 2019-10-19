@@ -55,6 +55,7 @@ public class Unit : MonoBehaviour, ISelectable
         if (currentNode == null)
         {
             currentNode = FindClosestNode();
+            currentNode.unitOnTile = this;
         }
 
         transform.position = currentNode.transform.position;
@@ -135,17 +136,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.collider.name);
-        if (collision.transform.tag == transform.tag)
-        {
-            Debug.Log("Hit!");
-            Projectile projectile = collision.gameObject.GetComponent<Projectile>();
-            if (projectile != null)
-            {
-                healthController.Damage(projectile.damage);
-                Destroy(projectile.gameObject);
-            }
-        }
+
     }
 
     public virtual void SwitchActionState(ActionState a)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MoveAction", menuName = "Actions/Player/Movement")]
-public class PlayerMoveAction : PlayerAction
+public class PlayerMoveAction : Action
 {
     PlayerUnit unit
     {

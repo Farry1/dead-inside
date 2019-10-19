@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: 
   damage: 5
+  maxAmmo: 3
+  currentAmmo: 0
+  recoil: 2
   projectile: {fileID: 5202598076933370690, guid: 294b1248571888649a3314c7176c9dff,
     type: 3}
   attachedActions:
