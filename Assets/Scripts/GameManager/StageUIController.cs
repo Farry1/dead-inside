@@ -128,7 +128,7 @@ public class StageUIController : MonoBehaviour
         CreateUnitPanel();
     }
 
-    public void ClearPlayerActions()
+    public void ClearPlayerActionsPanel()
     {
         Button[] buttons = playerActionsContainer.GetComponentsInChildren<Button>();
         foreach (Button b in buttons)

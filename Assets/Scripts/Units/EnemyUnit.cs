@@ -23,25 +23,20 @@ public class EnemyUnit : Unit
         base.Update();
     }
 
-    public override void SwitchUnitState(UnitState state)
-    {
-        switch (state)
-        {
-            case UnitState.Dead:
-                EnemyUnitsController.Instance.enemyUnits.Remove(this);
-                Destroy(this.gameObject);
-                break;
-        }
-
-        unitState = state;
-    }
+    /*
+     * 
+     * ENEMY AI
+     * 
+     */
 
     public IEnumerator MakeTurn()
     {
         Debug.Log(transform.name + " is doing a move!");
 
+        //If we have Action Points Left
         while (currentActionPoints > 0)
         {
+            //If a Player Unit is in Shoot Range, Shoot!
             PlayerUnit targetUnit = (PlayerUnit)GetPlayerUnitInShootRange();
 
             if (targetUnit != null)
@@ -49,21 +44,21 @@ public class EnemyUnit : Unit
                 Shoot(targetUnit);
                 yield return new WaitForSeconds(1f);
             }
+
+            //If not, find closest Player Unit
             else
             {
                 Unit closestPlayerUnit = FindClosestPlayerUnit();
 
+                //If we find a Player Unit, Set it as target and move towards it as close as possible
                 if (closestPlayerUnit != null)
-                {
-                    Debug.Log("Set up Path");
+                {                    
                     currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, closestPlayerUnit.currentNode, maxSteps);
                     yield return StartCoroutine(Move());
-                    Debug.Log("Movement Done!");
                 }
-
-                yield return new WaitForSeconds(1f);
             }
 
+            //Decrement Action Points
             currentActionPoints--;
         }
 
@@ -114,9 +109,7 @@ public class EnemyUnit : Unit
         currentPath.RemoveAt(0);
 
         SetMoveDestination(currentPath[0].transform.position, 0.45f);
-
-
-        //transform.position = currentPath[0].transform.position;
+        
         transform.rotation = currentPath[0].transform.rotation;
 
         currentNode.unitOnTile = null;
@@ -124,8 +117,7 @@ public class EnemyUnit : Unit
         currentNode.unitOnTile = this;
 
         if (currentPath.Count == 1)
-        {
-            //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
+        {            
             currentPath = null;
         }
 
@@ -152,5 +144,24 @@ public class EnemyUnit : Unit
             }
         }
         return null;
+    }
+
+
+    /*
+     * 
+     * UNIT STATES
+     * 
+     */
+    public override void SwitchUnitState(UnitState state)
+    {
+        switch (state)
+        {
+            case UnitState.Dead:
+                EnemyUnitsController.Instance.enemyUnits.Remove(this);
+                Destroy(this.gameObject);
+                break;
+        }
+
+        unitState = state;
     }
 }

@@ -7,15 +7,11 @@ using UnityEngine.UI;
 public class PlayerUnit : Unit
 {
     [HideInInspector] public GameObject relatedUIPanel;
-
     bool isPlayerTurn;
-
-
 
     protected override void Start()
     {
         base.Start();
-
     }
 
     protected override void Update()
@@ -23,11 +19,13 @@ public class PlayerUnit : Unit
         base.Update();
 
         bool rightMouseUp = Input.GetMouseButtonUp(1);
-        bool leftMouseUp = Input.GetMouseButtonUp(1);
+        bool leftMouseUp = Input.GetMouseButtonUp(0);
 
+        //Todo: Make this more efficient and not in Update, Event after action and at begin of player turn.
         if (isPlayerTurn)
         {
-            relatedUIPanel.transform.Find("TurnsText").GetComponent<Text>().text = currentActionPoints.ToString();
+            if (relatedUIPanel != null)
+                relatedUIPanel.transform.Find("TurnsText").GetComponent<Text>().text = currentActionPoints.ToString();
         }
 
 
@@ -43,7 +41,6 @@ public class PlayerUnit : Unit
                     case ActionState.None:
                         if (rightMouseUp)
                             PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
-
                         break;
 
 
@@ -72,7 +69,6 @@ public class PlayerUnit : Unit
             case UnitState.Dead:
                 PlayerUnitsController.Instance.units.Remove(this);
                 Destroy(this.gameObject);
-
                 break;
         }
     }
@@ -80,41 +76,13 @@ public class PlayerUnit : Unit
     void OnDestroy()
     {
         StageUIController.Instance.UpdateUnitPanel();
-        StageUIController.Instance.ClearPlayerActions();
+        StageUIController.Instance.ClearPlayerActionsPanel();
     }
 
-    IEnumerator MoveNextTile()
-    {
-        //Remove the old first node and move us to that position
-        currentPath.RemoveAt(0);
-
-        SetMoveDestination(currentPath[0].transform.position, 0.45f);
-
-        //transform.position = currentPath[0].transform.position;
-        transform.rotation = currentPath[0].transform.rotation;
-
-        currentNode.unitOnTile = null;
-        currentNode = currentPath[0];
-        currentNode.unitOnTile = this;
-
-
-        if (currentPath.Count == 1)
-        {
-            //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
-            currentPath = null;
-            actionState = ActionState.None;
-            StageUIController.Instance.playerMoveButton.interactable = true;
-            if (unitState == UnitState.Selected && currentActionPoints > 0)
-                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
-        }
-
-        yield return new WaitForSeconds(0.5f);
-    }
-
-
+    //Called After a click on a navigable Surface
     public void Move()
     {
-        Dijkstra.Instance.Clear();
+        //If the current Action State allows it, move to that position and decrement an Action Point
         if (actionState == ActionState.MovePreparation &&
             actionState != ActionState.Moving &&
             currentPath != null &&
@@ -126,15 +94,44 @@ public class PlayerUnit : Unit
         }
     }
 
-
+    //Initiate The Actual Movement
     IEnumerator MoveCoroutine()
     {
-
-
+        //As long as we have avalid path that has more than one entry left, Move to that Position
         while (currentPath != null && currentPath.Count() > 1)
         {
+            //Wait until movement to next tile is done
             yield return StartCoroutine(MoveNextTile());
         }
+    }
+
+    //Move To the next Tile
+    IEnumerator MoveNextTile()
+    {
+        //Remove the old first node and move us to that position
+        currentPath.RemoveAt(0);
+
+        //Set Destination and move over time, also set Rotation to the rotation of target Node
+        SetMoveDestination(currentPath[0].transform.position, 0.45f);
+        transform.rotation = currentPath[0].transform.rotation;
+
+        //Reset Nodes
+        currentNode.unitOnTile = null;
+        currentNode = currentPath[0];
+        currentNode.unitOnTile = this;
+
+
+        if (currentPath.Count == 1)
+        {
+            //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
+            currentPath = null;
+            SwitchActionState(ActionState.None);
+            StageUIController.Instance.playerMoveButton.interactable = true;
+            if (unitState == UnitState.Selected && currentActionPoints > 0)
+                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+        }
+
+        yield return new WaitForSeconds(0.5f);
     }
 
     public void PrecalculatePathTo(Node target)
@@ -170,7 +167,7 @@ public class PlayerUnit : Unit
             Unit unitOntargetTile = v.unitOnTile;
 
             //If there is a unit check with a raycast if it's hit
-            if (unitOntargetTile != null && UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+            if (unitOntargetTile != null && Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
             {
                 v.HighlightField(Color.red);
             }
@@ -186,7 +183,7 @@ public class PlayerUnit : Unit
                     equippedRangeWeapon.Fire(currentNode, v);
 
                     if (unitOntargetTile != null &&
-                        UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                        Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                     {
                         unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
                     }
@@ -209,60 +206,39 @@ public class PlayerUnit : Unit
         }
     }
 
+    //Die!
     IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
+        PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
         SetMoveDestination(direction * 5f, 2f);
         yield return new WaitForSeconds(2f);
         SwitchUnitState(UnitState.Dead);
-
     }
 
-    private bool UnitIsHitWithRaycast(Unit unit, Vector3 start)
+    Node CalculateRecoilTarget(int recoilAmount, Vector3 recoilDirection)
     {
-        Vector3 direction = unit.raycastTarget.position - start;
-        Ray shootRay = new Ray(gunbarrel.position, direction * 10);
-
-        Debug.DrawRay(shootRay.origin, shootRay.direction, Color.red, 2f);
-
-        RaycastHit shootHit;
-
-        if (Physics.SphereCast(shootRay, 0.1f, out shootHit))
-        {
-            if (shootHit.collider.gameObject.GetComponent<Unit>() == unit)
-            {
-                Debug.Log("Hit!");
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    Node CalculateRecoilTarget(int steps, Vector3 recoilDirection)
-    {
+        //Set an offset, so the ray doesnt accicentally hits a Tile 
         Vector3 offset = currentNode.transform.up * 0.05f;
-        Debug.Log(steps);
-        Debug.DrawRay(currentNode.transform.position + offset, recoilDirection * 1.5f, Color.cyan);
 
         Node recoilNode = currentNode;
 
-        for (int i = 0; i < steps; i++)
+        //Checks node after node in the recoil direction until we reach the recoilAmount defined on the weapon
+        for (int i = 0; i < recoilAmount; i++)
         {
             RaycastHit[] hits = Physics.RaycastAll(recoilNode.transform.position + offset, recoilDirection, 1.5f).OrderBy(h => h.distance).ToArray();
             for (int j = 0; j < hits.Length; j++)
             {
                 RaycastHit hit = hits[j];
 
-                Debug.Log(hit.collider.name);
-
+                //If we hit something that stops us, this is our target Node and we leave the loop
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
                     hit.collider.gameObject.tag == "Player" ||
                     hit.collider.gameObject.tag == "Enemy")
                 {
-                    Debug.Log("Tile Detected");
                     break;
                 }
 
+                //If we hit another nav data this is our current recoil node
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
                 {
                     if (hit.transform.tag == "Node")
@@ -277,13 +253,14 @@ public class PlayerUnit : Unit
                 }
             }
 
+            //If we hit no node, nor a stopping target, this has to be an edge. So we die!
             if (hits.Length == 0)
             {
-                Debug.Log("Dead");
                 return null;
             }
         }
 
+        //Highlight the recoil node and return it
         recoilNode.HighlightField(Color.red);
         return recoilNode;
     }
@@ -295,58 +272,19 @@ public class PlayerUnit : Unit
         SwitchActionState(ActionState.None);
     }
 
-    public override void SwitchActionState(ActionState a)
-    {
-        switch (a)
-        {
-            case ActionState.None:
-                if (currentActionPoints > 0)
-                {
-                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);                    
-                }
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
-
-                break;
-
-            case ActionState.MovePreparation:
-                if (currentActionPoints > 0)
-                {
-                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
-                    PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(true);
-                }
-                break;
-
-            case ActionState.PreparingRangeAttack:
-                Dijkstra.Instance.Clear();
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
-                break;
-
-            case ActionState.Moving:
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
-                break;
-        }
-
-        actionState = a;
-    }
-
-
 
     public override void OnSelect()
     {
         base.OnSelect();
 
-        if (unitState != UnitState.Selected && isPlayerTurn)
+        if (isPlayerTurn)
         {
             PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
             PlayerUnitsController.Instance.SelectUnit(this);
             StageUIController.Instance.SetPlayerActionContainer(true);
-            unitState = UnitState.Selected;
+            SwitchUnitState(UnitState.Selected);
 
             StageUIController.Instance.CreatePlayerActionMenu(actions);
-            // StageUIController.Instance.playerMoveButton.interactable = !moveActionAvailable;
-
-            if (currentActionPoints > 0)
-                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
         }
     }
 
@@ -389,11 +327,20 @@ public class PlayerUnit : Unit
         }
     }
 
+    /*
+     * 
+     * UNIT STATES
+     * 
+     */
 
     public override void SwitchUnitState(UnitState state)
     {
         switch (state)
         {
+            case UnitState.Selected:
+                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+                break;
+
             case UnitState.Dead:
                 PlayerUnitsController.Instance.units.Remove(this);
                 Destroy(this.gameObject);
@@ -403,7 +350,46 @@ public class PlayerUnit : Unit
         unitState = state;
     }
 
+    public override void SwitchActionState(ActionState a)
+    {
+        switch (a)
+        {
+            case ActionState.None:
+                Dijkstra.Instance.Clear();
+                if (currentActionPoints > 0)
+                {
+                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+                }
+                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
 
+                break;
+
+            case ActionState.MovePreparation:
+                if (currentActionPoints > 0)
+                {
+                    Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+                    PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(true);
+                }
+                break;
+
+            case ActionState.PreparingRangeAttack:
+                Dijkstra.Instance.Clear();
+                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                break;
+
+            case ActionState.Moving:
+                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                break;
+        }
+
+        actionState = a;
+    }
+
+    /*
+     * 
+     * Unit Events
+     * 
+     */
     protected override void OnPlayerTurn()
     {
         base.OnPlayerTurn();

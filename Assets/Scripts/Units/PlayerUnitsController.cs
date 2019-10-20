@@ -87,13 +87,13 @@ public class PlayerUnitsController : MonoBehaviour
                     if (hitNode != null && selectedPlayerUnit != null)
                     {
                         selectedPlayerUnit.PrecalculatePathTo(hitNode);
-                        selectedPlayerUnit.Shoot(hitNode);                       
-                    }                    
+                        selectedPlayerUnit.Shoot(hitNode);
+                    }
                 }
                 break;
             }
         }
-        
+
         void SetMovement(Ray navigateRay)
         {
             if (Input.GetMouseButtonDown(0))
@@ -114,14 +114,19 @@ public class PlayerUnitsController : MonoBehaviour
 
     public void UnselectSelectedPlayerUnits()
     {
+        if (selectedPlayerUnit != null)
+        {
+            selectedPlayerUnit.SwitchActionState(Unit.ActionState.None);
+        }
+
+        lineRenderer.gameObject.SetActive(false);
         StageUIController.Instance.SetPlayerActionContainer(false);
+        StageUIController.Instance.ClearPlayerActionsPanel();
 
-        StageUIController.Instance.ClearPlayerActions();
-
-        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == PlayerUnit.UnitState.Selected).ToArray();
+        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
         foreach (PlayerUnit unit in selectedUnits)
         {
-            unit.unitState = PlayerUnit.UnitState.Idle;
+            unit.unitState = Unit.UnitState.Idle;
         }
 
         selectedPlayerUnit = null;
@@ -130,7 +135,7 @@ public class PlayerUnitsController : MonoBehaviour
 
     public PlayerUnit GetSelectedUnit()
     {
-        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == PlayerUnit.UnitState.Selected).ToArray();
+        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
         return selectedUnits[0];
     }
 

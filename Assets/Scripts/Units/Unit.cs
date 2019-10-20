@@ -5,30 +5,36 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class Unit : MonoBehaviour, ISelectable
 {
-    public enum UnitState { Idle, Selected, Dead };
-    public UnitState unitState = UnitState.Idle;
+    //Unit and Action States
+    [HideInInspector] public enum UnitState { Idle, Selected, Dead };
+    [HideInInspector] public UnitState unitState = UnitState.Idle;
+
+    [HideInInspector] public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving }
+    [HideInInspector] public ActionState actionState;
+
+    //Reference to Health Controller
+    [HideInInspector] public Health healthController;
+
+    //Nodes for Pathfinding
+    [HideInInspector] public Node currentNode = null;
+    [HideInInspector] public List<Node> currentPath = null;
 
 
-
-    public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving }
-    public ActionState actionState;
-
+    [Header("Gun Transforms")]
     public Transform gunbarrel;
     public Transform raycastTarget;
 
+    [Header("Actions")]
+    [Tooltip("Actions that don't come with any weapon or gear, like moving")]
     public List<Action> actions = new List<Action>();
-
-    [HideInInspector] public Health healthController;
-
+   
+    [Header("Character Specifics")]
     public int maxActionPoints = 2;
     protected int currentActionPoints = 2;
     public int maxSteps = 1;
     public Weapon equippedRangeWeapon;
 
-
-    [HideInInspector] public Node currentNode = null;
-    [HideInInspector] public List<Node> currentPath = null;
-
+    //Variables for linear movement over time    
     protected float t;
     protected Vector3 startPosition;
     protected Vector3 target;
@@ -37,6 +43,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     void OnEnable()
     {
+        //Subscribe to events
         StageManager.OnPlayerTurn += OnPlayerTurn;
         StageManager.OnEnemyTurn += OnEnemyTurn;
     }
@@ -44,12 +51,12 @@ public class Unit : MonoBehaviour, ISelectable
 
     void OnDisable()
     {
+        //Unsubscribe events
         StageManager.OnPlayerTurn -= OnPlayerTurn;
         StageManager.OnEnemyTurn -= OnEnemyTurn;
     }
-
-
-    // Start is called before the first frame update
+    
+    
     protected virtual void Start()
     {
         healthController = GetComponent<Health>();
@@ -58,7 +65,7 @@ public class Unit : MonoBehaviour, ISelectable
 
         if (currentNode == null)
         {
-            currentNode = FindClosestNode();
+            currentNode = Calculations.FindClosestNodeToTransform(transform);
             currentNode.unitOnTile = this;
         }
 
@@ -77,27 +84,7 @@ public class Unit : MonoBehaviour, ISelectable
         }
     }
 
-    Node FindClosestNode()
-    {
-        Node[] nodes = FindObjectsOfType<Node>();
-
-        Node closestNode = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (Node n in nodes)
-        {
-            Vector3 diff = n.transform.position - position;
-            float currDistance = diff.sqrMagnitude;
-            if (currDistance < distance)
-            {
-                closestNode = n;
-                distance = currDistance;
-            }
-        }
-        return closestNode;
-    }
-
-    // Update is called once per frame
+    
     protected virtual void Update()
     {
         t += Time.deltaTime / timeToReachTarget;
@@ -106,7 +93,6 @@ public class Unit : MonoBehaviour, ISelectable
 
     public void SetMoveDestination(Vector3 destination, float time)
     {
-        Debug.Log("SetDestination");
         t = 0;
         startPosition = transform.position;
         timeToReachTarget = time;
