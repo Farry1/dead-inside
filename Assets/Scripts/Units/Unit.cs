@@ -6,11 +6,11 @@ using UnityEngine;
 public class Unit : MonoBehaviour, ISelectable
 {
     //Unit and Action States
-    [HideInInspector] public enum UnitState { Idle, Selected, Dead };
-    [HideInInspector] public UnitState unitState = UnitState.Idle;
+    public enum UnitState { Idle, Selected, Dead };
+    public UnitState unitState = UnitState.Idle;
 
-    [HideInInspector] public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving }
-    [HideInInspector] public ActionState actionState;
+    public enum ActionState { MovePreparation, PreparingRangeAttack, None, Moving, Recoil }
+    public ActionState actionState;
 
     //Reference to Health Controller
     [HideInInspector] public Health healthController;
@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour, ISelectable
     [Header("Actions")]
     [Tooltip("Actions that don't come with any weapon or gear, like moving")]
     public List<Action> actions = new List<Action>();
-   
+
     [Header("Character Specifics")]
     public int maxActionPoints = 2;
     protected int currentActionPoints = 2;
@@ -55,8 +55,8 @@ public class Unit : MonoBehaviour, ISelectable
         StageManager.OnPlayerTurn -= OnPlayerTurn;
         StageManager.OnEnemyTurn -= OnEnemyTurn;
     }
-    
-    
+
+
     protected virtual void Start()
     {
         healthController = GetComponent<Health>();
@@ -84,7 +84,7 @@ public class Unit : MonoBehaviour, ISelectable
         }
     }
 
-    
+
     protected virtual void Update()
     {
         t += Time.deltaTime / timeToReachTarget;

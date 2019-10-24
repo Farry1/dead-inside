@@ -161,7 +161,6 @@ public class Dijkstra : MonoBehaviour
 
     public void GetNodesInRange(Node source, int range)
     {
-        Debug.Log("Dijkstra!");
         source = PlayerUnitsController.Instance.selectedPlayerUnit.currentNode;
 
         Dictionary<Node, float> distance = new Dictionary<Node, float>();

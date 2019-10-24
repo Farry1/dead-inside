@@ -4,14 +4,18 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PlayerAnimation))]
 public class PlayerUnit : Unit
 {
     [HideInInspector] public GameObject relatedUIPanel;
     bool isPlayerTurn;
 
+    PlayerAnimation playerAnimation;
+
     protected override void Start()
     {
         base.Start();
+        playerAnimation = GetComponent<PlayerAnimation>();
     }
 
     protected override void Update()
@@ -108,12 +112,23 @@ public class PlayerUnit : Unit
     //Move To the next Tile
     IEnumerator MoveNextTile()
     {
+        //Set the Rotation
+        //Todo: transfer rotation and movement to animator script
+        //
+        Vector3 direction = currentPath[1].transform.position - currentPath[0].transform.position;
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentPath[1].transform.up);
+
+        Debug.Log(direction);
+        Debug.DrawRay(currentNode.transform.position, direction, Color.red, 2f);
+
         //Remove the old first node and move us to that position
         currentPath.RemoveAt(0);
 
         //Set Destination and move over time, also set Rotation to the rotation of target Node
         SetMoveDestination(currentPath[0].transform.position, 0.45f);
+
         transform.rotation = currentPath[0].transform.rotation;
+        transform.rotation = Quaternion.LookRotation(planarDirection, currentPath[0].transform.up);
 
         //Reset Nodes
         currentNode.unitOnTile = null;
@@ -126,9 +141,12 @@ public class PlayerUnit : Unit
             //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
             currentPath = null;
             SwitchActionState(ActionState.None);
+
             StageUIController.Instance.playerMoveButton.interactable = true;
             if (unitState == UnitState.Selected && currentActionPoints > 0)
                 Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
+
+
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -182,6 +200,7 @@ public class PlayerUnit : Unit
                     //Shoot!                    
                     equippedRangeWeapon.Fire(currentNode, v);
 
+
                     if (unitOntargetTile != null &&
                         Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                     {
@@ -189,12 +208,14 @@ public class PlayerUnit : Unit
                     }
 
                     currentActionPoints--;
+                    
 
                     //If we have a recoil target, move to that position
                     if (recoilTarget != null)
                     {
                         currentNode = recoilTarget;
                         StartCoroutine(MoveWithRecoil(recoilTarget));
+                        
                     }
                     //If not you fly over the edge and die in space
                     else
@@ -267,6 +288,7 @@ public class PlayerUnit : Unit
 
     IEnumerator MoveWithRecoil(Node recoilNode)
     {
+        SwitchActionState(ActionState.Recoil);
         SetMoveDestination(recoilNode.transform.position, 0.5f);
         yield return new WaitForSeconds(0.5f);
         SwitchActionState(ActionState.None);
@@ -355,6 +377,7 @@ public class PlayerUnit : Unit
         switch (a)
         {
             case ActionState.None:
+                StartCoroutine(playerAnimation.TransitionToIdle());
                 Dijkstra.Instance.Clear();
                 if (currentActionPoints > 0)
                 {
@@ -378,7 +401,12 @@ public class PlayerUnit : Unit
                 break;
 
             case ActionState.Moving:
+                playerAnimation.PlayMoveAnimation();
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                break;
+            case ActionState.Recoil:
+                actionState = ActionState.Recoil;
+                playerAnimation.PlayShootAnimation();
                 break;
         }
 
