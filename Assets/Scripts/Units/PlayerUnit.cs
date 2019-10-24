@@ -4,18 +4,17 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(PlayerAnimation))]
 public class PlayerUnit : Unit
 {
     [HideInInspector] public GameObject relatedUIPanel;
     bool isPlayerTurn;
 
-    PlayerAnimation playerAnimation;
+    
 
     protected override void Start()
     {
         base.Start();
-        playerAnimation = GetComponent<PlayerAnimation>();
+        
     }
 
     protected override void Update()
@@ -201,6 +200,13 @@ public class PlayerUnit : Unit
                     equippedRangeWeapon.Fire(currentNode, v);
 
 
+                    //rotate player towards shooting direction
+                    //Todo: make a separate function for this that return a Quaternion. This will be used more often and is already at MoveToNextTile()
+                    Vector3 direction = v.transform.position - currentNode.transform.position;
+                    Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
+                    transform.rotation = Quaternion.LookRotation(planarDirection, currentNode.transform.up);
+
+
                     if (unitOntargetTile != null &&
                         Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                     {
@@ -379,7 +385,7 @@ public class PlayerUnit : Unit
         switch (a)
         {
             case ActionState.None:
-                StartCoroutine(playerAnimation.TransitionToIdle());
+                StartCoroutine(unitAnimation.TransitionToIdle());
                 Dijkstra.Instance.Clear();
                 if (currentActionPoints > 0)
                 {
@@ -403,12 +409,12 @@ public class PlayerUnit : Unit
                 break;
 
             case ActionState.Moving:
-                playerAnimation.PlayMoveAnimation();
+                unitAnimation.PlayMoveAnimation();
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
                 break;
             case ActionState.Recoil:
                 actionState = ActionState.Recoil;
-                playerAnimation.PlayShootAnimation();
+                unitAnimation.PlayShootAnimation();
                 break;
         }
 

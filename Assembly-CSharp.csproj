@@ -82,10 +82,10 @@
     <Compile Include="Assets\Scripts\Units\EnemyUnit.cs" />
     <Compile Include="Assets\Scripts\Units\EnemyUnitsController.cs" />
     <Compile Include="Assets\Scripts\Units\Health.cs" />
-    <Compile Include="Assets\Scripts\Units\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Units\PlayerUnit.cs" />
     <Compile Include="Assets\Scripts\Units\PlayerUnitsController.cs" />
     <Compile Include="Assets\Scripts\Units\Unit.cs" />
+    <Compile Include="Assets\Scripts\Units\UnitAnimation.cs" />
     <Compile Include="Assets\Scripts\Units\UnitFacing.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

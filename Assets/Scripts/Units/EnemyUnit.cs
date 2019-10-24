@@ -69,6 +69,7 @@ public class EnemyUnit : Unit
 
     void Shoot(Unit targetUnit)
     {
+        unitAnimation.PlayShootAnimation();
         equippedRangeWeapon.Fire(currentNode, targetUnit.currentNode);
         targetUnit.healthController.Damage(equippedRangeWeapon.damage);
     }
@@ -97,20 +98,31 @@ public class EnemyUnit : Unit
 
     IEnumerator Move()
     {
+        unitAnimation.PlayMoveAnimation();   
         while (currentPath != null && currentPath.Count() > 1)
         {
             yield return StartCoroutine(MoveToNextTile());
         }
+        unitAnimation.PlayIdleAnimation();
     }
 
     IEnumerator MoveToNextTile()
     {
+        Vector3 direction = currentPath[1].transform.position - currentPath[0].transform.position;
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentPath[1].transform.up);
+
+
         Debug.Log("Move To Next Tile");
         currentPath.RemoveAt(0);
 
-        SetMoveDestination(currentPath[0].transform.position, 0.45f);
         
+
         transform.rotation = currentPath[0].transform.rotation;
+        transform.rotation = Quaternion.LookRotation(planarDirection, currentPath[0].transform.up);
+
+        SetMoveDestination(currentPath[0].transform.position, 0.45f);
+
+        
 
         currentNode.unitOnTile = null;
         currentNode = currentPath[0];

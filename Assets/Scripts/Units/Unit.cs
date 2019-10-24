@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(UnitAnimation))]
 public class Unit : MonoBehaviour, ISelectable
 {
     //Unit and Action States
@@ -40,6 +41,7 @@ public class Unit : MonoBehaviour, ISelectable
     protected Vector3 target;
     protected float timeToReachTarget;
 
+    protected UnitAnimation unitAnimation;
 
     void OnEnable()
     {
@@ -59,6 +61,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     protected virtual void Start()
     {
+        unitAnimation = GetComponent<UnitAnimation>();
         healthController = GetComponent<Health>();
         currentActionPoints = maxActionPoints;
         startPosition = target = transform.position;
