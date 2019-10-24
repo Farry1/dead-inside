@@ -30,7 +30,8 @@ public class PlayerAnimation : MonoBehaviour
 
     public void PlayShootAnimation()
     {
-        animator.SetBool("Shoot", true);
+        Debug.Log("Shoot animation!");
+        animator.SetTrigger("shoot");
     }
 
     public IEnumerator TransitionToIdle()

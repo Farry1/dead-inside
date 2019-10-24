@@ -230,6 +230,8 @@ public class PlayerUnit : Unit
     //Die!
     IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
+        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
+        SwitchActionState(ActionState.Recoil);
         PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
         SetMoveDestination(direction * 5f, 2f);
         yield return new WaitForSeconds(2f);
