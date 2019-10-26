@@ -70,7 +70,6 @@ public class EnemyUnit : Unit
     void Shoot(Unit targetUnit)
     {
         unitAnimation.PlayShootAnimation();
-        equippedRangeWeapon.Fire(currentNode, targetUnit.currentNode);
         targetUnit.healthController.Damage(equippedRangeWeapon.damage);
     }
 

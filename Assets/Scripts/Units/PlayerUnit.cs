@@ -9,12 +9,12 @@ public class PlayerUnit : Unit
     [HideInInspector] public GameObject relatedUIPanel;
     bool isPlayerTurn;
 
-    
+
 
     protected override void Start()
     {
         base.Start();
-        
+
     }
 
     protected override void Update()
@@ -195,9 +195,7 @@ public class PlayerUnit : Unit
                 //If we have a weapon and action points left
                 if (equippedRangeWeapon != null && currentActionPoints > 0)
                 {
-                    //Shoot!                    
-                    equippedRangeWeapon.Fire(currentNode, v);
-
+                    //Shoot!    
 
                     //rotate player towards shooting direction
                     //Todo: make a separate function for this that return a Quaternion. This will be used more often and is already at MoveToNextTile()
@@ -212,15 +210,16 @@ public class PlayerUnit : Unit
                         unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
                     }
 
+                    GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
                     currentActionPoints--;
-                    
+
 
                     //If we have a recoil target, move to that position
                     if (recoilTarget != null)
                     {
                         currentNode = recoilTarget;
                         StartCoroutine(MoveWithRecoil(recoilTarget));
-                        
+
                     }
                     //If not you fly over the edge and die in space
                     else

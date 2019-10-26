@@ -16,7 +16,7 @@ MonoBehaviour:
   maxAmmo: 3
   currentAmmo: 0
   recoil: 2
-  projectile: {fileID: 5202598076933370690, guid: 294b1248571888649a3314c7176c9dff,
+  projectile: {fileID: 2236988208382687189, guid: bc389afe63bd545498c31940160c7f4f,
     type: 3}
   attachedActions:
   - {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0, type: 2}
