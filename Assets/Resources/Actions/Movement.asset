@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Movement
   m_EditorClassIdentifier: 
   actionName: Move
-  observerKey: Move
-  actionPointsNeeded: 1
-  actionIsRunning: 0
+  actionUISprite: {fileID: 21300000, guid: 0d61e513f1c2e5e4189be69d82cdb3cc, type: 3}
+  cooldown: 1
+  AttackRange: 1

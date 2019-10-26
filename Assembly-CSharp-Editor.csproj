@@ -129,6 +129,9 @@
     <Reference Include="UnityEditor.UI">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files/Unity/2019.2.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>

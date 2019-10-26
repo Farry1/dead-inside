@@ -34,6 +34,7 @@ public class Unit : MonoBehaviour, ISelectable
     protected int currentActionPoints = 2;
     public int maxSteps = 1;
     public Weapon equippedRangeWeapon;
+    public Sprite characterPortrait;
 
     //Variables for linear movement over time    
     protected float t;

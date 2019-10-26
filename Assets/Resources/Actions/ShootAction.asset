@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ShootAction
   m_EditorClassIdentifier: 
   actionName: Shoot
-  observerKey: Shoot
-  actionPointsNeeded: 1
-  actionIsRunning: 0
+  actionUISprite: {fileID: 21300000, guid: 04b4bdddbe37e3c4f8ce12fc4613a25e, type: 3}
+  cooldown: 1
+  AttackRange: 1

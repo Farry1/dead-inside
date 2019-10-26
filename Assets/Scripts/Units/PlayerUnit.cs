@@ -141,7 +141,6 @@ public class PlayerUnit : Unit
             currentPath = null;
             SwitchActionState(ActionState.None);
 
-            StageUIController.Instance.playerMoveButton.interactable = true;
             if (unitState == UnitState.Selected && currentActionPoints > 0)
                 Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
 
