@@ -109,11 +109,9 @@ public class StageUIController : MonoBehaviour
             if (unitPanelPrefab != null && playerInfoContainer != null)
             {
                 GameObject unitPanel = Instantiate(unitPanelPrefab, playerInfoContainer.transform) as GameObject;
-
                 unitPanel.gameObject.name = "UnitPanel";
                 unit.relatedUIPanel = unitPanel;
                 unitPanel.transform.Find("ProfileImage").GetComponentInChildren<Image>().sprite = unit.characterPortrait;
-
             }
         }
     }
