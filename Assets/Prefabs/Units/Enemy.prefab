@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1849323693039312150}
   - component: {fileID: 1950127963894630606}
   - component: {fileID: 4737934199331527585}
+  - component: {fileID: 4740400209132859605}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -58,10 +59,13 @@ MonoBehaviour:
   currentPath: []
   gunbarrel: {fileID: 5024676868331948298}
   raycastTarget: {fileID: 3762374742743722546}
-  actions: []
+  actions:
+  - {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb, type: 2}
   maxActionPoints: 2
   maxSteps: 3
-  equippedRangeWeapon: {fileID: 0}
+  equippedRangeWeapon: {fileID: 11400000, guid: a70353fd03a5be84284bc313e035249c,
+    type: 2}
+  characterPortrait: {fileID: 0}
 --- !u!114 &1036418276397528881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +118,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7291092a001d1e347bf326c8bc1817e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4740400209132859605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334851116237302146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b305de9e1ebc4049905c3302ac9cddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7430542962702098194

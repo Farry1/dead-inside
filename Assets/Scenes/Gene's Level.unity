@@ -20359,7 +20359,7 @@ PrefabInstance:
         type: 3}
       propertyPath: equippedRangeWeapon
       value: 
-      objectReference: {fileID: 11400000, guid: 3c361b8ba935d9a4986fd41f20805920,
+      objectReference: {fileID: 11400000, guid: a70353fd03a5be84284bc313e035249c,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed1191218ada9c4eb5281cfeb219c5e, type: 3}
@@ -20859,11 +20859,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1680508479}
-    - target: {fileID: 4212147124985486194, guid: d7bcb99922b324d46939ed5176457291,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4212147124985486195, guid: d7bcb99922b324d46939ed5176457291,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -20904,6 +20899,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212147124985486194, guid: d7bcb99922b324d46939ed5176457291,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7bcb99922b324d46939ed5176457291, type: 3}
@@ -20974,11 +20974,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4334851116237302144, guid: 7ed1191218ada9c4eb5281cfeb219c5e,
-        type: 3}
-      propertyPath: equippedRangeWeapon
-      value: 
-      objectReference: {fileID: 11400000, guid: acc8712da462a094e9c33167a4f8e0f8,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed1191218ada9c4eb5281cfeb219c5e, type: 3}

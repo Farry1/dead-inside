@@ -8,8 +8,7 @@ public class PlayerUnitsController : MonoBehaviour
 {
     [HideInInspector] public List<PlayerUnit> units = new List<PlayerUnit>();
     [HideInInspector] public PlayerUnit selectedPlayerUnit = null;
-
-    public LineRenderer lineRenderer;
+    [HideInInspector] public LineRenderer lineRenderer;
 
     private static PlayerUnitsController _instance;
     public static PlayerUnitsController Instance { get { return _instance; } }
@@ -95,7 +94,7 @@ public class PlayerUnitsController : MonoBehaviour
                         if (hitNode != null && selectedPlayerUnit != null)
                         {
                             selectedPlayerUnit.PrecalculatePathTo(hitNode);
-                            selectedPlayerUnit.Shoot(hitNode);
+                            selectedPlayerUnit.RangeAttack(hitNode);
                         }
                     }
                     break;

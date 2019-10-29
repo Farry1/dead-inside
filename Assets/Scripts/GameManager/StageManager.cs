@@ -62,7 +62,7 @@ public class StageManager : MonoBehaviour
     }
 
     public void EndEnemyTurn()
-    {
+    {     
         stageState = StageState.PlayerTurn;
         OnPlayerTurn();
     }

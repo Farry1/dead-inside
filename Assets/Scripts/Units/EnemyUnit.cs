@@ -6,7 +6,8 @@ using System.Linq;
 
 public class EnemyUnit : Unit
 {
-    public enum EnemyActionState { Patrolling, Attacking }
+
+    public enum EnemyActionState { Patrolling, Attacking };
 
     EnemyAI enemyAI;
 
@@ -34,127 +35,81 @@ public class EnemyUnit : Unit
         Debug.Log(transform.name + " is doing a move!");
 
         //If we have Action Points Left
-        while (currentActionPoints > 0)
+        while (currentActionPoints > 0 && enemyAI.AreActionsAvailable())
         {
             //If a Player Unit is in Shoot Range, Shoot!
-            PlayerUnit targetUnit = (PlayerUnit)GetPlayerUnitInShootRange();
-
-            if (targetUnit != null)
+            if (enemyAI.IsActionAvailable("Shoot"))
             {
-                Shoot(targetUnit);
-                yield return new WaitForSeconds(1f);
-            }
+                PlayerUnit targetUnit = (PlayerUnit)enemyAI.GetPlayerUnitInShootRange();
 
-            //If not, find closest Player Unit
-            else
-            {
-                Unit closestPlayerUnit = FindClosestPlayerUnit();
+                if (targetUnit != null)
+                {
+                    //if Range Attack returns true, the recoil Target is a valid field, else the unit will probably die.
+                    if (RangeAttack(targetUnit))
+                        yield return new WaitForSeconds(1f);
+                    else
+                    {
+                        yield return new WaitForSeconds(1f);
+                        yield break;
+                    }
 
-                //If we find a Player Unit, Set it as target and move towards it as close as possible
-                if (closestPlayerUnit != null)
-                {                    
-                    currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, closestPlayerUnit.currentNode, maxSteps);
-                    yield return StartCoroutine(Move());
                 }
-            }
+                //If not, find closest Player Unit
+                else
+                {
+                    Unit closestPlayerUnit = enemyAI.FindClosestPlayerUnit();
 
-            //Decrement Action Points
-            currentActionPoints--;
+                    //If we find a Player Unit, Set it as target and move towards it as close as possible
+                    if (closestPlayerUnit != null)
+                    {
+                        currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, closestPlayerUnit.currentNode, maxSteps);
+                       
+                        yield return StartCoroutine(unitMovement.MoveCoroutine());
+                    }
+                }
+
+                //Decrement Action Points
+                currentActionPoints--;
+            }
         }
 
-        yield return new WaitForSeconds(1.5f);
-
-        Debug.Log(transform.name + " ends move");
+        Debug.Log(transform.name + " is done with move");
     }
 
-    void Shoot(Unit targetUnit)
+    bool RangeAttack(Unit targetUnit)
     {
         unitAnimation.PlayShootAnimation();
         targetUnit.healthController.Damage(equippedRangeWeapon.damage);
-    }
+        transform.rotation = unitMovement.PlanarRotation(targetUnit.transform.position - currentNode.transform.position);
+        GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
 
-    PlayerUnit FindClosestPlayerUnit()
-    {
-        int pathLength = 255;
-        List<Node> path = new List<Node>();
-        PlayerUnit closestUnit = null;
+        //Calculate Recoid Direction and get the node, where the unit would land after a shot
+        Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
 
-        Dijkstra.Instance.Clear();
+        Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
 
-        foreach (PlayerUnit playerUnit in PlayerUnitsController.Instance.units)
+        if (recoilTarget != null)
         {
-            if (Dijkstra.Instance.GeneratePathTo(currentNode, playerUnit.currentNode, 255).Count < pathLength)
-            {
-                path = Dijkstra.Instance.GeneratePathTo(currentNode, playerUnit.currentNode, 255);
-                pathLength = path.Count;
-                closestUnit = playerUnit;
-            }
+            unitMovement.SetMoveDestination(recoilTarget.transform.position, 0.45f);
+            currentNode.unitOnTile = null;
+            currentNode = recoilTarget;
+            currentNode.unitOnTile = this;
+            return true;
         }
-
-        return closestUnit;
-    }
-
-
-    IEnumerator Move()
-    {
-        unitAnimation.PlayMoveAnimation();   
-        while (currentPath != null && currentPath.Count() > 1)
+        else
         {
-            yield return StartCoroutine(MoveToNextTile());
+            StartCoroutine(DieLonesomeInSpace(recoilDirection));
+            return false;
         }
-        unitAnimation.PlayIdleAnimation();
     }
 
-    IEnumerator MoveToNextTile()
+    IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
-        Vector3 direction = currentPath[1].transform.position - currentPath[0].transform.position;
-        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentPath[1].transform.up);
-
-
-        Debug.Log("Move To Next Tile");
-        currentPath.RemoveAt(0);
-
-        
-
-        transform.rotation = currentPath[0].transform.rotation;
-        transform.rotation = Quaternion.LookRotation(planarDirection, currentPath[0].transform.up);
-
-        SetMoveDestination(currentPath[0].transform.position, 0.45f);
-
-        
-
-        currentNode.unitOnTile = null;
-        currentNode = currentPath[0];
-        currentNode.unitOnTile = this;
-
-        if (currentPath.Count == 1)
-        {            
-            currentPath = null;
-        }
-
-        yield return new WaitForSeconds(0.5f);
-    }
-
-    Unit GetPlayerUnitInShootRange()
-    {
-        foreach (Unit playerUnit in PlayerUnitsController.Instance.units)
-        {
-            Vector3 direction = playerUnit.raycastTarget.position - gunbarrel.position;
-            RaycastHit shootHit;
-            Ray shootRay = new Ray(gunbarrel.position, direction);
-
-            Debug.DrawRay(shootRay.origin, shootRay.direction * 10, Color.red, 2f);
-
-            if (Physics.SphereCast(shootRay, 0.1f, out shootHit))
-            {
-                if (shootHit.collider.tag == "Player")
-                {
-                    Debug.Log("Player Hit!");
-                    return shootHit.collider.GetComponent<Unit>();
-                }
-            }
-        }
-        return null;
+        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
+        SwitchActionState(ActionState.Recoil);
+        unitMovement.SetMoveDestination(direction * 5f, 2f);
+        yield return new WaitForSeconds(2f);
+        SwitchUnitState(UnitState.Dead);
     }
 
 
@@ -174,5 +129,22 @@ public class EnemyUnit : Unit
         }
 
         unitState = state;
+    }
+
+    public override void SwitchActionState(ActionState a)
+    {
+        switch (a)
+        {
+            case ActionState.None:
+                unitAnimation.PlayIdleAnimation();
+                break;
+
+            case ActionState.Moving:
+                unitAnimation.PlayMoveAnimation();
+                break;
+        }
+
+
+
     }
 }

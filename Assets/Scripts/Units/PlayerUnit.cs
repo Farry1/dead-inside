@@ -9,8 +9,6 @@ public class PlayerUnit : Unit
     [HideInInspector] public GameObject relatedUIPanel;
     bool isPlayerTurn;
 
-
-
     protected override void Start()
     {
         base.Start();
@@ -92,62 +90,9 @@ public class PlayerUnit : Unit
             currentActionPoints > 0)
         {
             SwitchActionState(ActionState.Moving);
-            StartCoroutine(MoveCoroutine());
+            StartCoroutine(unitMovement.MoveCoroutine());
             currentActionPoints--;
         }
-    }
-
-    //Initiate The Actual Movement
-    IEnumerator MoveCoroutine()
-    {
-        //As long as we have avalid path that has more than one entry left, Move to that Position
-        while (currentPath != null && currentPath.Count() > 1)
-        {
-            //Wait until movement to next tile is done
-            yield return StartCoroutine(MoveNextTile());
-        }
-    }
-
-    //Move To the next Tile
-    IEnumerator MoveNextTile()
-    {
-        //Set the Rotation
-        //Todo: transfer rotation and movement to animator script
-        //
-        Vector3 direction = currentPath[1].transform.position - currentPath[0].transform.position;
-        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentPath[1].transform.up);
-
-        Debug.Log(direction);
-        Debug.DrawRay(currentNode.transform.position, direction, Color.red, 2f);
-
-        //Remove the old first node and move us to that position
-        currentPath.RemoveAt(0);
-
-        //Set Destination and move over time, also set Rotation to the rotation of target Node
-        SetMoveDestination(currentPath[0].transform.position, 0.45f);
-
-        transform.rotation = currentPath[0].transform.rotation;
-        transform.rotation = Quaternion.LookRotation(planarDirection, currentPath[0].transform.up);
-
-        //Reset Nodes
-        currentNode.unitOnTile = null;
-        currentNode = currentPath[0];
-        currentNode.unitOnTile = this;
-
-
-        if (currentPath.Count == 1)
-        {
-            //Next thingy in path would be our ultimate goal and we're standing on it. So make the path null to end this
-            currentPath = null;
-            SwitchActionState(ActionState.None);
-
-            if (unitState == UnitState.Selected && currentActionPoints > 0)
-                Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
-
-
-        }
-
-        yield return new WaitForSeconds(0.5f);
     }
 
     public void PrecalculatePathTo(Node target)
@@ -160,7 +105,7 @@ public class PlayerUnit : Unit
         }
     }
 
-    public void Shoot(Node v)
+    public void RangeAttack(Node v)
     {
         if (actionState == ActionState.PreparingRangeAttack)
         {
@@ -172,7 +117,7 @@ public class PlayerUnit : Unit
 
             //Calculate Recoid Direction and get the node, where the unit would land after a shot
             Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
-            Node recoilTarget = CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
+            Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
 
             //If a valid recoil target is found, hightlight it blue
             if (recoilTarget != null)
@@ -195,13 +140,9 @@ public class PlayerUnit : Unit
                 //If we have a weapon and action points left
                 if (equippedRangeWeapon != null && currentActionPoints > 0)
                 {
-                    //Shoot!    
+                    //Shoot!   
 
-                    //rotate player towards shooting direction
-                    //Todo: make a separate function for this that return a Quaternion. This will be used more often and is already at MoveToNextTile()
-                    Vector3 direction = v.transform.position - currentNode.transform.position;
-                    Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
-                    transform.rotation = Quaternion.LookRotation(planarDirection, currentNode.transform.up);
+                    transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
 
                     if (unitOntargetTile != null &&
@@ -237,65 +178,17 @@ public class PlayerUnit : Unit
         //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
         SwitchActionState(ActionState.Recoil);
         PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
-        SetMoveDestination(direction * 5f, 2f);
+        unitMovement.SetMoveDestination(direction * 5f, 2f);
         yield return new WaitForSeconds(2f);
         SwitchUnitState(UnitState.Dead);
     }
 
-    Node CalculateRecoilTarget(int recoilAmount, Vector3 recoilDirection)
-    {
-        //Set an offset, so the ray doesnt accicentally hits a Tile 
-        Vector3 offset = currentNode.transform.up * 0.05f;
 
-        Node recoilNode = currentNode;
-
-        //Checks node after node in the recoil direction until we reach the recoilAmount defined on the weapon
-        for (int i = 0; i < recoilAmount; i++)
-        {
-            RaycastHit[] hits = Physics.RaycastAll(recoilNode.transform.position + offset, recoilDirection, 1.5f).OrderBy(h => h.distance).ToArray();
-            for (int j = 0; j < hits.Length; j++)
-            {
-                RaycastHit hit = hits[j];
-
-                //If we hit something that stops us, this is our target Node and we leave the loop
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
-                    hit.collider.gameObject.tag == "Player" ||
-                    hit.collider.gameObject.tag == "Enemy")
-                {
-                    break;
-                }
-
-                //If we hit another nav data this is our current recoil node
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
-                {
-                    if (hit.transform.tag == "Node")
-                    {
-                        Node n = hit.collider.GetComponent<Node>();
-                        if (n != null)
-                        {
-                            recoilNode = n;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //If we hit no node, nor a stopping target, this has to be an edge. So we die!
-            if (hits.Length == 0)
-            {
-                return null;
-            }
-        }
-
-        //Highlight the recoil node and return it
-        recoilNode.HighlightField(Color.red);
-        return recoilNode;
-    }
 
     IEnumerator MoveWithRecoil(Node recoilNode)
     {
         SwitchActionState(ActionState.Recoil);
-        SetMoveDestination(recoilNode.transform.position, 0.5f);
+        unitMovement.SetMoveDestination(recoilNode.transform.position, 0.5f);
         yield return new WaitForSeconds(0.5f);
         SwitchActionState(ActionState.None);
     }
@@ -428,10 +321,12 @@ public class PlayerUnit : Unit
     {
         base.OnPlayerTurn();
         isPlayerTurn = true;
+
+
     }
 
     protected override void OnEnemyTurn()
-    {
+    {     
         base.OnEnemyTurn();
         isPlayerTurn = false;
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(UnitAnimation))]
+[RequireComponent(typeof(UnitMovement))]
 public class Unit : MonoBehaviour, ISelectable
 {
     //Unit and Action States
@@ -30,19 +31,21 @@ public class Unit : MonoBehaviour, ISelectable
     public List<Action> actions = new List<Action>();
 
     [Header("Character Specifics")]
+    //Todo: Put this stuff into a Scriptable Object Config Thingy
     public int maxActionPoints = 2;
     protected int currentActionPoints = 2;
     public int maxSteps = 1;
     public Weapon equippedRangeWeapon;
     public Sprite characterPortrait;
 
-    //Variables for linear movement over time    
-    protected float t;
-    protected Vector3 startPosition;
-    protected Vector3 target;
-    protected float timeToReachTarget;
+    ////Variables for linear movement over time    
+    //protected float t;
+    //protected Vector3 startPosition;
+    //protected Vector3 target;
+    //protected float timeToReachTarget;
 
     protected UnitAnimation unitAnimation;
+    protected UnitMovement unitMovement;
 
     void OnEnable()
     {
@@ -63,9 +66,10 @@ public class Unit : MonoBehaviour, ISelectable
     protected virtual void Start()
     {
         unitAnimation = GetComponent<UnitAnimation>();
+        unitMovement = GetComponent<UnitMovement>();
         healthController = GetComponent<Health>();
         currentActionPoints = maxActionPoints;
-        startPosition = target = transform.position;
+        //startPosition = target = transform.position;
 
         if (currentNode == null)
         {
@@ -73,7 +77,7 @@ public class Unit : MonoBehaviour, ISelectable
             currentNode.unitOnTile = this;
         }
 
-        transform.position = currentNode.transform.position;
+        //transform.position = currentNode.transform.position;
         FindAttachedActions();
     }
 
@@ -91,17 +95,17 @@ public class Unit : MonoBehaviour, ISelectable
 
     protected virtual void Update()
     {
-        t += Time.deltaTime / timeToReachTarget;
-        transform.position = Vector3.Lerp(startPosition, target, t);
+        //t += Time.deltaTime / timeToReachTarget;
+        //transform.position = Vector3.Lerp(startPosition, target, t);
     }
 
-    public void SetMoveDestination(Vector3 destination, float time)
-    {
-        t = 0;
-        startPosition = transform.position;
-        timeToReachTarget = time;
-        target = destination;
-    }
+    //public void SetMoveDestination(Vector3 destination, float time)
+    //{
+    //    t = 0;
+    //    startPosition = transform.position;
+    //    timeToReachTarget = time;
+    //    target = destination;
+    //}
 
     public virtual void SwitchUnitState(UnitState state)
     {
