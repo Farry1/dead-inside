@@ -21,7 +21,6 @@ public class StageUIController : MonoBehaviour
     public GameObject LosePanel;
 
     [Header("UI Buttons")]
-    public Button playerMoveButton;
     public Button nextTurnButton;
 
     [Header("Ingame Menu")]
@@ -48,7 +47,6 @@ public class StageUIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerMoveButton.interactable = true;
         stageManager = StageManager.Instance;
     }
 
@@ -108,11 +106,12 @@ public class StageUIController : MonoBehaviour
         Debug.Log("Creating Player Info Panel");
         foreach (PlayerUnit unit in PlayerUnitsController.Instance.units)
         {
-            GameObject unitPanel = GameObject.Instantiate(unitPanelPrefab, playerInfoContainer.transform);
-            if (unitPanel != null)
+            if (unitPanelPrefab != null && playerInfoContainer != null)
             {
+                GameObject unitPanel = Instantiate(unitPanelPrefab, playerInfoContainer.transform) as GameObject;
                 unitPanel.gameObject.name = "UnitPanel";
                 unit.relatedUIPanel = unitPanel;
+                unitPanel.transform.Find("ProfileImage").GetComponentInChildren<Image>().sprite = unit.characterPortrait;
             }
         }
     }
@@ -130,13 +129,16 @@ public class StageUIController : MonoBehaviour
 
     public void ClearPlayerActionsPanel()
     {
-        Button[] buttons = playerActionsContainer.GetComponentsInChildren<Button>();
-        foreach (Button b in buttons)
+        if (playerActionsContainer != null)
         {
-            Destroy(b.gameObject);
-        }
+            Button[] buttons = playerActionsContainer.GetComponentsInChildren<Button>();
+            foreach (Button b in buttons)
+            {
+                Destroy(b.gameObject);
+            }
 
-        playerActionsContainer.SetActive(false);
+            playerActionsContainer.SetActive(false);
+        }
     }
 
     public void CreatePlayerActionMenu(List<Action> availableActions)
@@ -146,6 +148,9 @@ public class StageUIController : MonoBehaviour
         {
             GameObject actionButton = GameObject.Instantiate(actionButtonPrefab, playerActionsContainer.transform);
             actionButton.GetComponentInChildren<Text>().text = action.actionName;
+            actionButton.GetComponentInChildren<Text>().gameObject.SetActive(false);
+
+            actionButton.transform.Find("Image").GetComponentInChildren<Image>().sprite = action.actionUISprite;
             actionButton.GetComponentInChildren<Button>().onClick.AddListener(action.Execute);
         }
     }

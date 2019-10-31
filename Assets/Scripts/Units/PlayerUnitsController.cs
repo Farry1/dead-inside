@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerUnitsController : MonoBehaviour
 {
     [HideInInspector] public List<PlayerUnit> units = new List<PlayerUnit>();
     [HideInInspector] public PlayerUnit selectedPlayerUnit = null;
-
-    public LineRenderer lineRenderer;
+    [HideInInspector] public LineRenderer lineRenderer;
 
     private static PlayerUnitsController _instance;
     public static PlayerUnitsController Instance { get { return _instance; } }
@@ -67,32 +67,41 @@ public class PlayerUnitsController : MonoBehaviour
 
         SetMovement(mousePositionRay);
 
-        for (int i = 0; i < hits.Length; i++)
+        if (!IsPointerOverUIObject())
         {
-            RaycastHit hit = hits[i];
-
-            //If mouse is over a Tile
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+            for (int i = 0; i < hits.Length; i++)
             {
-                //Check which side of the tile was hit
-                Transform objectHit = hit.transform;
-                Ray objectSideRay = new Ray(objectHit.transform.position, hit.normal);
-                //Debug.DrawRay(objectSideRay.origin, objectSideRay.direction * 1.5f, Color.red, 5f);
+                RaycastHit hit = hits[i];
 
-                // Get the node that is in that direction
-                RaycastHit objectSideHit;
-                if (Physics.Raycast(objectSideRay, out objectSideHit, 1f))
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("UI"))
                 {
-                    Node hitNode = objectSideHit.collider.gameObject.GetComponent<Node>();
-                    if (hitNode != null && selectedPlayerUnit != null)
-                    {
-                        selectedPlayerUnit.PrecalculatePathTo(hitNode);
-                        selectedPlayerUnit.Shoot(hitNode);
-                    }
+                    break;
                 }
-                break;
+
+                //If mouse is over a Tile
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+                {
+                    //Check which side of the tile was hit
+                    Transform objectHit = hit.transform;
+                    Ray objectSideRay = new Ray(objectHit.transform.position, hit.normal);
+                    //Debug.DrawRay(objectSideRay.origin, objectSideRay.direction * 1.5f, Color.red, 5f);
+
+                    // Get the node that is in that direction
+                    RaycastHit objectSideHit;
+                    if (Physics.Raycast(objectSideRay, out objectSideHit, 1f))
+                    {
+                        Node hitNode = objectSideHit.collider.gameObject.GetComponent<Node>();
+                        if (hitNode != null && selectedPlayerUnit != null)
+                        {
+                            selectedPlayerUnit.PrecalculatePathTo(hitNode);
+                            selectedPlayerUnit.RangeAttack(hitNode);
+                        }
+                    }
+                    break;
+                }
             }
         }
+        
 
         void SetMovement(Ray navigateRay)
         {
@@ -111,6 +120,15 @@ public class PlayerUnitsController : MonoBehaviour
         }
     }
 
+    //Is Mouse Touching UI?
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
 
     public void UnselectSelectedPlayerUnits()
     {

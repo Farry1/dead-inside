@@ -5,6 +5,7 @@ using UnityEngine;
 public class Action : ScriptableObject
 {
     public string actionName = "Action";
+    public Sprite actionUISprite;
     public float cooldown = 1f;
     public float AttackRange = 1f;
 

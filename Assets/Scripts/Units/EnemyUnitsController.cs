@@ -56,13 +56,20 @@ public class EnemyUnitsController : MonoBehaviour
 
     IEnumerator DoEnemyActions()
     {
-        foreach (EnemyUnit enemyUnit in enemyUnits)
+        
+        //Foreach through all enemies and create a copy of that list, so the Coroutine won't break; 
+        foreach (EnemyUnit enemyUnit in enemyUnits.ToList())
         {
-            Debug.Log("Do Evil Stuff");
-            yield return (enemyUnit.MakeTurn());
-            
+            if (enemyUnit != null)
+            {
+                Debug.Log("Do Evil Stuff");
+                yield return (enemyUnit.MakeTurn());
+                yield return new WaitForSeconds(1f);
+            }
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
+     
+
         StageManager.Instance.EndEnemyTurn();
     }
 
@@ -71,7 +78,7 @@ public class EnemyUnitsController : MonoBehaviour
         if (AllEnemiesDead())
         {
             StageUIController.Instance.WinPanel.SetActive(true);
-        }        
+        }
     }
 
     private bool AllEnemiesDead()
@@ -83,6 +90,4 @@ public class EnemyUnitsController : MonoBehaviour
         else
             return false;
     }
-
-   
 }
