@@ -63,7 +63,7 @@ public class EnemyUnit : Unit
                     if (closestPlayerUnit != null)
                     {
                         currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, closestPlayerUnit.currentNode, maxSteps);
-                       
+
                         yield return StartCoroutine(unitMovement.MoveCoroutine());
                     }
                 }
@@ -124,6 +124,7 @@ public class EnemyUnit : Unit
         {
             case UnitState.Dead:
                 EnemyUnitsController.Instance.enemyUnits.Remove(this);
+                Destroy(projectedUnitUI);
                 Destroy(this.gameObject);
                 break;
         }

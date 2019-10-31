@@ -15,6 +15,7 @@ public class StageUIController : MonoBehaviour
 
     [Header("UI Element")]
     public GameObject playerActionsContainer;
+    public GameObject projectedUnitUIsContainer;
     public GameObject playerInfoContainer;
     public Text stateIndicator;
     public GameObject WinPanel;

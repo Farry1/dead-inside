@@ -264,6 +264,7 @@ public class PlayerUnit : Unit
 
             case UnitState.Dead:
                 PlayerUnitsController.Instance.units.Remove(this);
+                Destroy(projectedUnitUI);
                 Destroy(this.gameObject);
                 break;
         }
@@ -326,7 +327,7 @@ public class PlayerUnit : Unit
     }
 
     protected override void OnEnemyTurn()
-    {     
+    {
         base.OnEnemyTurn();
         isPlayerTurn = false;
     }

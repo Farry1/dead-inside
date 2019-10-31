@@ -71,12 +71,7 @@ public class PlayerUnitsController : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                RaycastHit hit = hits[i];
-
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("UI"))
-                {
-                    break;
-                }
+                RaycastHit hit = hits[i];                
 
                 //If mouse is over a Tile
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))

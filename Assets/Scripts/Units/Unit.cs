@@ -33,7 +33,7 @@ public class Unit : MonoBehaviour, ISelectable
     [Header("Character Specifics")]
     //Todo: Put this stuff into a Scriptable Object Config Thingy
     public int maxActionPoints = 2;
-    protected int currentActionPoints = 2;
+    [HideInInspector] public int currentActionPoints = 2;
     public int maxSteps = 1;
     public Weapon equippedRangeWeapon;
     public Sprite characterPortrait;
@@ -46,6 +46,9 @@ public class Unit : MonoBehaviour, ISelectable
 
     protected UnitAnimation unitAnimation;
     protected UnitMovement unitMovement;
+
+    public GameObject projectedUnitUI;
+
 
     void OnEnable()
     {
