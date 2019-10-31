@@ -143,8 +143,5 @@ public class EnemyUnit : Unit
                 unitAnimation.PlayMoveAnimation();
                 break;
         }
-
-
-
     }
 }
