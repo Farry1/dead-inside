@@ -274,6 +274,7 @@ public class PlayerUnit : Unit
         switch (state)
         {
             case UnitState.Selected:
+                Dijkstra.Instance.Clear();
                 Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
                 break;
 
@@ -304,6 +305,7 @@ public class PlayerUnit : Unit
             case ActionState.MovePreparation:
                 if (currentActionPoints > 0)
                 {
+                    Dijkstra.Instance.Clear();
                     Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
                     PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(true);
                 }

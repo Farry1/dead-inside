@@ -28,9 +28,10 @@ public class Node : MonoBehaviour
 
     }
 
-    public void IndicateNavigation(int stepsRequired, int maxSteps, Node v)
-    {        
+    public void IndicateNavigation(float stepsRequired, int maxSteps, Node v)
+    {
         stepCounterText.text = stepsRequired.ToString();
+
 
         if (stepsRequired <= maxSteps && v.unitOnTile == false)
         {

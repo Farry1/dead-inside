@@ -37,16 +37,11 @@ public class Dijkstra : MonoBehaviour
     }
 
 
-    void ChangeSelectedUnit()
-    {
-
-    }
-
     float CostToEnterNode(Node node, Node targetNode)
     {
         float cost = node.movementCost;
 
-        if (node.canBeEntered && node.unitOnTile == null)
+        if (node.canBeEntered && node.unitOnTile == null && NoUnitOnSlants(node))
         {
             if (Vector3.Distance(node.transform.position, targetNode.transform.position) > 1.1f)
             {
@@ -58,6 +53,61 @@ public class Dijkstra : MonoBehaviour
 
 
         return cost;
+    }
+
+    private bool NoUnitOnSlants(Node v)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3 rayDirection = Vector3.zero;
+            switch (i)
+            {
+                case 0:
+                    rayDirection = (v.transform.forward + v.transform.up).normalized;
+                    break;
+                case 1:
+                    rayDirection = (v.transform.right + v.transform.up).normalized;
+                    break;
+                case 2:
+                    rayDirection = (v.transform.right * -1 + v.transform.up).normalized;
+                    break;
+                case 3:
+                    rayDirection = (v.transform.forward * -1 + v.transform.up).normalized;
+                    break;
+            }
+
+            Ray ray = new Ray(v.transform.localPosition, rayDirection);
+            //Debug.DrawRay(ray.origin, ray.direction * 0.7f, Color.magenta, 2f);
+
+            RaycastHit[] hits = Physics.RaycastAll(ray, 0.8f).OrderBy(h => h.distance).ToArray();
+            for (int j = 0; j < hits.Length; j++)
+            {
+                RaycastHit hit = hits[j];
+
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
+                {
+                    if (hit.transform.tag == "Node")
+                    {
+                        Node n = hit.collider.GetComponent<Node>();
+                        if (n != null)
+                        {
+                            Debug.Log("Node found!");
+                            if (n.unitOnTile != null)
+                            {
+                                Debug.Log("Unit On Slant Tile");
+                                return false;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+
+
+
     }
 
     public List<Node> GeneratePathTo(Node source, Node target, int maxSteps)
@@ -161,8 +211,6 @@ public class Dijkstra : MonoBehaviour
 
     public void GetNodesInRange(Node source, int range)
     {
-        source = PlayerUnitsController.Instance.selectedPlayerUnit.currentNode;
-
         Dictionary<Node, float> distance = new Dictionary<Node, float>();
         Dictionary<Node, Node> previous = new Dictionary<Node, Node>();
 
@@ -199,6 +247,7 @@ public class Dijkstra : MonoBehaviour
 
             unvisitedNodes.Remove(u);
 
+
             foreach (Node v in u.edges)
             {
                 //This calculates the cost with costs value set up in the Node instance. For real distance use Vector3.Distance().
@@ -209,7 +258,7 @@ public class Dijkstra : MonoBehaviour
                     previous[v] = u;
                 }
 
-                v.IndicateNavigation((int)distance[v], range, v);
+                v.IndicateNavigation(distance[v], range, v);
             }
         }
     }
