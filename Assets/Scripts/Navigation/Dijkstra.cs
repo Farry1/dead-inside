@@ -59,6 +59,7 @@ public class Dijkstra : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
+            //Check for 4 directions that are set here
             Vector3 rayDirection = Vector3.zero;
             switch (i)
             {
@@ -89,15 +90,9 @@ public class Dijkstra : MonoBehaviour
                     if (hit.transform.tag == "Node")
                     {
                         Node n = hit.collider.GetComponent<Node>();
-                        if (n != null)
+                        if (n != null && n.unitOnTile != null)
                         {
-                            Debug.Log("Node found!");
-                            if (n.unitOnTile != null)
-                            {
-                                Debug.Log("Unit On Slant Tile");
-                                return false;
-                            }
-
+                            return false;
                         }
                     }
                 }
@@ -262,8 +257,6 @@ public class Dijkstra : MonoBehaviour
             }
         }
     }
-
-
 
     public void Clear()
     {

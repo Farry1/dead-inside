@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0daca28a99fd44e932c61e95c9adb4, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 3
   maxAmmo: 3
   currentAmmo: 0
   recoil: 2
+  range: 3
   projectile: {fileID: 2236988208382687189, guid: bc389afe63bd545498c31940160c7f4f,
     type: 3}
   attachedActions:

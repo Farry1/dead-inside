@@ -24,8 +24,7 @@ public class ProjectedUnitUI : MonoBehaviour
     private void Start()
     {
         health = GetComponent<Health>();
-        unit = GetComponent<Unit>();
-        
+        unit = GetComponent<Unit>();        
 
         projectedUnitUI = Instantiate(UIPrefab, StageUIController.Instance.projectedUnitUIsContainer.transform);
         healthBar = projectedUnitUI.transform.Find("Health").Find("HealthBar").GetComponent<Image>();
