@@ -57,8 +57,9 @@ public class UnitMovement : MonoBehaviour
     //Move To the next Tile
     IEnumerator MoveNextTile()
     {
-        //Set the Rotation        
-        transform.rotation = PlanarRotation(currentPath[1].transform.position - currentPath[0].transform.position);
+        //Set the Rotation Vectors        
+        Vector3 direction = currentPath[1].transform.position - currentPath[0].transform.position;
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentPath[1].transform.up);
 
         //Remove the old first node and move us to that position
         currentPath.RemoveAt(0);
@@ -67,6 +68,10 @@ public class UnitMovement : MonoBehaviour
 
         //Set Destination and move over time, also set Rotation to the rotation of target Node
         SetMoveDestination(currentPath[0].transform.position, 0.45f);
+
+        //Set Rotation
+        transform.rotation = currentPath[0].transform.rotation;
+        transform.rotation = Quaternion.LookRotation(planarDirection, currentPath[0].transform.up);
 
 
         //Reset Nodes
