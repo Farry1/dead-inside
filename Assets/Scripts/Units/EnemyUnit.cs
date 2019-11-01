@@ -124,8 +124,7 @@ public class EnemyUnit : Unit
         {
             case UnitState.Dead:
                 EnemyUnitsController.Instance.enemyUnits.Remove(this);
-                Destroy(projectedUnitUI);
-                Destroy(this.gameObject);
+                Die();
                 break;
         }
 

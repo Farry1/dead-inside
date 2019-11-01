@@ -63,6 +63,8 @@ public class UnitMovement : MonoBehaviour
         //Remove the old first node and move us to that position
         currentPath.RemoveAt(0);
 
+        
+
         //Set Destination and move over time, also set Rotation to the rotation of target Node
         SetMoveDestination(currentPath[0].transform.position, 0.45f);
 

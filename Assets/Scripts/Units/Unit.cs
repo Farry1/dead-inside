@@ -128,7 +128,9 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void Die()
     {
-
+        currentNode.unitOnTile = null;
+        Destroy(projectedUnitUI);
+        Destroy(this.gameObject);        
     }
 
     protected virtual void OnPlayerTurn()
