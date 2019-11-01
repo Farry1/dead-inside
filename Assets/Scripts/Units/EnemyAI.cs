@@ -49,7 +49,7 @@ public class EnemyAI : MonoBehaviour
 
             Debug.DrawRay(shootRay.origin, shootRay.direction * 10, Color.red, 2f);
 
-            if (Physics.SphereCast(shootRay, 0.1f, out shootHit))
+            if (Physics.SphereCast(shootRay, 0.1f, out shootHit, enemyUnit.equippedRangeWeapon.range))
             {
                 if (shootHit.collider.tag == "Player")
                 {

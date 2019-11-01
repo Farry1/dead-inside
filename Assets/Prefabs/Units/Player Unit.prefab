@@ -167,9 +167,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb, type: 2}
   - {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0, type: 2}
   maxActionPoints: 2
+  currentActionPoints: 2
   maxSteps: 3
   equippedRangeWeapon: {fileID: 0}
   characterPortrait: {fileID: 21300000, guid: 44c34683bb400714d8d55b572b1a4578, type: 3}
+  projectedUnitUI: {fileID: 0}
   relatedUIPanel: {fileID: 0}
 --- !u!114 &3855868428183498912
 MonoBehaviour:
@@ -183,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef821ebaad18a01489090615154a0c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 3
+  health: 20
 --- !u!136 &143468066
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -237,7 +239,6 @@ MonoBehaviour:
   UIHolder: {fileID: 6245188351812473889}
   UIPrefab: {fileID: 7784013550354445076, guid: e0e55bc276e5bc346a216c89cb4a7bf2,
     type: 3}
-  connectedRenderer: {fileID: 7609076107284262747}
 --- !u!1 &8204705327116700284
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,12 +433,6 @@ PrefabInstance:
 --- !u!4 &7609076107278589087 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 415048, guid: 2907b919dc761f34399f8dab1aca81ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 7609076107278993879}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &7609076107284262747 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13756044, guid: 2907b919dc761f34399f8dab1aca81ec,
     type: 3}
   m_PrefabInstance: {fileID: 7609076107278993879}
   m_PrefabAsset: {fileID: 0}

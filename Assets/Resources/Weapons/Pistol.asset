@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0daca28a99fd44e932c61e95c9adb4, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  damage: 2
+  damage: 1
   maxAmmo: 3
   currentAmmo: 0
   recoil: 1

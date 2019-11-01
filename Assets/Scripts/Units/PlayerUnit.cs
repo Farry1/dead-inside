@@ -107,68 +107,83 @@ public class PlayerUnit : Unit
 
     public void RangeAttack(Node v)
     {
+        float distance = Vector3.Distance(currentNode.transform.position, v.transform.position);
+
         if (actionState == ActionState.PreparingRangeAttack)
         {
-            //Clear all previous highlighted fields 
-            Dijkstra.Instance.Clear();
-
-            //Highlight Target Node
-            v.HighlightField(Color.yellow);
-
-            //Calculate Recoid Direction and get the node, where the unit would land after a shot
-            Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
-            Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
-
-            //If a valid recoil target is found, hightlight it blue
-            if (recoilTarget != null)
-                recoilTarget.HighlightField(Color.blue);
-
-
-            //Get Unit on target tile
-            Unit unitOntargetTile = v.unitOnTile;
-
-            //If there is a unit check with a raycast if it's hit
-            if (unitOntargetTile != null && Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+            //If in shoot range
+            if(distance < equippedRangeWeapon.range)
             {
-                v.HighlightField(Color.red);
-            }
+                //Clear all previous highlighted fields 
+                Dijkstra.Instance.Clear();
+
+                //Highlight Target Node
+                v.HighlightField(Color.yellow);
+
+                //Calculate Recoid Direction and get the node, where the unit would land after a shot
+                Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
+                Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
+
+                //If a valid recoil target is found, hightlight it blue
+                if (recoilTarget != null)
+                    recoilTarget.HighlightField(Color.blue);
 
 
-            //If the mouse is clicked
-            if (Input.GetMouseButtonUp(0))
-            {
-                //If we have a weapon and action points left
-                if (equippedRangeWeapon != null && currentActionPoints > 0)
+                //Get Unit on target tile
+                Unit unitOntargetTile = v.unitOnTile;
+
+                //If there is a unit check with a raycast if it's hit
+                if (unitOntargetTile != null && Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                 {
-                    //Shoot!   
+                    v.HighlightField(Color.red);
+                }
 
-                    transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
-
-                    if (unitOntargetTile != null &&
-                        Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                //If the mouse is clicked
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //If we have a weapon and action points left
+                    if (equippedRangeWeapon != null && currentActionPoints > 0)
                     {
-                        unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
-                    }
+                        //Shoot!   
 
-                    GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
-                    currentActionPoints--;
+                        transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
 
-                    //If we have a recoil target, move to that position
-                    if (recoilTarget != null)
-                    {
-                        currentNode = recoilTarget;
-                        StartCoroutine(MoveWithRecoil(recoilTarget));
+                        if (unitOntargetTile != null &&
+                            Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                        {
+                            unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
+                        }
 
-                    }
-                    //If not you fly over the edge and die in space
-                    else
-                    {
-                        StartCoroutine(DieLonesomeInSpace(recoilDirection));
+                        GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
+                        currentActionPoints--;
+
+
+                        //If we have a recoil target, move to that position
+                        if (recoilTarget != null)
+                        {
+                            currentNode = recoilTarget;
+                            StartCoroutine(MoveWithRecoil(recoilTarget));
+
+                        }
+                        //If not you fly over the edge and die in space
+                        else
+                        {
+                            StartCoroutine(DieLonesomeInSpace(recoilDirection));
+                        }
                     }
                 }
+            } else // If Not in Shoot Range
+            {
+                //Clear all previous highlighted fields 
+                Dijkstra.Instance.Clear();
+
+                //Highlight Target Node
+                v.HighlightField(Color.black);
             }
+
+            
         }
     }
 
