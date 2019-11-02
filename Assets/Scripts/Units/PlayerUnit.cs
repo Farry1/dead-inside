@@ -123,6 +123,7 @@ public class PlayerUnit : Unit
 
     Node previousTargetedNode = null;
 
+    //Todo: Move shooting to a separate class
     public void RangeAttack(Node v)
     {
         float distance = Vector3.Distance(currentNode.transform.position, v.transform.position);
