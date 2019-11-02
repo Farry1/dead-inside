@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour, ISelectable
     [HideInInspector] public Health healthController;
 
     //Nodes for Pathfinding
-    [HideInInspector] public Node currentNode = null;
+    public Node currentNode = null;
     [HideInInspector] public List<Node> currentPath = null;
 
 
@@ -48,6 +48,11 @@ public class Unit : MonoBehaviour, ISelectable
     protected UnitMovement unitMovement;
 
     public GameObject projectedUnitUI;
+
+
+    public delegate void UnitSelection();
+    public static event UnitSelection OnUnitSelected;
+    public static event UnitSelection OnUnitUnselected;
 
 
     void OnEnable()
@@ -123,7 +128,12 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void OnSelect()
     {
+        OnUnitSelected();
+    }
 
+    public virtual void OnUnselect()
+    {
+        OnUnitUnselected();
     }
 
     public virtual void Die()

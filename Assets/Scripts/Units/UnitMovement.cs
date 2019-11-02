@@ -5,6 +5,10 @@ using System.Linq;
 
 public class UnitMovement : MonoBehaviour
 {
+    public GameObject zeroGravityWarningPrefab;
+    private GameObject zeroGravityWarningInstance;
+
+
     //Variables for linear movement over time    
     protected float t;
     protected Vector3 startPosition;
@@ -18,6 +22,26 @@ public class UnitMovement : MonoBehaviour
         {
             return unit.currentPath;
         }
+    }
+
+
+    void OnEnable()
+    {
+        Unit.OnUnitSelected += DestroyZeroGravityWarning;
+        Unit.OnUnitUnselected += DestroyZeroGravityWarning;
+        PlayerUnit.OnActionStateNone += DestroyZeroGravityWarning;
+        PlayerUnit.OnActionStateMovementPreparation += DestroyZeroGravityWarning;
+
+
+    }
+
+
+    void OnDisable()
+    {
+        Unit.OnUnitSelected -= DestroyZeroGravityWarning;
+        Unit.OnUnitUnselected -= DestroyZeroGravityWarning;
+        PlayerUnit.OnActionStateNone -= DestroyZeroGravityWarning;
+        PlayerUnit.OnActionStateMovementPreparation -= DestroyZeroGravityWarning;
     }
 
     void Start()
@@ -64,7 +88,7 @@ public class UnitMovement : MonoBehaviour
         //Remove the old first node and move us to that position
         currentPath.RemoveAt(0);
 
-        
+
 
         //Set Destination and move over time, also set Rotation to the rotation of target Node
         SetMoveDestination(currentPath[0].transform.position, 0.45f);
@@ -90,9 +114,10 @@ public class UnitMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
     }
 
+    Node previousRecoilNode = null;
+
     public Node CalculateRecoilTarget(int recoilAmount, Vector3 recoilDirection)
     {
-        
         //Set an offset, so the ray doesnt accicentally hits a Tile 
         Vector3 offset = unit.currentNode.transform.up * 0.05f;
 
@@ -137,12 +162,39 @@ public class UnitMovement : MonoBehaviour
             //If we hit no node, nor a stopping target, this has to be an edge. So we die!
             if (hits.Length == 0)
             {
+                if (recoilNode != null)
+                {
+                    if (previousRecoilNode != recoilNode || zeroGravityWarningInstance == null)
+                    {
+                        previousRecoilNode = recoilNode;
+                        if (zeroGravityWarningInstance == null)
+                        {
+                            zeroGravityWarningInstance = Instantiate(zeroGravityWarningPrefab, recoilNode.transform.localPosition, recoilNode.transform.localRotation);
+                        }
+
+                    }
+                    zeroGravityWarningInstance.transform.localPosition = recoilNode.transform.localPosition;
+                    zeroGravityWarningInstance.transform.Find("ArrowContainer").rotation = Quaternion.LookRotation(recoilDirection);
+                    recoilNode.HighlightField(Color.red);
+                }
                 return null;
             }
         }
 
+        if (zeroGravityWarningInstance != null)
+            Destroy(zeroGravityWarningInstance);
+
         return recoilNode;
     }
+
+    void DestroyZeroGravityWarning()
+    {
+        if (zeroGravityWarningInstance != null)
+        {
+            Destroy(zeroGravityWarningInstance);
+        }
+    }
+
 
 
     public Quaternion PlanarRotation(Vector3 direction)

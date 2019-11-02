@@ -9,6 +9,10 @@ public class PlayerUnit : Unit
     [HideInInspector] public GameObject relatedUIPanel;
     bool isPlayerTurn;
 
+    public delegate void ActionStateChange();
+    public static event ActionStateChange OnActionStateNone;
+    public static event ActionStateChange OnActionStateMovementPreparation;
+
     protected override void Start()
     {
         base.Start();
@@ -111,8 +115,8 @@ public class PlayerUnit : Unit
 
         if (actionState == ActionState.PreparingRangeAttack)
         {
-            //If in shoot range
-            if(distance < equippedRangeWeapon.range)
+            //If target is in shoot range and target node is not the node we're currently on
+            if (distance < equippedRangeWeapon.range && v != currentNode)
             {
                 //Clear all previous highlighted fields 
                 Dijkstra.Instance.Clear();
@@ -163,9 +167,7 @@ public class PlayerUnit : Unit
                         //If we have a recoil target, move to that position
                         if (recoilTarget != null)
                         {
-                            currentNode = recoilTarget;
                             StartCoroutine(MoveWithRecoil(recoilTarget));
-
                         }
                         //If not you fly over the edge and die in space
                         else
@@ -174,7 +176,8 @@ public class PlayerUnit : Unit
                         }
                     }
                 }
-            } else // If Not in Shoot Range
+            }
+            else // If Not in Shoot Range
             {
                 //Clear all previous highlighted fields 
                 Dijkstra.Instance.Clear();
@@ -183,7 +186,7 @@ public class PlayerUnit : Unit
                 v.HighlightField(Color.black);
             }
 
-            
+
         }
     }
 
@@ -204,6 +207,11 @@ public class PlayerUnit : Unit
     {
         SwitchActionState(ActionState.Recoil);
         unitMovement.SetMoveDestination(recoilNode.transform.position, 0.5f);
+
+        currentNode.unitOnTile = null;
+        currentNode = recoilNode;
+        currentNode.unitOnTile = this;
+
         yield return new WaitForSeconds(0.5f);
         SwitchActionState(ActionState.None);
     }
@@ -212,6 +220,8 @@ public class PlayerUnit : Unit
     public override void OnSelect()
     {
         base.OnSelect();
+
+
 
         if (isPlayerTurn)
         {
@@ -292,6 +302,7 @@ public class PlayerUnit : Unit
         switch (a)
         {
             case ActionState.None:
+                OnActionStateNone();
                 StartCoroutine(unitAnimation.TransitionToIdle());
                 Dijkstra.Instance.Clear();
                 if (currentActionPoints > 0)
@@ -303,6 +314,7 @@ public class PlayerUnit : Unit
                 break;
 
             case ActionState.MovePreparation:
+                OnActionStateMovementPreparation();
                 if (currentActionPoints > 0)
                 {
                     Dijkstra.Instance.Clear();

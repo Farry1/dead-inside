@@ -15,6 +15,8 @@ public class PlayerUnitsController : MonoBehaviour
 
     bool isPlayerTurn;
 
+    Node previousHoveredNode = null;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -71,7 +73,7 @@ public class PlayerUnitsController : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                RaycastHit hit = hits[i];                
+                RaycastHit hit = hits[i];
 
                 //If mouse is over a Tile
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
@@ -88,6 +90,7 @@ public class PlayerUnitsController : MonoBehaviour
                         Node hitNode = objectSideHit.collider.gameObject.GetComponent<Node>();
                         if (hitNode != null && selectedPlayerUnit != null)
                         {
+                            previousHoveredNode = hitNode;
                             selectedPlayerUnit.PrecalculatePathTo(hitNode);
                             selectedPlayerUnit.RangeAttack(hitNode);
                         }
@@ -96,7 +99,7 @@ public class PlayerUnitsController : MonoBehaviour
                 }
             }
         }
-        
+
 
         void SetMovement(Ray navigateRay)
         {
@@ -130,6 +133,7 @@ public class PlayerUnitsController : MonoBehaviour
         if (selectedPlayerUnit != null)
         {
             selectedPlayerUnit.SwitchActionState(Unit.ActionState.None);
+            selectedPlayerUnit.OnUnselect();
         }
 
         lineRenderer.gameObject.SetActive(false);
