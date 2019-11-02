@@ -13,10 +13,16 @@ public class PlayerUnit : Unit
     public static event ActionStateChange OnActionStateNone;
     public static event ActionStateChange OnActionStateMovementPreparation;
 
+    public GameObject validCrosshairPrefab;
+    public GameObject invalidCrosshairPrefab;
+    private GameObject crosshairInstance = null;
+
+
+
+
     protected override void Start()
     {
         base.Start();
-
     }
 
     protected override void Update()
@@ -109,6 +115,14 @@ public class PlayerUnit : Unit
         }
     }
 
+
+    void TestFunction()
+    {
+        Debug.Log("Test!");
+    }
+
+    Node previousTargetedNode = null;
+
     public void RangeAttack(Node v)
     {
         float distance = Vector3.Distance(currentNode.transform.position, v.transform.position);
@@ -121,58 +135,80 @@ public class PlayerUnit : Unit
                 //Clear all previous highlighted fields 
                 Dijkstra.Instance.Clear();
 
-                //Highlight Target Node
-                v.HighlightField(Color.yellow);
-
-                //Calculate Recoid Direction and get the node, where the unit would land after a shot
-                Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
-                Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
-
-                //If a valid recoil target is found, hightlight it blue
-                if (recoilTarget != null)
-                    recoilTarget.HighlightField(Color.blue);
-
-
                 //Get Unit on target tile
                 Unit unitOntargetTile = v.unitOnTile;
+
+                bool validTarget = false;
 
                 //If there is a unit check with a raycast if it's hit
                 if (unitOntargetTile != null && Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
                 {
                     v.HighlightField(Color.red);
+                    validTarget = true;
+                }
+                //If No Unit, check if the Node is Hit
+                else if (Calculations.NodeIsHitWithRaycast(v, this))
+                {
+                    v.HighlightField(Color.green);
+                    validTarget = true;
+                }
+                else
+                {
+                    validTarget = false;
+                    v.HighlightField(Color.black);
                 }
 
 
-                //If the mouse is clicked
-                if (Input.GetMouseButtonUp(0))
+                if (previousTargetedNode != v)
                 {
-                    //If we have a weapon and action points left
-                    if (equippedRangeWeapon != null && currentActionPoints > 0)
+                    DisableCrosshair();
+                    previousTargetedNode = v;
+
+                    if (validTarget)
+                        crosshairInstance = Instantiate(validCrosshairPrefab, v.transform.position, v.transform.rotation);
+                    else
+                        crosshairInstance = Instantiate(invalidCrosshairPrefab, v.transform.position, v.transform.rotation);
+                }
+
+
+
+                if (validTarget)
+                {
+                    //Calculate Recoid Direction and get the node, where the unit would land after a shot
+                    Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
+                    Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
+
+                    //If a valid recoil target is found, hightlight it blue
+                    if (recoilTarget != null)
+                        recoilTarget.HighlightField(Color.blue);
+
+
+
+                    //If the mouse is clicked
+                    if (Input.GetMouseButtonUp(0))
                     {
-                        //Shoot!   
-
-                        transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
-
-
-                        if (unitOntargetTile != null &&
-                            Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                        //If we have a weapon and action points left
+                        if (equippedRangeWeapon != null && currentActionPoints > 0)
                         {
-                            unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
-                        }
+                            //Shoot!   
 
-                        GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
-                        currentActionPoints--;
+                            transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
 
-                        //If we have a recoil target, move to that position
-                        if (recoilTarget != null)
-                        {
-                            StartCoroutine(MoveWithRecoil(recoilTarget));
-                        }
-                        //If not you fly over the edge and die in space
-                        else
-                        {
-                            StartCoroutine(DieLonesomeInSpace(recoilDirection));
+                            if (unitOntargetTile != null &&
+                                Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                            {
+                                unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
+
+                                ShootProjectile(recoilTarget, recoilDirection);
+                            }
+                            else
+                            {
+                                if (Calculations.NodeIsHitWithRaycast(v, this))
+                                {
+                                    ShootProjectile(recoilTarget, recoilDirection);
+                                }
+                            }
                         }
                     }
                 }
@@ -185,8 +221,32 @@ public class PlayerUnit : Unit
                 //Highlight Target Node
                 v.HighlightField(Color.black);
             }
+        }
+    }
+
+    void DisableCrosshair()
+    {
+        if (crosshairInstance != null)
+        {
+            Destroy(crosshairInstance);
+        }
+    }
+
+    private void ShootProjectile(Node recoilTarget, Vector3 recoilDirection)
+    {
+        GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
+        currentActionPoints--;
 
 
+        //If we have a recoil target, move to that position
+        if (recoilTarget != null)
+        {
+            StartCoroutine(MoveWithRecoil(recoilTarget));
+        }
+        //If not you fly over the edge and die in space
+        else
+        {
+            StartCoroutine(DieLonesomeInSpace(recoilDirection));
         }
     }
 
@@ -303,6 +363,7 @@ public class PlayerUnit : Unit
         {
             case ActionState.None:
                 OnActionStateNone();
+                DisableCrosshair();
                 StartCoroutine(unitAnimation.TransitionToIdle());
                 Dijkstra.Instance.Clear();
                 if (currentActionPoints > 0)

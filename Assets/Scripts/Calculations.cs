@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Calculations : MonoBehaviour
 {
@@ -18,6 +19,40 @@ public class Calculations : MonoBehaviour
             if (shootHit.collider.gameObject.GetComponent<Unit>() == unit)
             {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool NodeIsHitWithRaycast(Node targetNode, Unit unit)
+    {
+        Vector3 direction = targetNode.transform.position - unit.gunbarrel.position;
+        Ray shootRay = new Ray(unit.gunbarrel.position, direction);
+
+        Debug.DrawRay(shootRay.origin, shootRay.direction, Color.yellow, 2f);
+
+        RaycastHit[] hits = Physics.RaycastAll(shootRay, unit.equippedRangeWeapon.range).OrderBy(h => h.distance).ToArray();
+        for (int j = 0; j < hits.Length; j++)
+        {
+            RaycastHit hit = hits[j];
+
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+            {
+                return false;
+            }
+
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
+            {
+                if (hit.transform.tag == "Node")
+                {
+                    Node n = hit.collider.GetComponent<Node>();
+                    if (n != null && n == targetNode)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
             }
         }
 

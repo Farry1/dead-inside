@@ -63,10 +63,12 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: c9034ce76a0e0e846946c7129bb45acb, type: 2}
   maxActionPoints: 2
+  currentActionPoints: 2
   maxSteps: 3
   equippedRangeWeapon: {fileID: 11400000, guid: a70353fd03a5be84284bc313e035249c,
     type: 2}
   characterPortrait: {fileID: 0}
+  projectedUnitUI: {fileID: 0}
 --- !u!114 &1036418276397528881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b305de9e1ebc4049905c3302ac9cddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zeroGravityWarningPrefab: {fileID: 0}
 --- !u!114 &4740194323401866224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +172,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6466559724558723773}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.45, z: 0}
+  m_LocalPosition: {x: 0, y: 0.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4334851116237302145}

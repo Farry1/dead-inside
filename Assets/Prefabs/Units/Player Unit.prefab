@@ -173,6 +173,10 @@ MonoBehaviour:
   characterPortrait: {fileID: 21300000, guid: 44c34683bb400714d8d55b572b1a4578, type: 3}
   projectedUnitUI: {fileID: 0}
   relatedUIPanel: {fileID: 0}
+  validCrosshairPrefab: {fileID: 1852360556669239233, guid: 4985ad85e3f5907458abc5d0a8d328bf,
+    type: 3}
+  invalidCrosshairPrefab: {fileID: 1852360556669239233, guid: 17ce80ce8959c2848b2a4ea4b43d7e0e,
+    type: 3}
 --- !u!114 &3855868428183498912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8204705327116700284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.281, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6672107977936763498}
