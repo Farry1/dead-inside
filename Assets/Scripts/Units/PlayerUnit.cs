@@ -137,16 +137,17 @@ public class PlayerUnit : Unit
                 Dijkstra.Instance.Clear();
 
                 //Get Unit on target tile
-                Unit unitOntargetTile = v.unitOnTile;
+                Unit unitOnTargetTile = v.unitOnTile;
 
                 bool validTarget = false;
 
                 //If there is a unit check with a raycast if it's hit
-                if (unitOntargetTile != null && Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                if (unitOnTargetTile != null && Calculations.UnitIsHitWithRaycast(unitOnTargetTile, gunbarrel.position))
                 {
                     v.HighlightField(Color.red);
                     validTarget = true;
                 }
+
                 //If No Unit, check if the Node is Hit
                 else if (Calculations.NodeIsHitWithRaycast(v, this))
                 {
@@ -171,19 +172,33 @@ public class PlayerUnit : Unit
                         crosshairInstance = Instantiate(invalidCrosshairPrefab, v.transform.position, v.transform.rotation);
                 }
 
-
-
                 if (validTarget)
                 {
                     //Calculate Recoid Direction and get the node, where the unit would land after a shot
                     Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
-                    Node recoilTarget = unitMovement.CalculateRecoilTarget(equippedRangeWeapon.recoil, recoilDirection);
+                    PushTargetInfo recoilTargetInfo = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection);
+
+                    Node recoilTarget = null;
+                    Unit recoilTouchedUnit = null;
+                    int recoilCollisionDamage = 0;
+
+                    if (recoilTargetInfo != null)
+                    {
+                        recoilTarget = recoilTargetInfo.pushNode;
+                        recoilTouchedUnit = recoilTargetInfo.touchedUnit;
+                        recoilCollisionDamage = recoilTargetInfo.collisionDamage;
+                    }
+
 
                     //If a valid recoil target is found, hightlight it blue
                     if (recoilTarget != null)
                         recoilTarget.HighlightField(Color.blue);
 
-
+                    if (unitOnTargetTile != null)
+                    {
+                        Debug.Log("Unit on Target: " + unitOnTargetTile.name);
+                        unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v));
+                    }
 
                     //If the mouse is clicked
                     if (Input.GetMouseButtonUp(0))
@@ -192,14 +207,38 @@ public class PlayerUnit : Unit
                         if (equippedRangeWeapon != null && currentActionPoints > 0)
                         {
                             //Shoot!   
-
                             transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
-
-                            if (unitOntargetTile != null &&
-                                Calculations.UnitIsHitWithRaycast(unitOntargetTile, gunbarrel.position))
+                            //If the recoil has a collision
+                            if (recoilCollisionDamage > 0)
                             {
-                                unitOntargetTile.healthController.Damage(equippedRangeWeapon.damage);
+                                healthController.Damage(Constants.COLLISION_DAMAGE);
+                            }
+
+                            if (recoilTouchedUnit != null)
+                            {
+                                recoilTouchedUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                            }
+
+
+                            //If we hit a unit on a target Tile
+                            if (unitOnTargetTile != null &&
+                                Calculations.UnitIsHitWithRaycast(unitOnTargetTile, gunbarrel.position))
+                            {
+                                PushTargetInfo enemyPushTargetInfo =
+                                    unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v));
+
+                                Node enemyPushTargetNode = null;
+
+                                if (enemyPushTargetInfo != null)
+                                {
+                                    enemyPushTargetNode = enemyPushTargetInfo.pushNode;
+                                }
+
+                                unitOnTargetTile.Hit(
+                                    enemyPushTargetNode,
+                                    Node.GetPlanarDirection(currentNode, v),
+                                    equippedRangeWeapon.damage);
 
                                 ShootProjectile(recoilTarget, recoilDirection);
                             }
@@ -247,22 +286,9 @@ public class PlayerUnit : Unit
         //If not you fly over the edge and die in space
         else
         {
-            StartCoroutine(DieLonesomeInSpace(recoilDirection));
+            StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
         }
     }
-
-    //Die!
-    IEnumerator DieLonesomeInSpace(Vector3 direction)
-    {
-        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
-        SwitchActionState(ActionState.Recoil);
-        PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
-        unitMovement.SetMoveDestination(direction * 5f, 2f);
-        yield return new WaitForSeconds(2f);
-        SwitchUnitState(UnitState.Dead);
-    }
-
-
 
     IEnumerator MoveWithRecoil(Node recoilNode)
     {

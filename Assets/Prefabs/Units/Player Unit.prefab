@@ -171,6 +171,7 @@ MonoBehaviour:
   maxSteps: 3
   equippedRangeWeapon: {fileID: 0}
   characterPortrait: {fileID: 21300000, guid: 44c34683bb400714d8d55b572b1a4578, type: 3}
+  unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
   relatedUIPanel: {fileID: 0}
   validCrosshairPrefab: {fileID: 1852360556669239233, guid: 4985ad85e3f5907458abc5d0a8d328bf,
@@ -229,6 +230,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zeroGravityWarningPrefab: {fileID: 1852360556669239233, guid: e01d6d0b383150249a42cacfe90d9044,
+    type: 3}
+  collisionWarningPrefab: {fileID: 1852360556669239233, guid: 37052f9c1241b484c80be2f3b830e7d2,
     type: 3}
 --- !u!114 &3676913047896504962
 MonoBehaviour:

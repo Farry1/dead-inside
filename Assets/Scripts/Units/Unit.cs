@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour, ISelectable
     //protected float timeToReachTarget;
 
     protected UnitAnimation unitAnimation;
-    protected UnitMovement unitMovement;
+    public UnitMovement unitMovement;
 
     public GameObject projectedUnitUI;
 
@@ -139,8 +139,26 @@ public class Unit : MonoBehaviour, ISelectable
     public virtual void Die()
     {
         currentNode.unitOnTile = null;
+        unitMovement.DestroyZeroGravityWarning();
         Destroy(projectedUnitUI);
-        Destroy(this.gameObject);        
+        Destroy(this.gameObject);
+    }
+
+    public void Hit(Node targetNode, Vector3 hitDirection, int damage)
+    {
+        healthController.Damage(damage);
+
+        if (targetNode != null)
+        {
+            unitMovement.SetMoveDestination(targetNode.transform.position, 0.45f);
+            currentNode.unitOnTile = null;
+            currentNode = targetNode;
+            targetNode.unitOnTile = this;
+        }
+        else
+        {
+            StartCoroutine(unitMovement.DieLonesomeInSpace(hitDirection));
+        }
     }
 
     protected virtual void OnPlayerTurn()

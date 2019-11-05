@@ -8,6 +8,8 @@ public class UnitMovement : MonoBehaviour
     public GameObject zeroGravityWarningPrefab;
     private GameObject zeroGravityWarningInstance;
 
+    public GameObject collisionWarningPrefab;
+    private GameObject collisionWarningInstance;
 
     //Variables for linear movement over time    
     protected float t;
@@ -32,6 +34,11 @@ public class UnitMovement : MonoBehaviour
         PlayerUnit.OnActionStateNone += DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation += DestroyZeroGravityWarning;
 
+        Unit.OnUnitSelected += DestroyCollisionWarning;
+        Unit.OnUnitUnselected += DestroyCollisionWarning;
+        PlayerUnit.OnActionStateNone += DestroyCollisionWarning;
+        PlayerUnit.OnActionStateMovementPreparation += DestroyCollisionWarning;
+
 
     }
 
@@ -42,6 +49,11 @@ public class UnitMovement : MonoBehaviour
         Unit.OnUnitUnselected -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateNone -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation -= DestroyZeroGravityWarning;
+
+        Unit.OnUnitSelected -= DestroyCollisionWarning;
+        Unit.OnUnitUnselected -= DestroyCollisionWarning;
+        PlayerUnit.OnActionStateNone -= DestroyCollisionWarning;
+        PlayerUnit.OnActionStateMovementPreparation -= DestroyCollisionWarning;
     }
 
     void Start()
@@ -114,35 +126,65 @@ public class UnitMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
     }
 
-    Node previousRecoilNode = null;
+    Node previousPushNode = null;
 
-    public Node CalculateRecoilTarget(int recoilAmount, Vector3 recoilDirection)
+    public PushTargetInfo CalculatePushTarget(int pushAmount, Vector3 pushDirection)
     {
+        PushTargetInfo pushTargetInfo = new PushTargetInfo();
+
+        //A negative pushAmount should inverse the push direction;
+        if (pushAmount < 0)
+            pushDirection = -pushDirection;
+        pushAmount = Mathf.Abs(pushAmount);
+
         //Set an offset, so the ray doesnt accicentally hits a Tile 
         Vector3 offset = unit.currentNode.transform.up * 0.05f;
 
-        Node recoilNode = unit.currentNode;
+        Node pushNode = unit.currentNode;
 
-        if (recoilAmount == 0)
+        if (pushAmount == 0)
         {
-            return recoilNode;
+            pushTargetInfo.pushNode = pushNode;
+            return pushTargetInfo;
         }
 
         //Checks node after node in the recoil direction until we reach the recoilAmount defined on the weapon
-        for (int i = 0; i < recoilAmount; i++)
+        for (int i = 0; i < pushAmount; i++)
         {
-            RaycastHit[] hits = Physics.RaycastAll(recoilNode.transform.position + offset, recoilDirection, 1.5f).OrderBy(h => h.distance).ToArray();
+            RaycastHit[] hits = Physics.RaycastAll(pushNode.transform.position + offset, pushDirection, 1.5f).OrderBy(h => h.distance).ToArray();
             for (int j = 0; j < hits.Length; j++)
             {
                 RaycastHit hit = hits[j];
 
                 //If we hit something that stops us, this is our target Node and we leave the loop
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
-                    hit.collider.gameObject.tag == "Player" ||
-                    hit.collider.gameObject.tag == "Enemy")
+
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
                 {
+                    if (collisionWarningInstance == null)
+                        collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
+
+
+                    pushTargetInfo.collisionDamage = Constants.COLLISION_DAMAGE;
                     break;
                 }
+                else if (
+                hit.collider.gameObject.tag == "Player" ||
+                hit.collider.gameObject.tag == "Enemy")
+                {
+                    pushTargetInfo.collisionDamage = Constants.COLLISION_DAMAGE;
+                    Unit touchedUnit = hit.collider.GetComponent<Unit>();
+                    if (touchedUnit != null)
+                    {
+                        pushTargetInfo.touchedUnit = touchedUnit;
+                    }
+
+                    if (collisionWarningInstance == null)
+                        collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
+
+
+                    break;
+                }
+
 
                 //If we hit another nav data this is our current recoil node
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
@@ -152,7 +194,7 @@ public class UnitMovement : MonoBehaviour
                         Node n = hit.collider.GetComponent<Node>();
                         if (n != null)
                         {
-                            recoilNode = n;
+                            pushNode = n;
                             break;
                         }
                     }
@@ -162,36 +204,55 @@ public class UnitMovement : MonoBehaviour
             //If we hit no node, nor a stopping target, this has to be an edge. So we die!
             if (hits.Length == 0)
             {
-                if (recoilNode != null)
+                Debug.Log(this.gameObject.name + " Hit Length is Zero");
+                if (pushNode != null)
                 {
-                    if (previousRecoilNode != recoilNode || zeroGravityWarningInstance == null)
+                    if (previousPushNode != pushNode || zeroGravityWarningInstance == null)
                     {
-                        previousRecoilNode = recoilNode;
+                        previousPushNode = pushNode;
                         if (zeroGravityWarningInstance == null)
                         {
-                            zeroGravityWarningInstance = Instantiate(zeroGravityWarningPrefab, recoilNode.transform.localPosition, recoilNode.transform.localRotation);
+                            Debug.Log(this.gameObject.name + " Instantiating Warning!");
+                            zeroGravityWarningInstance = Instantiate(zeroGravityWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
                         }
-
                     }
-                    zeroGravityWarningInstance.transform.localPosition = recoilNode.transform.localPosition;
-                    zeroGravityWarningInstance.transform.Find("ArrowContainer").rotation = Quaternion.LookRotation(recoilDirection);
-                    recoilNode.HighlightField(Color.red);
+                    zeroGravityWarningInstance.transform.localPosition = pushNode.transform.localPosition;
+                    zeroGravityWarningInstance.transform.Find("ArrowContainer").rotation = Quaternion.LookRotation(pushDirection);
+                    pushNode.HighlightField(Color.red);
                 }
                 return null;
             }
         }
 
-        if (zeroGravityWarningInstance != null)
-            Destroy(zeroGravityWarningInstance);
+        DestroyZeroGravityWarning();
 
-        return recoilNode;
+        pushTargetInfo.pushNode = pushNode;
+        return pushTargetInfo;
     }
 
-    void DestroyZeroGravityWarning()
+
+    public IEnumerator DieLonesomeInSpace(Vector3 direction)
+    {
+        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
+        unit.SwitchActionState(Unit.ActionState.Recoil);
+        SetMoveDestination(direction * 5f, 2f);
+        yield return new WaitForSeconds(2f);
+        unit.SwitchUnitState(Unit.UnitState.Dead);
+    }
+
+    public void DestroyZeroGravityWarning()
     {
         if (zeroGravityWarningInstance != null)
         {
             Destroy(zeroGravityWarningInstance);
+        }
+    }
+
+    public void DestroyCollisionWarning()
+    {
+        if (collisionWarningInstance != null)
+        {
+            Destroy(collisionWarningInstance);
         }
     }
 

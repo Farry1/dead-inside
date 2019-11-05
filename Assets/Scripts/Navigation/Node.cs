@@ -88,6 +88,25 @@ public class Node : MonoBehaviour
         return planarDirection;
     }
 
+    public static Vector3 GetPlanarDirection(Node currentNode, Node targetNode)
+    {
+        //Origin and Destination of Ray
+        Vector3 origin = currentNode.transform.position;
+        Vector3 destination = targetNode.transform.position;
+
+        //Get opposite Direction
+        Vector3 direction = origin - destination;
+
+        //Lock Ray on current plane
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
+
+        planarDirection = planarDirection.normalized;
+
+        //Lock rays in 45 Degree Angles
+        planarDirection = LockAnglesOn45Degrees(planarDirection);
+        return planarDirection;
+    }
+
     public Unit GetUnitOnTile()
     {
         return unitOnTile;
