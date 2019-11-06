@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Walkable
+  m_Name: Outline
   m_Shader: {fileID: -6465566751694194690, guid: 7fa9745f5dfecca409b7969d61df5f5e,
     type: 3}
   m_ShaderKeywords: 
@@ -87,4 +87,5 @@ Material:
     - Color_74CA97D8: {r: 0.2039216, g: 4, b: 0, a: 0}
     - _Color: {r: 0, g: 0.8301887, b: 0.13678713, a: 0.46666667}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MainColor: {r: 0.2039216, g: 4, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

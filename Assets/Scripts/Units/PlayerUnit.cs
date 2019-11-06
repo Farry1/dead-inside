@@ -149,20 +149,20 @@ public class PlayerUnit : Unit
                 //If there is a unit check with a raycast if it's hit
                 if (unitOnTargetTile != null && Calculations.UnitIsHitWithRaycast(unitOnTargetTile, gunbarrel.position))
                 {
-                    v.HighlightField(Color.red);
+                    v.HighlightField(Color.red, true);
                     validTarget = true;
                 }
 
                 //If No Unit, check if the Node is Hit
                 else if (Calculations.NodeIsHitWithRaycast(v, this))
                 {
-                    v.HighlightField(Color.green);
+                    v.HighlightField(Color.green, true);
                     validTarget = true;
                 }
                 else
                 {
                     validTarget = false;
-                    v.HighlightField(Color.black);
+                    v.HighlightField(Color.black, true);
                 }
 
 
@@ -190,7 +190,7 @@ public class PlayerUnit : Unit
                     if (recoilTarget != null)
                     {
                         Debug.Log("Recoil Target Found! " + recoilTarget.name);
-                        recoilTarget.HighlightField(Color.cyan);
+                        recoilTarget.HighlightField(Color.cyan, true);
                     }
 
                     if (unitOnTargetTile != null)
@@ -198,7 +198,7 @@ public class PlayerUnit : Unit
                         Debug.Log("Unit on Target: " + unitOnTargetTile.name);
                         Node unitTargetNode = unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, unitOnTargetTile.currentNode), v);
                         if (unitTargetNode != null)
-                            unitTargetNode.HighlightField(Color.cyan);
+                            unitTargetNode.HighlightField(Color.cyan, true);
                         previousHoveredUnit = unitOnTargetTile;
                     }
 
@@ -217,13 +217,12 @@ public class PlayerUnit : Unit
                             {
                                 Node unitTargetNode = unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v), v);
 
-
                                 unitOnTargetTile.healthController.Damage(equippedRangeWeapon.damage);
                                 ShootProjectile(recoilTarget, recoilDirection);
 
                                 if (unitTargetNode != null)
                                 {
-                                    unitOnTargetTile.unitMovement.StartCoroutine(unitOnTargetTile.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v)));
+                                    StartCoroutine(unitOnTargetTile.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v)));
                                 }
                                 else
                                 {
@@ -249,7 +248,7 @@ public class PlayerUnit : Unit
                 Dijkstra.Instance.Clear();
 
                 //Highlight Target Node
-                v.HighlightField(Color.black);
+                v.HighlightField(Color.black, false);
             }
         }
     }

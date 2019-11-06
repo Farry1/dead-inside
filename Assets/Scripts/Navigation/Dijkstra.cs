@@ -262,7 +262,7 @@ public class Dijkstra : MonoBehaviour
     {
         foreach (Node v in graph)
         {
-            v.HideNavigationIndicator();
+            v.HighlightField(Color.cyan, false);
         }
     }
 }

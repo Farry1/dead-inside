@@ -196,7 +196,7 @@ public class UnitMovement : MonoBehaviour
             {
                 UpdateZeroGravityWarning(pushNode, direction);
 
-                pushNode.HighlightField(Color.red);
+                pushNode.HighlightField(Color.red, true);
 
                 previousHoveredNode = hoveredNode;
                 return null;
@@ -223,11 +223,11 @@ public class UnitMovement : MonoBehaviour
     }
 
     private void UpdateCollisionWarning(Node hoveredNode, Node pushNode, Vector3 pushDirection)
-    {   
+    {
         if (hoveredNode != null && hoveredNode != previousHoveredNode && collisionWarningInstance == null)
-        {            
+        {
             Debug.Log(gameObject.name + " Collision Warning Instantiate" + hoveredNode);
-            collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition + pushDirection * 0.45f, pushNode.transform.localRotation);            
+            collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition + pushDirection * 0.45f, pushNode.transform.localRotation);
         }
     }
 
@@ -317,6 +317,17 @@ public class UnitMovement : MonoBehaviour
         unit.SwitchActionState(Unit.ActionState.None);
         yield return new WaitForSeconds(0.25f);
     }
+
+    public void CalculateArealPush(int steps, Vector3 direction, Node hoveredNode)
+    {
+        Debug.Log("Calculate Areal Push");
+    }
+
+    public void MoveArealPush(int steps, Node hoveredNode)
+    {
+        Debug.Log("Move Areal Push");
+    }
+
 
     public IEnumerator DieLonesomeInSpace(Vector3 direction)
     {

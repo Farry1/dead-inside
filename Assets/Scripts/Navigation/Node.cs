@@ -32,28 +32,25 @@ public class Node : MonoBehaviour
     {
         stepCounterText.text = stepsRequired.ToString();
 
-
         if (stepsRequired <= maxSteps && v.unitOnTile == false)
         {
-            surfaceIndicator.gameObject.SetActive(true);
-            surfaceIndicator.material.color = Color.green;
-
-            visibleSurfaceIndicator.gameObject.SetActive(true);
-            visibleSurfaceIndicator.material = materials[0];
+            v.HighlightField(Color.green, true);
         }
         else
         {
-            surfaceIndicator.gameObject.SetActive(false);
-            visibleSurfaceIndicator.gameObject.SetActive(false);
+            v.HighlightField(Color.cyan, false);
         }
     }
 
-    public void HighlightField(Color color)
+    public void HighlightField(Color color, bool fullTile)
     {
         surfaceIndicator.gameObject.SetActive(true);
-
         visibleSurfaceIndicator.gameObject.SetActive(true);
-        visibleSurfaceIndicator.material = materials[1];
+        visibleSurfaceIndicator.material = materials[0];
+
+        if (fullTile)
+            visibleSurfaceIndicator.material = materials[1];
+
         visibleSurfaceIndicator.material.SetColor("_MainColor", color);
     }
 
@@ -81,7 +78,7 @@ public class Node : MonoBehaviour
         //Lock Ray on current plane
         Vector3 planarDirection = Vector3.ProjectOnPlane(direction, targetNode.transform.up);
 
-        planarDirection = planarDirection.normalized;        
+        planarDirection = planarDirection.normalized;
 
         //Lock rays in 45 Degree Angles
         planarDirection = LockAnglesOn45Degrees(planarDirection);

@@ -29,7 +29,6 @@ public class EnemyUnit : Unit
      * ENEMY AI
      * 
      */
-
     public IEnumerator MakeTurn()
     {
         Debug.Log(transform.name + " is doing a move!");
@@ -114,11 +113,7 @@ public class EnemyUnit : Unit
             StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
             return false;
         }
-
-
     }
-
-
 
     /*
      * 
