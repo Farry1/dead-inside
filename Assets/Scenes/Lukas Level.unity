@@ -9902,7 +9902,7 @@ PrefabInstance:
         type: 3}
       propertyPath: equippedRangeWeapon
       value: 
-      objectReference: {fileID: 11400000, guid: acc8712da462a094e9c33167a4f8e0f8,
+      objectReference: {fileID: 11400000, guid: 55d6583dc2f1c9a4d9939b0d5fb32a89,
         type: 2}
     - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
@@ -9917,7 +9917,7 @@ PrefabInstance:
     - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
       propertyPath: ignorePushback
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3855868428183498912, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
@@ -25188,7 +25188,7 @@ PrefabInstance:
     - target: {fileID: 4334851116237302144, guid: 7ed1191218ada9c4eb5281cfeb219c5e,
         type: 3}
       propertyPath: ignorePushback
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed1191218ada9c4eb5281cfeb219c5e, type: 3}

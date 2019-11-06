@@ -6,10 +6,10 @@ using UnityEngine;
 public class Weapon : ScriptableObject
 {
    
-    public enum ProjectileType { Linear, Areal }
+    //public enum ProjectileType { Linear, Areal }
     [Header("Projetile Settings")]
     public GameObject projectile;
-    public ProjectileType projetileType;
+    //public ProjectileType projetileType;
     public int projetilePushAmount;
     
 

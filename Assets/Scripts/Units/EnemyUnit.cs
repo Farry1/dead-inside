@@ -7,10 +7,10 @@ using System.Linq;
 public class EnemyUnit : Unit
 {
 
-    public enum EnemyActionState { Patrolling, Attacking };
+    EnemyAI enemyAI;    
 
-    EnemyAI enemyAI;
-
+    public enum AttackType { Normal, Suicide }
+    public AttackType attackType;
 
     protected override void Start()
     {
