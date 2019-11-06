@@ -241,7 +241,7 @@ public class UnitMovement : MonoBehaviour
 
         Node pushNode = unit.currentNode;
 
-        //If no stepts, quit the Coroutine and don't move
+        //If no steps, quit the Coroutine and don't move
         if (steps == 0)
         {
             yield return 0;

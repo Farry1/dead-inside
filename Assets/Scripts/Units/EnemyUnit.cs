@@ -87,20 +87,35 @@ public class EnemyUnit : Unit
 
         Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
 
+        Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
+        Debug.DrawRay(targetUnit.currentNode.transform.position, shootDirection, Color.cyan, 2f);
+
+        Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, shootDirection, currentNode);
+        if (targetPushbackNode != null)
+        {
+            targetUnit.StartCoroutine(targetUnit.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, shootDirection));
+        }
+        else
+        {
+            targetUnit.StartCoroutine(targetUnit.unitMovement.DieLonesomeInSpace(shootDirection));
+        }
+
         //If the recoil target is valid, move there
         if (recoilTarget != null)
         {
-            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
             unitMovement.ResetPreviousStoredValues();
+            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
             return true;
         }
         //If the recoil target is not valid, die
         else
         {
-            StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
             unitMovement.ResetPreviousStoredValues();
+            StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
             return false;
-        }        
+        }
+
+
     }
 
 
