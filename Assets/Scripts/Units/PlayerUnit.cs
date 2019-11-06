@@ -13,6 +13,10 @@ public class PlayerUnit : Unit
     public static event ActionStateChange OnActionStateNone;
     public static event ActionStateChange OnActionStateMovementPreparation;
 
+    public delegate void NodeAction();
+    public static event NodeAction OnHoveredNodeChanged;
+    public static event NodeAction OnNodeClicked;
+
     public GameObject validCrosshairPrefab;
     public GameObject invalidCrosshairPrefab;
     private GameObject crosshairInstance = null;
@@ -121,7 +125,8 @@ public class PlayerUnit : Unit
         Debug.Log("Test!");
     }
 
-    Node previousTargetedNode = null;
+    Node previousHoveredNode = null;
+    Unit previousHoveredUnit = null;
 
     //Todo: Move shooting to a separate class
     public void RangeAttack(Node v)
@@ -161,10 +166,11 @@ public class PlayerUnit : Unit
                 }
 
 
-                if (previousTargetedNode != v)
+                if (previousHoveredNode != v)
                 {
+                    OnHoveredNodeChanged();
                     DisableCrosshair();
-                    previousTargetedNode = v;
+                    previousHoveredNode = v;
 
                     if (validTarget)
                         crosshairInstance = Instantiate(validCrosshairPrefab, v.transform.position, v.transform.rotation);
@@ -174,73 +180,55 @@ public class PlayerUnit : Unit
 
                 if (validTarget)
                 {
-                    //Calculate Recoid Direction and get the node, where the unit would land after a shot
-                    Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, v);
-                    PushTargetInfo recoilTargetInfo = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection);
+                    //Calculate Recoil Direction and get the node, where the unit would land after a shooting
+                    Vector3 recoilDirection = Node.GetPlanarDirection(v, currentNode);
 
-                    Node recoilTarget = null;
-                    Unit recoilTouchedUnit = null;
-                    int recoilCollisionDamage = 0;
+                    Debug.DrawRay(currentNode.transform.position, recoilDirection, Color.cyan, 2f);
 
-                    if (recoilTargetInfo != null)
-                    {
-                        recoilTarget = recoilTargetInfo.pushNode;
-                        recoilTouchedUnit = recoilTargetInfo.touchedUnit;
-                        recoilCollisionDamage = recoilTargetInfo.collisionDamage;
-                    }
+                    Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, v);
 
-
-                    //If a valid recoil target is found, hightlight it blue
                     if (recoilTarget != null)
-                        recoilTarget.HighlightField(Color.blue);
+                    {
+                        Debug.Log("Recoil Target Found! " + recoilTarget.name);
+                        recoilTarget.HighlightField(Color.cyan);
+                    }
 
                     if (unitOnTargetTile != null)
                     {
                         Debug.Log("Unit on Target: " + unitOnTargetTile.name);
-                        unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v));
+                        Node unitTargetNode = unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, unitOnTargetTile.currentNode), v);
+                        if (unitTargetNode != null)
+                            unitTargetNode.HighlightField(Color.cyan);
+                        previousHoveredUnit = unitOnTargetTile;
                     }
 
                     //If the mouse is clicked
                     if (Input.GetMouseButtonUp(0))
                     {
+
                         //If we have a weapon and action points left
                         if (equippedRangeWeapon != null && currentActionPoints > 0)
                         {
                             //Shoot!   
                             transform.rotation = unitMovement.PlanarRotation(v.transform.position - currentNode.transform.position);
 
-                            //If the recoil has a collision
-                            if (recoilCollisionDamage > 0)
-                            {
-                                healthController.Damage(Constants.COLLISION_DAMAGE);
-                            }
-
-                            if (recoilTouchedUnit != null)
-                            {
-                                recoilTouchedUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
-                            }
-
-
                             //If we hit a unit on a target Tile
-                            if (unitOnTargetTile != null &&
-                                Calculations.UnitIsHitWithRaycast(unitOnTargetTile, gunbarrel.position))
+                            if (unitOnTargetTile != null)
                             {
-                                PushTargetInfo enemyPushTargetInfo =
-                                    unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v));
+                                Node unitTargetNode = unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v), v);
 
-                                Node enemyPushTargetNode = null;
 
-                                if (enemyPushTargetInfo != null)
-                                {
-                                    enemyPushTargetNode = enemyPushTargetInfo.pushNode;
-                                }
-
-                                unitOnTargetTile.Hit(
-                                    enemyPushTargetNode,
-                                    Node.GetPlanarDirection(currentNode, v),
-                                    equippedRangeWeapon.damage);
-
+                                unitOnTargetTile.healthController.Damage(equippedRangeWeapon.damage);
                                 ShootProjectile(recoilTarget, recoilDirection);
+
+                                if (unitTargetNode != null)
+                                {
+                                    unitOnTargetTile.unitMovement.StartCoroutine(unitOnTargetTile.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v)));
+                                }
+                                else
+                                {
+                                    StartCoroutine(unitOnTargetTile.unitMovement.DieLonesomeInSpace(Node.GetPlanarDirection(currentNode, v)));
+                                }
                             }
                             else
                             {
@@ -250,11 +238,13 @@ public class PlayerUnit : Unit
                                 }
                             }
                         }
+                        OnNodeClicked();
                     }
                 }
             }
             else // If Not in Shoot Range
             {
+
                 //Clear all previous highlighted fields 
                 Dijkstra.Instance.Clear();
 
@@ -277,11 +267,10 @@ public class PlayerUnit : Unit
         GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
         currentActionPoints--;
 
-
         //If we have a recoil target, move to that position
         if (recoilTarget != null)
         {
-            StartCoroutine(MoveWithRecoil(recoilTarget));
+            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
         }
         //If not you fly over the edge and die in space
         else
@@ -290,25 +279,10 @@ public class PlayerUnit : Unit
         }
     }
 
-    IEnumerator MoveWithRecoil(Node recoilNode)
-    {
-        SwitchActionState(ActionState.Recoil);
-        unitMovement.SetMoveDestination(recoilNode.transform.position, 0.5f);
-
-        currentNode.unitOnTile = null;
-        currentNode = recoilNode;
-        currentNode.unitOnTile = this;
-
-        yield return new WaitForSeconds(0.5f);
-        SwitchActionState(ActionState.None);
-    }
-
 
     public override void OnSelect()
     {
         base.OnSelect();
-
-
 
         if (isPlayerTurn)
         {
@@ -316,7 +290,6 @@ public class PlayerUnit : Unit
             PlayerUnitsController.Instance.SelectUnit(this);
             StageUIController.Instance.SetPlayerActionContainer(true);
             SwitchUnitState(UnitState.Selected);
-
             StageUIController.Instance.CreatePlayerActionMenu(actions);
         }
     }
@@ -421,6 +394,8 @@ public class PlayerUnit : Unit
                 PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
                 break;
             case ActionState.Recoil:
+                Dijkstra.Instance.Clear();
+                DisableCrosshair();
                 actionState = ActionState.Recoil;
                 unitAnimation.PlayShootAnimation();
                 break;

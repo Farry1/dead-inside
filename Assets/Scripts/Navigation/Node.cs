@@ -79,12 +79,13 @@ public class Node : MonoBehaviour
         Vector3 direction = destination - origin;
 
         //Lock Ray on current plane
-        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, targetNode.transform.up);
 
-        planarDirection = planarDirection.normalized;
+        planarDirection = planarDirection.normalized;        
 
         //Lock rays in 45 Degree Angles
         planarDirection = LockAnglesOn45Degrees(planarDirection);
+
         return planarDirection;
     }
 
@@ -98,12 +99,15 @@ public class Node : MonoBehaviour
         Vector3 direction = origin - destination;
 
         //Lock Ray on current plane
-        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, currentNode.transform.up);
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, targetNode.transform.up);
 
         planarDirection = planarDirection.normalized;
 
         //Lock rays in 45 Degree Angles
         planarDirection = LockAnglesOn45Degrees(planarDirection);
+
+        //Debug.DrawRay(currentNode.transform.position, planarDirection, Color.cyan, 2f);
+
         return planarDirection;
     }
 
@@ -114,7 +118,7 @@ public class Node : MonoBehaviour
 
     public static Vector3 LockAnglesOn45Degrees(Vector3 direction)
     {
-        Vector3 lockedDirection = direction;
+        Vector3 lockedDirection = Vector3.zero;
 
         if (direction.x < -0.9)
         {
@@ -122,7 +126,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.x > -0.9) && (direction.x <= -0.3))
         {
-            lockedDirection.x = 0.7f;
+            lockedDirection.x = 1f;
         }
         else if ((direction.x > -0.3) && (direction.x <= 0.3))
         {
@@ -130,7 +134,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.x > 0.3) && (direction.x <= 0.9))
         {
-            lockedDirection.x = -0.7f;
+            lockedDirection.x = -1f;
         }
         else if (direction.x > 0.9f)
         {
@@ -143,7 +147,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.y > -0.9) && (direction.y <= -0.3))
         {
-            lockedDirection.y = 0.7f;
+            lockedDirection.y = 1f;
         }
         else if ((direction.y > -0.3) && (direction.y <= 0.3))
         {
@@ -151,7 +155,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.y > 0.3) && (direction.y <= 0.9))
         {
-            lockedDirection.y = -0.7f;
+            lockedDirection.y = -1f;
         }
         else if (direction.y > 0.9f)
         {
@@ -164,7 +168,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.z > -0.9) && (direction.z <= -0.3))
         {
-            lockedDirection.z = 0.7f;
+            lockedDirection.z = 1f;
         }
         else if ((direction.z > -0.3) && (direction.z <= 0.3))
         {
@@ -172,7 +176,7 @@ public class Node : MonoBehaviour
         }
         else if ((direction.z > 0.3) && (direction.z <= 0.9))
         {
-            lockedDirection.z = -0.7f;
+            lockedDirection.z = -1f;
         }
         else if (direction.z > 0.9f)
         {

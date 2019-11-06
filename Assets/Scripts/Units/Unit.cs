@@ -139,6 +139,7 @@ public class Unit : MonoBehaviour, ISelectable
     public virtual void Die()
     {
         currentNode.unitOnTile = null;
+        unitMovement.DestroyCollisionWarning();
         unitMovement.DestroyZeroGravityWarning();
         Destroy(projectedUnitUI);
         Destroy(this.gameObject);

@@ -135,6 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zeroGravityWarningPrefab: {fileID: 1852360556669239233, guid: e01d6d0b383150249a42cacfe90d9044,
     type: 3}
+  collisionWarningPrefab: {fileID: 1852360556669239233, guid: 37052f9c1241b484c80be2f3b830e7d2,
+    type: 3}
 --- !u!114 &4740194323401866224
 MonoBehaviour:
   m_ObjectHideFlags: 0

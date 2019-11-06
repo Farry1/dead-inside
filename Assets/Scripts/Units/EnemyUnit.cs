@@ -52,7 +52,6 @@ public class EnemyUnit : Unit
                         yield return new WaitForSeconds(1f);
                         yield break;
                     }
-
                 }
                 //If not, find closest Player Unit
                 else
@@ -72,8 +71,8 @@ public class EnemyUnit : Unit
                 currentActionPoints--;
             }
         }
-
-        Debug.Log(transform.name + " is done with move");
+        unitMovement.DestroyCollisionWarning();
+        unitMovement.DestroyZeroGravityWarning();
     }
 
     bool RangeAttack(Unit targetUnit)
@@ -86,47 +85,23 @@ public class EnemyUnit : Unit
         //Calculate Recoid Direction and get the node, where the unit would land after a shot
         Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
 
-        PushTargetInfo recoilTargetInfo = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection);
-
-        Node recoilTarget = null;
-        Unit recoilTouchedUnit = null;
-        int recoilCollisionDamage = 0;
-
-        if (recoilTargetInfo != null)
-        {
-            recoilTarget = recoilTargetInfo.pushNode;
-            recoilTouchedUnit = recoilTargetInfo.touchedUnit;
-            recoilCollisionDamage = recoilTargetInfo.collisionDamage;
-        }
-
-        //If the recoil has a collision
-        if (recoilCollisionDamage > 0)
-        {
-            healthController.Damage(Constants.COLLISION_DAMAGE);
-        }
-
-        if (recoilTouchedUnit != null)
-        {
-            recoilTouchedUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
-        }
+        Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
 
         //If the recoil target is valid, move there
         if (recoilTarget != null)
         {
-            unitMovement.SetMoveDestination(recoilTarget.transform.position, 0.45f);
-            currentNode.unitOnTile = null;
-            currentNode = recoilTarget;
-            currentNode.unitOnTile = this;
+            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
+            unitMovement.ResetPreviousStoredValues();
             return true;
         }
         //If the recoil target is not valid, die
         else
         {
             StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
+            unitMovement.ResetPreviousStoredValues();
             return false;
-        }
+        }        
     }
-
 
 
 

@@ -33,13 +33,15 @@ public class UnitMovement : MonoBehaviour
         Unit.OnUnitUnselected += DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateNone += DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation += DestroyZeroGravityWarning;
+        PlayerUnit.OnHoveredNodeChanged += DestroyZeroGravityWarning;
+        PlayerUnit.OnNodeClicked += DestroyZeroGravityWarning;
 
         Unit.OnUnitSelected += DestroyCollisionWarning;
         Unit.OnUnitUnselected += DestroyCollisionWarning;
         PlayerUnit.OnActionStateNone += DestroyCollisionWarning;
         PlayerUnit.OnActionStateMovementPreparation += DestroyCollisionWarning;
-
-
+        PlayerUnit.OnHoveredNodeChanged += DestroyCollisionWarning;
+        PlayerUnit.OnNodeClicked += DestroyCollisionWarning;
     }
 
 
@@ -49,11 +51,15 @@ public class UnitMovement : MonoBehaviour
         Unit.OnUnitUnselected -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateNone -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation -= DestroyZeroGravityWarning;
+        PlayerUnit.OnHoveredNodeChanged -= DestroyZeroGravityWarning;
+        PlayerUnit.OnNodeClicked -= DestroyZeroGravityWarning;
 
         Unit.OnUnitSelected -= DestroyCollisionWarning;
         Unit.OnUnitUnselected -= DestroyCollisionWarning;
         PlayerUnit.OnActionStateNone -= DestroyCollisionWarning;
         PlayerUnit.OnActionStateMovementPreparation -= DestroyCollisionWarning;
+        PlayerUnit.OnHoveredNodeChanged -= DestroyCollisionWarning;
+        PlayerUnit.OnNodeClicked -= DestroyCollisionWarning;
     }
 
     void Start()
@@ -67,6 +73,11 @@ public class UnitMovement : MonoBehaviour
     {
         t += Time.deltaTime / timeToReachTarget;
         transform.position = Vector3.Lerp(startPosition, target, t);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            DestroyCollisionWarning();
+        }
     }
 
     public void SetMoveDestination(Vector3 destination, float time)
@@ -126,62 +137,41 @@ public class UnitMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
     }
 
-    Node previousPushNode = null;
+    Node previousHoveredNode = null;
 
-    public PushTargetInfo CalculatePushTarget(int pushAmount, Vector3 pushDirection)
+    public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode)
     {
-        PushTargetInfo pushTargetInfo = new PushTargetInfo();
-
         //A negative pushAmount should inverse the push direction;
-        if (pushAmount < 0)
-            pushDirection = -pushDirection;
-        pushAmount = Mathf.Abs(pushAmount);
+        if (steps < 0)
+            direction = -direction;
+        steps = Mathf.Abs(steps);
 
         //Set an offset, so the ray doesnt accicentally hits a Tile 
         Vector3 offset = unit.currentNode.transform.up * 0.05f;
 
         Node pushNode = unit.currentNode;
 
-        if (pushAmount == 0)
+        if (steps == 0)
         {
-            pushTargetInfo.pushNode = pushNode;
-            return pushTargetInfo;
+            return pushNode;
         }
 
         //Checks node after node in the recoil direction until we reach the recoilAmount defined on the weapon
-        for (int i = 0; i < pushAmount; i++)
+        for (int i = 0; i < steps; i++)
         {
-            RaycastHit[] hits = Physics.RaycastAll(pushNode.transform.position + offset, pushDirection, 1.5f).OrderBy(h => h.distance).ToArray();
+            RaycastHit[] hits = Physics.RaycastAll(pushNode.transform.position + offset, direction, 1.5f).OrderBy(h => h.distance).ToArray();
             for (int j = 0; j < hits.Length; j++)
             {
                 RaycastHit hit = hits[j];
 
                 //If we hit something that stops us, this is our target Node and we leave the loop
 
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+                if (hit.collider.gameObject.tag == "Player" ||
+                    hit.collider.gameObject.tag == "Enemy" ||
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
                 {
-                    if (collisionWarningInstance == null)
-                        collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
-
-
-                    pushTargetInfo.collisionDamage = Constants.COLLISION_DAMAGE;
-                    break;
-                }
-                else if (
-                hit.collider.gameObject.tag == "Player" ||
-                hit.collider.gameObject.tag == "Enemy")
-                {
-                    pushTargetInfo.collisionDamage = Constants.COLLISION_DAMAGE;
-                    Unit touchedUnit = hit.collider.GetComponent<Unit>();
-                    if (touchedUnit != null)
-                    {
-                        pushTargetInfo.touchedUnit = touchedUnit;
-                    }
-
-                    if (collisionWarningInstance == null)
-                        collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
-
-
+                    UpdateCollisionWarning(hoveredNode, pushNode, direction);
+                    previousHoveredNode = hoveredNode;
                     break;
                 }
 
@@ -204,32 +194,129 @@ public class UnitMovement : MonoBehaviour
             //If we hit no node, nor a stopping target, this has to be an edge. So we die!
             if (hits.Length == 0)
             {
-                Debug.Log(this.gameObject.name + " Hit Length is Zero");
-                if (pushNode != null)
-                {
-                    if (previousPushNode != pushNode || zeroGravityWarningInstance == null)
-                    {
-                        previousPushNode = pushNode;
-                        if (zeroGravityWarningInstance == null)
-                        {
-                            Debug.Log(this.gameObject.name + " Instantiating Warning!");
-                            zeroGravityWarningInstance = Instantiate(zeroGravityWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
-                        }
-                    }
-                    zeroGravityWarningInstance.transform.localPosition = pushNode.transform.localPosition;
-                    zeroGravityWarningInstance.transform.Find("ArrowContainer").rotation = Quaternion.LookRotation(pushDirection);
-                    pushNode.HighlightField(Color.red);
-                }
+                UpdateZeroGravityWarning(pushNode, direction);
+
+                pushNode.HighlightField(Color.red);
+
+                previousHoveredNode = hoveredNode;
                 return null;
             }
         }
 
-        DestroyZeroGravityWarning();
-
-        pushTargetInfo.pushNode = pushNode;
-        return pushTargetInfo;
+        previousHoveredNode = hoveredNode;
+        return pushNode;
     }
 
+    private void UpdateZeroGravityWarning(Node pushNode, Vector3 direction)
+    {
+        if (zeroGravityWarningInstance == null)
+        {
+            Debug.Log(this.gameObject.name + " Instantiating Gravity Warning!");
+            zeroGravityWarningInstance = Instantiate(zeroGravityWarningPrefab, pushNode.transform.localPosition, pushNode.transform.localRotation);
+        }
+
+        if (zeroGravityWarningInstance != null)
+        {
+            zeroGravityWarningInstance.transform.localPosition = pushNode.transform.localPosition;
+            zeroGravityWarningInstance.transform.Find("ArrowContainer").rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    private void UpdateCollisionWarning(Node hoveredNode, Node pushNode, Vector3 pushDirection)
+    {   
+        if (hoveredNode != null && hoveredNode != previousHoveredNode && collisionWarningInstance == null)
+        {            
+            Debug.Log(gameObject.name + " Collision Warning Instantiate" + hoveredNode);
+            collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition + pushDirection * 0.45f, pushNode.transform.localRotation);            
+        }
+    }
+
+    Node previousVisitedNode = null;
+    public IEnumerator MoveWithPush(int steps, Vector3 direction)
+    {
+        //A negative pushAmount should inverse the push direction;
+        if (steps < 0)
+            direction = -direction;
+        steps = Mathf.Abs(steps);
+
+        Node pushNode = unit.currentNode;
+
+        //If no stepts, quit the Coroutine and don't move
+        if (steps == 0)
+        {
+            yield return 0;
+        }
+
+        //Set an offset, so the ray doesnt accicentally hits a Tile 
+        Vector3 offset = unit.currentNode.transform.up * 0.05f;
+
+        for (int i = 0; i < steps; i++)
+        {
+            //Check for movement int the specified direction
+            RaycastHit[] hits = Physics.RaycastAll(unit.currentNode.transform.position + offset, direction, 1.5f).OrderBy(h => h.distance).ToArray();
+            for (int j = 0; j < hits.Length; j++)
+            {
+                RaycastHit hit = hits[j];
+
+                //If we hit something that stops us, this is our target Node and we leave the loop
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+                {
+                    //Apply Collision Damage to this unit
+                    if (previousVisitedNode == pushNode)
+                        break;
+
+                    unit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                    previousVisitedNode = pushNode;
+                    break;
+                }
+                //If we hit another Player Or Enemy Unit, get that unit and apply damage to both: this unit and the hit unit. Then leave the loop.
+                else if (
+                hit.collider.gameObject.tag == "Player" ||
+                hit.collider.gameObject.tag == "Enemy")
+                {
+                    if (previousVisitedNode == pushNode)
+                        break;
+
+                    Unit hitUnit = hit.collider.GetComponent<Unit>();
+
+                    if (hitUnit != null)
+                    {
+                        Debug.Log("Apply Collision Damage to " + hitUnit.name);
+                        hitUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                    }
+
+                    unit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                    previousVisitedNode = pushNode;
+                    break;
+                }
+
+                //If we hit another nav data this is our node to move to
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
+                {
+                    if (hit.transform.tag == "Node")
+                    {
+                        Node n = hit.collider.GetComponent<Node>();
+                        if (n != null)
+                        {
+                            unit.SwitchActionState(Unit.ActionState.Recoil);
+                            pushNode = n;
+                            unit.currentNode.unitOnTile = null;
+                            unit.currentNode = pushNode;
+                            unit.currentNode.unitOnTile = unit;
+
+                            //Apply Movement and wait for a moment
+                            SetMoveDestination(pushNode.transform.position, 0.25f);
+                            yield return new WaitForSeconds(0.25f);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        unit.SwitchActionState(Unit.ActionState.None);
+        yield return new WaitForSeconds(0.25f);
+    }
 
     public IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
@@ -245,7 +332,9 @@ public class UnitMovement : MonoBehaviour
         if (zeroGravityWarningInstance != null)
         {
             Destroy(zeroGravityWarningInstance);
+            zeroGravityWarningInstance = null;
         }
+        previousHoveredNode = null;
     }
 
     public void DestroyCollisionWarning()
@@ -253,14 +342,20 @@ public class UnitMovement : MonoBehaviour
         if (collisionWarningInstance != null)
         {
             Destroy(collisionWarningInstance);
+            collisionWarningInstance = null;
         }
+        previousHoveredNode = null;
     }
-
-
 
     public Quaternion PlanarRotation(Vector3 direction)
     {
         Vector3 planarDirection = Vector3.ProjectOnPlane(direction, unit.currentNode.transform.up);
         return Quaternion.LookRotation(planarDirection, unit.currentNode.transform.up);
+    }
+
+    public void ResetPreviousStoredValues()
+    {
+        previousHoveredNode = null;
+        previousVisitedNode = null;
     }
 }
