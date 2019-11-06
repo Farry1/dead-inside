@@ -35,24 +35,21 @@ public class Unit : MonoBehaviour, ISelectable
     public int maxActionPoints = 2;
     [HideInInspector] public int currentActionPoints = 2;
     public int maxSteps = 1;
+    public bool ignorePushback;
     public Weapon equippedRangeWeapon;
-    public Sprite characterPortrait;
-
-    ////Variables for linear movement over time    
-    //protected float t;
-    //protected Vector3 startPosition;
-    //protected Vector3 target;
-    //protected float timeToReachTarget;
+    public Sprite characterPortrait;  
 
     protected UnitAnimation unitAnimation;
     public UnitMovement unitMovement;
 
     public GameObject projectedUnitUI;
 
+   
 
+    //Events
     public delegate void UnitSelection();
     public static event UnitSelection OnUnitSelected;
-    public static event UnitSelection OnUnitUnselected;
+    public static event UnitSelection OnUnitDeselected;
 
 
     void OnEnable()
@@ -133,7 +130,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void OnUnselect()
     {
-        OnUnitUnselected();
+        OnUnitDeselected();
     }
 
     public virtual void Die()

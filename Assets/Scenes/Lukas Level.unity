@@ -9902,13 +9902,23 @@ PrefabInstance:
         type: 3}
       propertyPath: equippedRangeWeapon
       value: 
-      objectReference: {fileID: 11400000, guid: b1a3f6d17b3edcb4b8aa981a04dcd6d6,
+      objectReference: {fileID: 11400000, guid: acc8712da462a094e9c33167a4f8e0f8,
         type: 2}
     - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
       propertyPath: weaponHolder
       value: 
       objectReference: {fileID: 919404951}
+    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
+        type: 3}
+      propertyPath: staticUnit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672107977936763499, guid: ff711a2ad6c0c9c42994ec5db1569a49,
+        type: 3}
+      propertyPath: ignorePushback
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3855868428183498912, guid: ff711a2ad6c0c9c42994ec5db1569a49,
         type: 3}
       propertyPath: health
@@ -13029,7 +13039,7 @@ PrefabInstance:
     - target: {fileID: 4334851116237302145, guid: 7ed1191218ada9c4eb5281cfeb219c5e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4334851116237302145, guid: 7ed1191218ada9c4eb5281cfeb219c5e,
         type: 3}
@@ -25174,6 +25184,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334851116237302144, guid: 7ed1191218ada9c4eb5281cfeb219c5e,
+        type: 3}
+      propertyPath: ignorePushback
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed1191218ada9c4eb5281cfeb219c5e, type: 3}

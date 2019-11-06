@@ -30,14 +30,14 @@ public class UnitMovement : MonoBehaviour
     void OnEnable()
     {
         Unit.OnUnitSelected += DestroyZeroGravityWarning;
-        Unit.OnUnitUnselected += DestroyZeroGravityWarning;
+        Unit.OnUnitDeselected += DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateNone += DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation += DestroyZeroGravityWarning;
         PlayerUnit.OnHoveredNodeChanged += DestroyZeroGravityWarning;
         PlayerUnit.OnNodeClicked += DestroyZeroGravityWarning;
 
         Unit.OnUnitSelected += DestroyCollisionWarning;
-        Unit.OnUnitUnselected += DestroyCollisionWarning;
+        Unit.OnUnitDeselected += DestroyCollisionWarning;
         PlayerUnit.OnActionStateNone += DestroyCollisionWarning;
         PlayerUnit.OnActionStateMovementPreparation += DestroyCollisionWarning;
         PlayerUnit.OnHoveredNodeChanged += DestroyCollisionWarning;
@@ -48,14 +48,14 @@ public class UnitMovement : MonoBehaviour
     void OnDisable()
     {
         Unit.OnUnitSelected -= DestroyZeroGravityWarning;
-        Unit.OnUnitUnselected -= DestroyZeroGravityWarning;
+        Unit.OnUnitDeselected -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateNone -= DestroyZeroGravityWarning;
         PlayerUnit.OnActionStateMovementPreparation -= DestroyZeroGravityWarning;
         PlayerUnit.OnHoveredNodeChanged -= DestroyZeroGravityWarning;
         PlayerUnit.OnNodeClicked -= DestroyZeroGravityWarning;
 
         Unit.OnUnitSelected -= DestroyCollisionWarning;
-        Unit.OnUnitUnselected -= DestroyCollisionWarning;
+        Unit.OnUnitDeselected -= DestroyCollisionWarning;
         PlayerUnit.OnActionStateNone -= DestroyCollisionWarning;
         PlayerUnit.OnActionStateMovementPreparation -= DestroyCollisionWarning;
         PlayerUnit.OnHoveredNodeChanged -= DestroyCollisionWarning;
@@ -141,6 +141,9 @@ public class UnitMovement : MonoBehaviour
 
     public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode)
     {
+        if (unit.ignorePushback)
+            steps = 0;
+
         //A negative pushAmount should inverse the push direction;
         if (steps < 0)
             direction = -direction;
@@ -234,6 +237,9 @@ public class UnitMovement : MonoBehaviour
     Node previousVisitedNode = null;
     public IEnumerator MoveWithPush(int steps, Vector3 direction)
     {
+        if (unit.ignorePushback)
+            steps = 0;
+
         //A negative pushAmount should inverse the push direction;
         if (steps < 0)
             direction = -direction;

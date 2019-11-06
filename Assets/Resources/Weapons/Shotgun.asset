@@ -17,7 +17,7 @@ MonoBehaviour:
   projetileType: 0
   projetilePushAmount: 2
   damage: 3
-  recoilAmount: 0
+  recoilAmount: 1
   range: 10
   attachedActions:
   - {fileID: 11400000, guid: b943fce73cb97a74c8561e3573d4fec0, type: 2}
