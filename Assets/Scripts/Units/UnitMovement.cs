@@ -333,7 +333,10 @@ public class UnitMovement : MonoBehaviour
     {
         //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
         unit.SwitchActionState(Unit.ActionState.Recoil);
-        SetMoveDestination(direction * 5f, 2f);
+
+        Debug.DrawRay(unit.currentNode.transform.position, direction, Color.green, 2f);
+
+        SetMoveDestination(transform.position + (direction * 5f), 2f);
         yield return new WaitForSeconds(2f);
         unit.SwitchUnitState(Unit.UnitState.Dead);
     }
