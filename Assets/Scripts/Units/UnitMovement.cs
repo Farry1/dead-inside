@@ -171,7 +171,8 @@ public class UnitMovement : MonoBehaviour
 
                 if (hit.collider.gameObject.tag == "Player" ||
                     hit.collider.gameObject.tag == "Enemy" ||
-                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     UpdateCollisionWarning(hoveredNode, pushNode, direction);
                     previousHoveredNode = hoveredNode;
@@ -265,7 +266,8 @@ public class UnitMovement : MonoBehaviour
                 RaycastHit hit = hits[j];
 
                 //If we hit something that stops us, this is our target Node and we leave the loop
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile"))
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     //Apply Collision Damage to this unit
                     if (previousVisitedNode == pushNode)

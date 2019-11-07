@@ -49,11 +49,24 @@ public class EnemyAI : MonoBehaviour
 
             Debug.DrawRay(shootRay.origin, shootRay.direction * 10, Color.red, 2f);
 
-            if (Physics.SphereCast(shootRay, 0.1f, out shootHit, enemyUnit.equippedRangeWeapon.range))
+            RaycastHit[] hits = Physics.RaycastAll(shootRay, enemyUnit.equippedRangeWeapon.range).OrderBy(h => h.distance).ToArray();
+            for (int j = 0; j < hits.Length; j++)
             {
-                if (shootHit.collider.tag == "Player")
+                RaycastHit hit = hits[j];
+
+                //If We hit something that stops the projectile, quit
+                if (
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
+                    hit.collider.gameObject.layer == LayerMask.NameToLayer("Obstacle")
+                    )
                 {
-                    return shootHit.collider.GetComponent<Unit>();
+                    return null;
+                }
+
+                //If We hit the player return it
+                if (hit.collider.gameObject.tag == "Player")
+                {
+                    return hit.collider.GetComponent<Unit>();
                 }
             }
         }

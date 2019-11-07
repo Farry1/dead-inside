@@ -87,7 +87,6 @@ public class EnemyUnit : Unit
         Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
 
         Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
-        Debug.DrawRay(targetUnit.currentNode.transform.position, shootDirection, Color.cyan, 2f);
 
         Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, shootDirection, currentNode);
         if (targetPushbackNode != null)

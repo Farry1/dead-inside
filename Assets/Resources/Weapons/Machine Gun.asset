@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a0daca28a99fd44e932c61e95c9adb4, type: 3}
-  m_Name: Pistol
+  m_Name: Machine Gun
   m_EditorClassIdentifier: 
   projectile: {fileID: 8254489242290045849, guid: ce47e4ec8712eb44596d60966ad49d65,
     type: 3}
-  projetileType: 0
   projetilePushAmount: 2
   damage: 4
   recoilAmount: 1
