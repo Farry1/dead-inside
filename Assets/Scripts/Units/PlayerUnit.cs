@@ -187,6 +187,11 @@ public class PlayerUnit : Unit
 
                     Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, v);
 
+                    if (equippedRangeWeapon.projetileType == Weapon.ProjectileType.Areal)
+                    {
+                        v.CalculateArealPush(equippedRangeWeapon.projetilePushAmount, v);
+                    }
+
                     if (recoilTarget != null)
                     {
                         Debug.Log("Recoil Target Found! " + recoilTarget.name);
@@ -220,20 +225,34 @@ public class PlayerUnit : Unit
                                 unitOnTargetTile.healthController.Damage(equippedRangeWeapon.damage);
                                 ShootProjectile(recoilTarget, recoilDirection);
 
-                                if (unitTargetNode != null)
+                                if (equippedRangeWeapon.projetileType == Weapon.ProjectileType.Linear)
                                 {
-                                    StartCoroutine(unitOnTargetTile.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v)));
+                                    if (unitTargetNode != null)
+                                    {
+                                        StartCoroutine(unitOnTargetTile.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, Node.GetPlanarDirection(currentNode, v)));
+                                    }
+                                    else
+                                    {
+                                        StartCoroutine(unitOnTargetTile.unitMovement.DieLonesomeInSpace(Node.GetPlanarDirection(currentNode, v)));
+                                    }
                                 }
-                                else
+                                else if (equippedRangeWeapon.projetileType == Weapon.ProjectileType.Areal)
                                 {
-                                    StartCoroutine(unitOnTargetTile.unitMovement.DieLonesomeInSpace(Node.GetPlanarDirection(currentNode, v)));
+                                    v.PushAdjacentUnits(equippedRangeWeapon.projetilePushAmount);
                                 }
+
+
                             }
                             else
                             {
                                 if (Calculations.NodeIsHitWithRaycast(v, this))
                                 {
                                     ShootProjectile(recoilTarget, recoilDirection);
+
+                                    if (equippedRangeWeapon.projetileType == Weapon.ProjectileType.Areal)
+                                    {
+                                        v.PushAdjacentUnits(equippedRangeWeapon.projetilePushAmount);
+                                    }
                                 }
                             }
                         }

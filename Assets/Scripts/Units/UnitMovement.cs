@@ -188,6 +188,7 @@ public class UnitMovement : MonoBehaviour
                         Node n = hit.collider.GetComponent<Node>();
                         if (n != null)
                         {
+                            pushNode.HighlightField(Color.yellow, true);
                             pushNode = n;
                             break;
                         }
@@ -207,6 +208,7 @@ public class UnitMovement : MonoBehaviour
             }
         }
 
+        pushNode.HighlightField(Color.yellow, true);
         previousHoveredNode = hoveredNode;
         return pushNode;
     }
@@ -324,16 +326,6 @@ public class UnitMovement : MonoBehaviour
 
         unit.SwitchActionState(Unit.ActionState.None);
         yield return new WaitForSeconds(0.25f);
-    }
-
-    public void CalculateArealPush(int steps, Vector3 direction, Node hoveredNode)
-    {
-        Debug.Log("Calculate Areal Push");
-    }
-
-    public void MoveArealPush(int steps, Node hoveredNode)
-    {
-        Debug.Log("Move Areal Push");
     }
 
 

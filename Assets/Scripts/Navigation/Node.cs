@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class Node : MonoBehaviour
@@ -49,7 +50,11 @@ public class Node : MonoBehaviour
         visibleSurfaceIndicator.material = materials[0];
 
         if (fullTile)
+        {
             visibleSurfaceIndicator.material = materials[1];
+            visibleSurfaceIndicator.material.SetColor("_BaseColor", color);
+        }
+            
 
         visibleSurfaceIndicator.material.SetColor("_MainColor", color);
     }
@@ -106,6 +111,117 @@ public class Node : MonoBehaviour
         //Debug.DrawRay(currentNode.transform.position, planarDirection, Color.cyan, 2f);
 
         return planarDirection;
+    }
+
+    public void PushAdjacentUnits(int steps)
+    {
+        Dictionary<Node, Vector3> nodesAndDirections = Get8NodesAndDirections();
+
+        foreach (KeyValuePair<Node, Vector3> nodeWithDirection in nodesAndDirections)
+        {
+            Unit unit = nodeWithDirection.Key.unitOnTile;
+
+            if (unit != null)
+            {
+                Debug.Log("Pushing " + unit.name);
+                Node targetNode = unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, null);
+
+                if (targetNode != null)
+                {
+
+                    StartCoroutine(unit.unitMovement.MoveWithPush(steps, nodeWithDirection.Value));
+                }
+                else
+                {
+                    StartCoroutine(unit.unitMovement.DieLonesomeInSpace(nodeWithDirection.Value));
+                }
+            }
+        }
+    }
+
+    Node previouseHoveredNode;
+    Dictionary<Node, Vector3> previousCollectionOfAdjacentUnits = null;
+
+    public void CalculateArealPush(int steps, Node hoveredNode)
+    {
+
+        Dictionary<Node, Vector3> nodesAndDirections = Get8NodesAndDirections();
+
+        foreach (KeyValuePair<Node, Vector3> nodeWithDirection in nodesAndDirections)
+        {
+            Unit unit = nodeWithDirection.Key.unitOnTile;
+
+            if (unit != null)
+            {
+                Debug.Log("Calculating Areal Push " + unit.name);
+                unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, hoveredNode);
+            }
+        }
+
+    }
+
+
+    public Dictionary<Node, Vector3> Get8NodesAndDirections()
+    {
+        Dictionary<Node, Vector3> nodesAndDirections = new Dictionary<Node, Vector3>();
+
+        for (int i = 0; i < 8; i++)
+        {
+            Vector3 rayDirection = Vector3.zero;
+            switch (i)
+            {
+                //Rays On a Plane
+                case 0:
+                    rayDirection = transform.forward;
+                    break;
+                case 1:
+                    rayDirection = transform.forward * -1;
+                    break;
+                case 2:
+                    rayDirection = transform.right;
+                    break;
+                case 3:
+                    rayDirection = transform.right * -1;
+                    break;
+                case 4:
+                    rayDirection = (transform.forward + transform.right).normalized;
+                    break;
+                case 5:
+                    rayDirection = (transform.forward * -1 + transform.right).normalized;
+                    break;
+                case 6:
+                    rayDirection = (transform.forward * -1 + transform.right * -1).normalized;
+                    break;
+                case 7:
+                    rayDirection = (transform.forward + transform.right * -1).normalized;
+                    break;
+            }
+
+            Ray ray = new Ray(transform.localPosition, rayDirection);
+            Debug.DrawRay(ray.origin, ray.direction * 1.5f, Color.yellow, 2f);
+
+
+            RaycastHit[] hits = Physics.RaycastAll(ray, 1.5f).OrderBy(h => h.distance).ToArray();
+            for (int j = 0; j < hits.Length; j++)
+            {
+                RaycastHit hit = hits[j];
+
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("NavData"))
+                {
+                    if (hit.transform.tag == "Node")
+                    {
+                        Node n = hit.collider.GetComponent<Node>();
+                        if (n != null)
+                        {
+                            nodesAndDirections.Add(n, rayDirection);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return nodesAndDirections;
     }
 
     public Unit GetUnitOnTile()
