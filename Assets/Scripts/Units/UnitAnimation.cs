@@ -9,7 +9,9 @@ public class UnitAnimation : MonoBehaviour
 
     void Start()
     {
+        
         animator = GetComponentInChildren<Animator>();
+        PlayIdleAnimation();
     }
 
 
@@ -25,6 +27,9 @@ public class UnitAnimation : MonoBehaviour
 
     public void PlayIdleAnimation()
     {
+
+        float randomOffset = Random.Range(0.0f, 1.0f);
+        animator.SetFloat("randomOffset", randomOffset);      
         animator.SetFloat("speed", 0);
     }
 
@@ -36,7 +41,7 @@ public class UnitAnimation : MonoBehaviour
 
     public IEnumerator TransitionToIdle()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.1f);
         PlayIdleAnimation();
     }
 }

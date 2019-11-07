@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(UnitAnimation))]
@@ -37,14 +38,15 @@ public class Unit : MonoBehaviour, ISelectable
     public int maxSteps = 1;
     public bool ignorePushback;
     public Weapon equippedRangeWeapon;
-    public Sprite characterPortrait;  
+    public Sprite characterPortrait;
 
     protected UnitAnimation unitAnimation;
-    public UnitMovement unitMovement;
+    [HideInInspector] public UnitMovement unitMovement;
+    [HideInInspector] public GameObject projectedUnitUI;
 
-    public GameObject projectedUnitUI;
+    public UnityEvent OnDie;
 
-   
+
 
     //Events
     public delegate void UnitSelection();
@@ -139,6 +141,7 @@ public class Unit : MonoBehaviour, ISelectable
         unitMovement.DestroyCollisionWarning();
         unitMovement.DestroyZeroGravityWarning();
         Destroy(projectedUnitUI);
+        OnDie.Invoke();
         Destroy(this.gameObject);
     }
 
@@ -177,5 +180,10 @@ public class Unit : MonoBehaviour, ISelectable
     public virtual void SwitchActionState(ActionState a)
     {
 
+    }
+
+    public void Explode(int amount)
+    {
+        currentNode.PushAdjacentUnits(amount);
     }
 }
