@@ -8,18 +8,34 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Battery damaged
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: da9d363abe5980c4495e1fe0986448eb,
+    type: 3}
   m_ShaderKeywords: _EMISSION _NORMALMAP
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2050
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_8FBB8D60:
+        m_Texture: {fileID: 2800000, guid: 2ce38170b16a72949b43dea65181c7d7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B35EE10A:
+        m_Texture: {fileID: 2800000, guid: c2828fbc69ce2774d94145fcfec3ff68, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_F1B425B9:
+        m_Texture: {fileID: 2800000, guid: 50dc6f9fefe8fa64c9ccfa9a549457bb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_F2FE9FC6:
+        m_Texture: {fileID: 2800000, guid: 149a90b5b95264643ac3b320d9c475b0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 2ce38170b16a72949b43dea65181c7d7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -100,6 +116,7 @@ Material:
     - _BaseColor: {r: 0.8455882, g: 0.8455882, b: 0.8455882, a: 1}
     - _Color: {r: 0.8455882, g: 0.8455882, b: 0.8455882, a: 1}
     - _EmissionColor: {r: 0.06911765, g: 0.21323532, b: 0, a: 1}
+    - _MainColor: {r: 2.670157, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
 --- !u!114 &425804179757579961
 MonoBehaviour:
