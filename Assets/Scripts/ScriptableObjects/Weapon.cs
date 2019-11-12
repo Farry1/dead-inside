@@ -5,13 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StandardWeapon", menuName = "Weapon/StandardWeapon")]
 public class Weapon : ScriptableObject
 {
-   
+
     public enum ProjectileType { Linear, Areal }
-    [Header("Projetile Settings")]
-    public GameObject projectile;
-    public ProjectileType projetileType;
-    public int projetilePushAmount;
-    
+    [Header("Projectile Settings")]
+    public GameObject shootFX;
+    public GameObject simulatedProjectile;
+    public GameObject projectileTarget;
+    public float projectileSpeed;
+    public ProjectileType projectileType;
+    public int projectilePushAmount;
+
 
     [Header("Weapon Settings")]
     public int damage;

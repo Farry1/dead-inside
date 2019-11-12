@@ -139,7 +139,7 @@ public class UnitMovement : MonoBehaviour
 
     Node previousHoveredNode = null;
 
-    public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode)
+    public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode, bool ignoreIndication)
     {
         if (unit.ignorePushback)
             steps = 0;
@@ -188,7 +188,8 @@ public class UnitMovement : MonoBehaviour
                         Node n = hit.collider.GetComponent<Node>();
                         if (n != null)
                         {
-                            pushNode.HighlightField(Color.yellow, true);
+                            if (!ignoreIndication)
+                                pushNode.HighlightField(Color.yellow, true);
                             pushNode = n;
                             break;
                         }
@@ -201,14 +202,17 @@ public class UnitMovement : MonoBehaviour
             {
                 UpdateZeroGravityWarning(pushNode, direction);
 
-                pushNode.HighlightField(Color.red, true);
+                if (!ignoreIndication)
+                    pushNode.HighlightField(Color.red, true);
 
                 previousHoveredNode = hoveredNode;
                 return null;
             }
         }
 
-        pushNode.HighlightField(Color.yellow, true);
+        if (!ignoreIndication)
+            pushNode.HighlightField(Color.yellow, true);
+
         previousHoveredNode = hoveredNode;
         return pushNode;
     }
@@ -331,13 +335,14 @@ public class UnitMovement : MonoBehaviour
 
     public IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
-        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
+        Debug.Log(gameObject.name + " is going to die!");
+
         unit.SwitchActionState(Unit.ActionState.Recoil);
 
         Debug.DrawRay(unit.currentNode.transform.position, direction, Color.green, 2f);
 
         SetMoveDestination(transform.position + (direction * 5f), 2f);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         unit.SwitchUnitState(Unit.UnitState.Dead);
     }
 

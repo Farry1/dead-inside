@@ -71,6 +71,9 @@ MonoBehaviour:
   characterPortrait: {fileID: 0}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
+  OnDie:
+    m_PersistentCalls:
+      m_Calls: []
   attackType: 0
 --- !u!114 &1036418276397528881
 MonoBehaviour:
@@ -311,6 +314,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: d148bd46a5a4c4e4d96a7c02442100fc, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3413db3b0a09fef449899b544a8c0091, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d148bd46a5a4c4e4d96a7c02442100fc, type: 3}
 --- !u!4 &5684307139500459117 stripped

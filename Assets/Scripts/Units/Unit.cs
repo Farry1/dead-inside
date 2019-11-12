@@ -61,7 +61,40 @@ public class Unit : MonoBehaviour, ISelectable
         StageManager.OnEnemyTurn += OnEnemyTurn;
     }
 
+    protected void ShootProjectile(Node recoilTarget, Vector3 recoilDirection, Vector3 projectileTargetPosition, Node targetNode, Unit targetUnit, Vector3 hitDirection, Node targetPushbackNode)
+    {
+        GameObject shootFX = Instantiate(equippedRangeWeapon.shootFX, gunbarrel.position, gunbarrel.rotation);
+        GameObject simulatedProjectile = Instantiate(equippedRangeWeapon.simulatedProjectile, gunbarrel.position, gunbarrel.rotation);
+        GameObject simulatedProjectileTarget = Instantiate(equippedRangeWeapon.projectileTarget, projectileTargetPosition, Quaternion.identity);
 
+        Projectile projectile = simulatedProjectile.GetComponent<Projectile>();
+        projectile.target = simulatedProjectileTarget;
+        projectile.damage = equippedRangeWeapon.damage;
+        projectile.projectilePushAmount = equippedRangeWeapon.projectilePushAmount;
+        projectile.projectileType = equippedRangeWeapon.projectileType;
+        projectile.hitNode = targetNode;
+        projectile.targetUnit = targetUnit;
+        projectile.initialUnit = this;
+        projectile.hitDirection = hitDirection;
+        projectile.targetPushbackNode = targetPushbackNode;
+
+        Vector3 projetileDirection = simulatedProjectileTarget.transform.position - simulatedProjectile.transform.position;
+
+        Rigidbody simulatedProjectileRB = simulatedProjectile.GetComponent<Rigidbody>();
+        simulatedProjectileRB.AddForce(equippedRangeWeapon.projectileSpeed * projetileDirection);
+
+        //If we have a recoil target, move to that position
+        if (recoilTarget != null)
+        {
+            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
+        }
+
+        //If not you fly over the edge and die in space
+        else
+        {
+            StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
+        }        
+    }
     void OnDisable()
     {
         //Unsubscribe events
@@ -102,21 +135,12 @@ public class Unit : MonoBehaviour, ISelectable
 
     protected virtual void Update()
     {
-        //t += Time.deltaTime / timeToReachTarget;
-        //transform.position = Vector3.Lerp(startPosition, target, t);
+      
     }
-
-    //public void SetMoveDestination(Vector3 destination, float time)
-    //{
-    //    t = 0;
-    //    startPosition = transform.position;
-    //    timeToReachTarget = time;
-    //    target = destination;
-    //}
 
     public virtual void SwitchUnitState(UnitState state)
     {
-        unitState = state;
+        //unitState = state;
     }
 
 

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerUnitsController : MonoBehaviour
 {
-    [HideInInspector] public List<PlayerUnit> units = new List<PlayerUnit>();
+    public List<PlayerUnit> units = new List<PlayerUnit>();
     [HideInInspector] public PlayerUnit selectedPlayerUnit = null;
     [HideInInspector] public LineRenderer lineRenderer;
 
