@@ -80,6 +80,18 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
+    IEnumerator CollisionAnimation(Vector3 direction)
+    {
+        Vector3 initialPos = transform.position;
+        Vector3 targetPos = transform.position + direction * 0.75f;
+
+        SetMoveDestination(targetPos, 0.05f);
+        yield return new WaitForSeconds(0.05f);
+
+        SetMoveDestination(initialPos, 0.1f);
+        yield return new WaitForSeconds(0.1f);
+    }
+
     public void SetMoveDestination(Vector3 destination, float time)
     {
         t = 0;
@@ -280,6 +292,7 @@ public class UnitMovement : MonoBehaviour
                         break;
 
                     unit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                    StartCoroutine(CollisionAnimation(direction));
                     previousVisitedNode = pushNode;
                     break;
                 }
@@ -299,6 +312,7 @@ public class UnitMovement : MonoBehaviour
                         hitUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
                     }
 
+                    StartCoroutine(CollisionAnimation(direction));
                     unit.healthController.Damage(Constants.COLLISION_DAMAGE);
                     previousVisitedNode = pushNode;
                     break;
@@ -319,8 +333,8 @@ public class UnitMovement : MonoBehaviour
                             unit.currentNode.unitOnTile = unit;
 
                             //Apply Movement and wait for a moment
-                            SetMoveDestination(pushNode.transform.position, 0.25f);
-                            yield return new WaitForSeconds(0.25f);
+                            SetMoveDestination(pushNode.transform.position, 0.15f);
+                            yield return new WaitForSeconds(0.15f);
                             break;
                         }
                     }

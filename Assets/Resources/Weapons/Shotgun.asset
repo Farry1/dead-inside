@@ -20,7 +20,7 @@ MonoBehaviour:
   projectileSpeed: 500
   projectileType: 0
   projectilePushAmount: 2
-  damage: 5
+  damage: 2
   recoilAmount: 1
   range: 10
   attachedActions:
