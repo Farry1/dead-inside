@@ -185,7 +185,7 @@ public class UnitMovement : MonoBehaviour
                     hit.collider.gameObject.tag == "Enemy" ||
                     hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
                     hit.collider.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-                {
+                {                    
                     UpdateCollisionWarning(hoveredNode, pushNode, direction);
                     previousHoveredNode = hoveredNode;
                     break;
