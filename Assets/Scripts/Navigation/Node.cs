@@ -124,7 +124,7 @@ public class Node : MonoBehaviour
             if (unit != null)
             {
                 Debug.Log("Pushing " + unit.name);
-                Node targetNode = unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, null);
+                Node targetNode = unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, null, true);
 
                 if (targetNode != null)
                 {
@@ -154,7 +154,7 @@ public class Node : MonoBehaviour
             if (unit != null)
             {
                 Debug.Log("Calculating Areal Push " + unit.name);
-                unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, hoveredNode);
+                unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, hoveredNode, false);
             }
         }
 

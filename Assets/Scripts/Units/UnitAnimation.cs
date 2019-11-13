@@ -26,8 +26,7 @@ public class UnitAnimation : MonoBehaviour
     }
 
     public void PlayIdleAnimation()
-    {
-
+    { 
         float randomOffset = Random.Range(0.0f, 1.0f);
         animator.SetFloat("randomOffset", randomOffset);      
         animator.SetFloat("speed", 0);

@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0daca28a99fd44e932c61e95c9adb4, type: 3}
   m_Name: Machine Gun
   m_EditorClassIdentifier: 
-  projectile: {fileID: 8254489242290045849, guid: ce47e4ec8712eb44596d60966ad49d65,
+  shootFX: {fileID: 8254489242290045849, guid: ce47e4ec8712eb44596d60966ad49d65, type: 3}
+  simulatedProjectile: {fileID: 11301611887564705, guid: 5942693f574fc5e47b6e0cd4b2c87258,
     type: 3}
-  projetilePushAmount: 2
-  damage: 4
+  projectileTarget: {fileID: 2470538886948302261, guid: 8e9dac5adde7d3d45b7f6123c6ca900f,
+    type: 3}
+  projectileSpeed: 500
+  projectileType: 0
+  projectilePushAmount: 1
+  damage: 2
   recoilAmount: 1
   range: 5
   attachedActions:

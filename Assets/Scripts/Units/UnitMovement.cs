@@ -80,6 +80,18 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
+    IEnumerator CollisionAnimation(Vector3 direction)
+    {
+        Vector3 initialPos = transform.position;
+        Vector3 targetPos = transform.position + direction * 0.75f;
+
+        SetMoveDestination(targetPos, 0.05f);
+        yield return new WaitForSeconds(0.05f);
+
+        SetMoveDestination(initialPos, 0.1f);
+        yield return new WaitForSeconds(0.1f);
+    }
+
     public void SetMoveDestination(Vector3 destination, float time)
     {
         t = 0;
@@ -139,7 +151,7 @@ public class UnitMovement : MonoBehaviour
 
     Node previousHoveredNode = null;
 
-    public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode)
+    public Node CalculatePushTarget(int steps, Vector3 direction, Node hoveredNode, bool ignoreIndication)
     {
         if (unit.ignorePushback)
             steps = 0;
@@ -173,7 +185,7 @@ public class UnitMovement : MonoBehaviour
                     hit.collider.gameObject.tag == "Enemy" ||
                     hit.collider.gameObject.layer == LayerMask.NameToLayer("Tile") ||
                     hit.collider.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-                {
+                {                    
                     UpdateCollisionWarning(hoveredNode, pushNode, direction);
                     previousHoveredNode = hoveredNode;
                     break;
@@ -188,7 +200,8 @@ public class UnitMovement : MonoBehaviour
                         Node n = hit.collider.GetComponent<Node>();
                         if (n != null)
                         {
-                            pushNode.HighlightField(Color.yellow, true);
+                            if (!ignoreIndication)
+                                pushNode.HighlightField(Color.yellow, true);
                             pushNode = n;
                             break;
                         }
@@ -201,14 +214,17 @@ public class UnitMovement : MonoBehaviour
             {
                 UpdateZeroGravityWarning(pushNode, direction);
 
-                pushNode.HighlightField(Color.red, true);
+                if (!ignoreIndication)
+                    pushNode.HighlightField(Color.red, true);
 
                 previousHoveredNode = hoveredNode;
                 return null;
             }
         }
 
-        pushNode.HighlightField(Color.yellow, true);
+        if (!ignoreIndication)
+            pushNode.HighlightField(Color.yellow, true);
+
         previousHoveredNode = hoveredNode;
         return pushNode;
     }
@@ -276,6 +292,7 @@ public class UnitMovement : MonoBehaviour
                         break;
 
                     unit.healthController.Damage(Constants.COLLISION_DAMAGE);
+                    StartCoroutine(CollisionAnimation(direction));
                     previousVisitedNode = pushNode;
                     break;
                 }
@@ -295,6 +312,7 @@ public class UnitMovement : MonoBehaviour
                         hitUnit.healthController.Damage(Constants.COLLISION_DAMAGE);
                     }
 
+                    StartCoroutine(CollisionAnimation(direction));
                     unit.healthController.Damage(Constants.COLLISION_DAMAGE);
                     previousVisitedNode = pushNode;
                     break;
@@ -315,8 +333,8 @@ public class UnitMovement : MonoBehaviour
                             unit.currentNode.unitOnTile = unit;
 
                             //Apply Movement and wait for a moment
-                            SetMoveDestination(pushNode.transform.position, 0.25f);
-                            yield return new WaitForSeconds(0.25f);
+                            SetMoveDestination(pushNode.transform.position, 0.15f);
+                            yield return new WaitForSeconds(0.15f);
                             break;
                         }
                     }
@@ -331,13 +349,14 @@ public class UnitMovement : MonoBehaviour
 
     public IEnumerator DieLonesomeInSpace(Vector3 direction)
     {
-        //Todo: Change this to some shot and then die animation. But for now just normal recoil state.
+        Debug.Log(gameObject.name + " is going to die!");
+
         unit.SwitchActionState(Unit.ActionState.Recoil);
 
         Debug.DrawRay(unit.currentNode.transform.position, direction, Color.green, 2f);
 
         SetMoveDestination(transform.position + (direction * 5f), 2f);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         unit.SwitchUnitState(Unit.UnitState.Dead);
     }
 

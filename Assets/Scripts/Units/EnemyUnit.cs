@@ -7,7 +7,7 @@ using System.Linq;
 public class EnemyUnit : Unit
 {
 
-    EnemyAI enemyAI;    
+    EnemyAI enemyAI;
 
     public enum AttackType { Normal, Suicide }
     public AttackType attackType;
@@ -43,14 +43,26 @@ public class EnemyUnit : Unit
 
                 if (targetUnit != null)
                 {
+                    //Calculate Recoid Direction and get the node, where the unit would land after a shot
+                    Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
+
+                    Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode, false);
+                    Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
+
+                    Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projectilePushAmount, shootDirection, currentNode, false);
+
+                    ShootProjectile(recoilTarget, recoilDirection, targetUnit.raycastTarget.position, targetUnit.currentNode, targetUnit, shootDirection, targetPushbackNode);
+                    transform.rotation = unitMovement.PlanarRotation(targetUnit.transform.position - currentNode.transform.position);
+                    yield return new WaitForSeconds(1f);
+
                     //if Range Attack returns true, the recoil Target is a valid field, else the unit will probably die.
-                    if (RangeAttack(targetUnit))
-                        yield return new WaitForSeconds(1f);
-                    else
-                    {
-                        yield return new WaitForSeconds(1f);
-                        yield break;
-                    }
+                    //if (RangeAttack(targetUnit))
+                    //    yield return new WaitForSeconds(1f);
+                    //else
+                    //{
+                    //    yield return new WaitForSeconds(1f);
+                    //    yield break;
+                    //}
                 }
                 //If not, find closest Player Unit
                 else
@@ -74,45 +86,45 @@ public class EnemyUnit : Unit
         unitMovement.DestroyZeroGravityWarning();
     }
 
-    bool RangeAttack(Unit targetUnit)
-    {
-        unitAnimation.PlayShootAnimation();
-        targetUnit.healthController.Damage(equippedRangeWeapon.damage);
-        transform.rotation = unitMovement.PlanarRotation(targetUnit.transform.position - currentNode.transform.position);
-        GameObject shootprojectile = Instantiate(equippedRangeWeapon.projectile, gunbarrel.position, gunbarrel.rotation);
+    //bool RangeAttack(Unit targetUnit)
+    //{
+    //    unitAnimation.PlayShootAnimation();
+    //    targetUnit.healthController.Damage(equippedRangeWeapon.damage);
+    //    transform.rotation = unitMovement.PlanarRotation(targetUnit.transform.position - currentNode.transform.position);
+    //    GameObject shootprojectile = Instantiate(equippedRangeWeapon.shootFX, gunbarrel.position, gunbarrel.rotation);
 
-        //Calculate Recoid Direction and get the node, where the unit would land after a shot
-        Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
+    //    //Calculate Recoid Direction and get the node, where the unit would land after a shot
+    //    Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
 
-        Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
+    //    Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
 
-        Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
+    //    Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
 
-        Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projetilePushAmount, shootDirection, currentNode);
-        if (targetPushbackNode != null)
-        {
-            targetUnit.StartCoroutine(targetUnit.unitMovement.MoveWithPush(equippedRangeWeapon.projetilePushAmount, shootDirection));
-        }
-        else
-        {
-            targetUnit.StartCoroutine(targetUnit.unitMovement.DieLonesomeInSpace(shootDirection));
-        }
+    //    Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projectilePushAmount, shootDirection, currentNode);
+    //    if (targetPushbackNode != null)
+    //    {
+    //        targetUnit.StartCoroutine(targetUnit.unitMovement.MoveWithPush(equippedRangeWeapon.projectilePushAmount, shootDirection));
+    //    }
+    //    else
+    //    {
+    //        targetUnit.StartCoroutine(targetUnit.unitMovement.DieLonesomeInSpace(shootDirection));
+    //    }
 
-        //If the recoil target is valid, move there
-        if (recoilTarget != null)
-        {
-            unitMovement.ResetPreviousStoredValues();
-            StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
-            return true;
-        }
-        //If the recoil target is not valid, die
-        else
-        {
-            unitMovement.ResetPreviousStoredValues();
-            StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
-            return false;
-        }
-    }
+    //    //If the recoil target is valid, move there
+    //    if (recoilTarget != null)
+    //    {
+    //        unitMovement.ResetPreviousStoredValues();
+    //        StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
+    //        return true;
+    //    }
+    //    //If the recoil target is not valid, die
+    //    else
+    //    {
+    //        unitMovement.ResetPreviousStoredValues();
+    //        StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
+    //        return false;
+    //    }
+    //}
 
     /*
      * 
