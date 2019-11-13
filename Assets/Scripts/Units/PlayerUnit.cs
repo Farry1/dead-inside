@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PlayerUnit : Unit
 {
     [HideInInspector] public GameObject relatedUIPanel;
-    bool isPlayerTurn;
+    
 
     public delegate void ActionStateChange();
     public static event ActionStateChange OnActionStateNone;
@@ -54,8 +54,6 @@ public class PlayerUnit : Unit
                 switch (actionState)
                 {
                     case ActionState.None:
-                        if (rightMouseUp)
-                            PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
                         break;
 
 
@@ -118,12 +116,7 @@ public class PlayerUnit : Unit
             currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, target, maxSteps);
         }
     }
-
-
-    void TestFunction()
-    {
-        Debug.Log("Test!");
-    }
+   
 
     Node previousHoveredNode = null;
     Unit previousHoveredUnit = null;
@@ -262,14 +255,7 @@ public class PlayerUnit : Unit
     {
         base.OnSelect();
 
-        if (isPlayerTurn)
-        {
-            PlayerUnitsController.Instance.UnselectSelectedPlayerUnits();
-            PlayerUnitsController.Instance.SelectUnit(this);
-            StageUIController.Instance.SetPlayerActionContainer(true);
-            SwitchUnitState(UnitState.Selected);
-            StageUIController.Instance.CreatePlayerActionMenu(actions);
-        }
+  
     }
 
     private void DrawPath()
@@ -392,8 +378,6 @@ public class PlayerUnit : Unit
     {
         base.OnPlayerTurn();
         isPlayerTurn = true;
-
-
     }
 
     protected override void OnEnemyTurn()

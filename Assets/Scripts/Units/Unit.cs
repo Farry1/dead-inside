@@ -46,7 +46,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     public UnityEvent OnDie;
 
-
+    protected bool isPlayerTurn;
 
     //Events
     public delegate void UnitSelection();
@@ -93,7 +93,7 @@ public class Unit : MonoBehaviour, ISelectable
         else
         {
             StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
-        }        
+        }
     }
     void OnDisable()
     {
@@ -121,6 +121,31 @@ public class Unit : MonoBehaviour, ISelectable
         FindAttachedActions();
     }
 
+    protected virtual void Update()
+    {
+        bool rightMouseUp = Input.GetMouseButtonUp(1);
+        bool leftMouseUp = Input.GetMouseButtonUp(0);
+
+        switch (unitState)
+        {
+            case UnitState.Idle:
+                break;
+
+            case UnitState.Selected:
+
+                switch (actionState)
+                {
+                    case ActionState.None:
+                        if (rightMouseUp)
+                            PlayerUnitsController.Instance.UnselectUnits();
+                        break;
+                }
+
+                break;
+        }
+    }
+
+
     private void FindAttachedActions()
     {
         if (equippedRangeWeapon != null)
@@ -132,11 +157,6 @@ public class Unit : MonoBehaviour, ISelectable
         }
     }
 
-
-    protected virtual void Update()
-    {
-      
-    }
 
     public virtual void SwitchUnitState(UnitState state)
     {
@@ -152,11 +172,42 @@ public class Unit : MonoBehaviour, ISelectable
     public virtual void OnSelect()
     {
         OnUnitSelected();
+
+        if (isPlayerTurn)
+        {
+            PlayerUnitsController.Instance.UnselectUnits();
+            PlayerUnitsController.Instance.SelectUnit(this);
+            SwitchUnitState(UnitState.Selected);
+
+            StageUIController.Instance.selectedUnitInformationContainer.SetActive(true);
+            if (characterPortrait != null)
+                StageUIController.Instance.selectedUnitImage.sprite = characterPortrait;
+            else
+                Debug.LogError("No character portrait set!");
+
+            StageUIController.Instance.selectedUnitMoveRange.text = maxSteps.ToString();
+            StageUIController.Instance.selectedUnitName.text = gameObject.name.ToString();
+
+
+            if (PlayerUnitsController.Instance.selectedUnit.tag == "Player")
+            {
+                StageUIController.Instance.SetPlayerActionContainer(true);
+                StageUIController.Instance.CreatePlayerActionMenu(actions);
+            }
+            else
+            {
+                StageUIController.Instance.SetPlayerActionContainer(false);
+            }
+
+        }
     }
 
     public virtual void OnUnselect()
     {
         OnUnitDeselected();
+
+        StageUIController.Instance.SetPlayerActionContainer(false);
+        StageUIController.Instance.selectedUnitInformationContainer.SetActive(false);
     }
 
     public virtual void Die()
@@ -189,11 +240,12 @@ public class Unit : MonoBehaviour, ISelectable
     protected virtual void OnPlayerTurn()
     {
         currentActionPoints = maxActionPoints;
+        isPlayerTurn = true;
     }
 
     protected virtual void OnEnemyTurn()
     {
-
+        isPlayerTurn = false;
     }
 
     private void OnCollisionEnter(Collision collision)

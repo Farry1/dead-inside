@@ -21,6 +21,11 @@ public class StageUIController : MonoBehaviour
     public GameObject WinPanel;
     public GameObject LosePanel;
 
+    public GameObject selectedUnitInformationContainer;
+    public Image selectedUnitImage;
+    public Text selectedUnitName;
+    public Text selectedUnitMoveRange;
+
     [Header("UI Buttons")]
     public Button nextTurnButton;
 
@@ -113,6 +118,7 @@ public class StageUIController : MonoBehaviour
                 unitPanel.gameObject.name = "UnitPanel";
                 unit.relatedUIPanel = unitPanel;
                 unitPanel.transform.Find("ProfileImage").GetComponentInChildren<Image>().sprite = unit.characterPortrait;
+                unitPanel.transform.Find("ProfileImage").GetComponentInChildren<Image>().preserveAspect = true;
             }
         }
     }

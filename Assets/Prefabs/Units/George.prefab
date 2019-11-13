@@ -249,7 +249,7 @@ MonoBehaviour:
   ignorePushback: 0
   equippedRangeWeapon: {fileID: 11400000, guid: acc8712da462a094e9c33167a4f8e0f8,
     type: 2}
-  characterPortrait: {fileID: 21300000, guid: 44c34683bb400714d8d55b572b1a4578, type: 3}
+  characterPortrait: {fileID: 21300000, guid: 5f5b933bfadc19b46843bc9a2a67056d, type: 3}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
   OnDie:
@@ -367,11 +367,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6724719437748392475}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: ff4ec26d3c00ca94b957f0534afdefd9,
-        type: 3}
-      propertyPath: m_Name
-      value: Ch44_nonPBR
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ff4ec26d3c00ca94b957f0534afdefd9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -426,6 +421,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ff4ec26d3c00ca94b957f0534afdefd9,
+        type: 3}
+      propertyPath: m_Name
+      value: Ch44_nonPBR
       objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: ff4ec26d3c00ca94b957f0534afdefd9,
         type: 3}

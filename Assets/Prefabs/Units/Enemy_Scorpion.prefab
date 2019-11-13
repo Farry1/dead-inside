@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 4740400209132859605}
   - component: {fileID: 4740194323401866224}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy_Scorpion
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,11 +65,16 @@ MonoBehaviour:
   maxActionPoints: 2
   currentActionPoints: 2
   maxSteps: 3
+  ignorePushback: 0
   equippedRangeWeapon: {fileID: 11400000, guid: a70353fd03a5be84284bc313e035249c,
     type: 2}
-  characterPortrait: {fileID: 0}
+  characterPortrait: {fileID: 21300000, guid: cee857d61de10aa4e9a71fd1e2a97ca4, type: 3}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
+  OnDie:
+    m_PersistentCalls:
+      m_Calls: []
+  attackType: 0
 --- !u!114 &1036418276397528881
 MonoBehaviour:
   m_ObjectHideFlags: 0

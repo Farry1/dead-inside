@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class PlayerUnitsController : MonoBehaviour
 {
     public List<PlayerUnit> units = new List<PlayerUnit>();
-    [HideInInspector] public PlayerUnit selectedPlayerUnit = null;
+    [HideInInspector] public Unit selectedUnit = null;
     [HideInInspector] public LineRenderer lineRenderer;
 
     private static PlayerUnitsController _instance;
@@ -88,11 +88,16 @@ public class PlayerUnitsController : MonoBehaviour
                     if (Physics.Raycast(objectSideRay, out objectSideHit, 1f))
                     {
                         Node hitNode = objectSideHit.collider.gameObject.GetComponent<Node>();
-                        if (hitNode != null && selectedPlayerUnit != null)
+                        if (hitNode != null && selectedUnit != null)
                         {
-                            previousHoveredNode = hitNode;
-                            selectedPlayerUnit.PrecalculatePathTo(hitNode);
-                            selectedPlayerUnit.RangeAttack(hitNode);
+                            if (selectedUnit.tag == "Player")
+                            {
+                                PlayerUnit selectedPlayerUnit = selectedUnit.GetComponent<PlayerUnit>();
+                                previousHoveredNode = hitNode;
+                                selectedPlayerUnit.PrecalculatePathTo(hitNode);
+                                selectedPlayerUnit.RangeAttack(hitNode);
+                            }
+
                         }
                     }
                     break;
@@ -105,13 +110,18 @@ public class PlayerUnitsController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (selectedPlayerUnit != null &&
-                    selectedPlayerUnit.currentPath != null)
+                if (selectedUnit != null &&
+                    selectedUnit.currentPath != null)
                 {
                     RaycastHit navigateToHit;
                     if (Physics.Raycast(navigateRay, out navigateToHit))
                     {
-                        selectedPlayerUnit.Move();
+                        if (selectedUnit.tag == "Player")
+                        {
+                            PlayerUnit selectedPlayerUnit = selectedUnit.GetComponent<PlayerUnit>();
+                            selectedPlayerUnit.Move();
+                        }
+
                     }
                 }
             }
@@ -128,39 +138,33 @@ public class PlayerUnitsController : MonoBehaviour
         return results.Count > 0;
     }
 
-    public void UnselectSelectedPlayerUnits()
+    public void UnselectUnits()
     {
-        if (selectedPlayerUnit != null)
+        if (selectedUnit != null)
         {
-            selectedPlayerUnit.SwitchActionState(Unit.ActionState.None);
-            selectedPlayerUnit.OnUnselect();
+            selectedUnit.SwitchActionState(Unit.ActionState.None);
+            selectedUnit.OnUnselect();
         }
 
         lineRenderer.gameObject.SetActive(false);
         StageUIController.Instance.SetPlayerActionContainer(false);
         StageUIController.Instance.ClearPlayerActionsPanel();
 
-        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
-        foreach (PlayerUnit unit in selectedUnits)
+        Unit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
+        foreach (Unit unit in selectedUnits)
         {
             unit.unitState = Unit.UnitState.Idle;
         }
 
-        selectedPlayerUnit = null;
+        selectedUnit = null;
         Dijkstra.Instance.Clear();
     }
 
-    public PlayerUnit GetSelectedUnit()
+
+
+    public void SelectUnit(Unit unit)
     {
-        PlayerUnit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
-        return selectedUnits[0];
-    }
-
-
-
-    public void SelectUnit(PlayerUnit unit)
-    {
-        selectedPlayerUnit = unit;
+        selectedUnit = unit;
     }
 
     void InitPlayerTurn()
@@ -171,6 +175,6 @@ public class PlayerUnitsController : MonoBehaviour
     void IsEnemyTurn()
     {
         isPlayerTurn = false;
-        UnselectSelectedPlayerUnits();
+        UnselectUnits();
     }
 }

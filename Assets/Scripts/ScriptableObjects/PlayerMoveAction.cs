@@ -9,13 +9,13 @@ public class PlayerMoveAction : Action
     {
         get
         {
-            return PlayerUnitsController.Instance.selectedPlayerUnit;
+            return PlayerUnitsController.Instance.selectedUnit.GetComponent<PlayerUnit>();
         }
     }
 
 
     public override void Execute()
     {
-        unit.SwitchActionState(PlayerUnit.ActionState.MovePreparation);       
+        unit.SwitchActionState(PlayerUnit.ActionState.MovePreparation);
     }
 }

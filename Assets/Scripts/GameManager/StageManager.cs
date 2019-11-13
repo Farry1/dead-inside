@@ -53,7 +53,6 @@ public class StageManager : MonoBehaviour
     {
         stageState = StageState.PlayerTurn;
         OnPlayerTurn();
-        Dijkstra.Instance.Clear();
     }
 
     public void EndPlayerTurn()
