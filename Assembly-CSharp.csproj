@@ -121,6 +121,9 @@
     <Reference Include="Unity.ProGrids.Editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Runtime">
+      <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -157,6 +160,9 @@
     <Reference Include="com.unity.cinemachine.editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.ProBuilder.AddOns.Editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
     </Reference>
@@ -171,12 +177,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Runtime">
-      <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files/Unity/2019.2.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
