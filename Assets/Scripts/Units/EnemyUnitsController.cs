@@ -56,7 +56,6 @@ public class EnemyUnitsController : MonoBehaviour
 
     IEnumerator DoEnemyActions()
     {
-        
         //Foreach through all enemies and create a copy of that list, so the Coroutine won't break; 
         foreach (EnemyUnit enemyUnit in enemyUnits.ToList())
         {
@@ -68,7 +67,6 @@ public class EnemyUnitsController : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(1f);
-     
 
         StageManager.Instance.EndEnemyTurn();
     }
@@ -77,7 +75,11 @@ public class EnemyUnitsController : MonoBehaviour
     {
         if (AllEnemiesDead())
         {
-            StageUIController.Instance.WinPanel.SetActive(true);
+            if (StageManager.Instance.stageState != StageManager.StageState.Won)
+            {
+                StageUIController.Instance.WinPanel.SetActive(true);
+                StageManager.Instance.SwitchStageState(StageManager.StageState.Won);
+            }
         }
     }
 

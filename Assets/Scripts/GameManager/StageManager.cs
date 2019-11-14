@@ -49,22 +49,54 @@ public class StageManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
 
+
     public void InitScene()
     {
-        stageState = StageState.PlayerTurn;
-        OnPlayerTurn();
+        if (stageState != StageState.Lost || stageState != StageState.Won)
+        {
+            SwitchStageState(StageState.PlayerTurn);
+            OnPlayerTurn();
+        }
     }
 
     public void EndPlayerTurn()
     {
-        stageState = StageState.EnemyTurn;
-        OnEnemyTurn();
+        if (stageState != StageState.Lost || stageState != StageState.Won)
+        {
+            SwitchStageState(StageState.EnemyTurn);
+        }
     }
 
     public void EndEnemyTurn()
     {
-        stageState = StageState.PlayerTurn;
-        OnPlayerTurn();
+        if (stageState == StageState.EnemyTurn)
+        {
+            SwitchStageState(StageState.PlayerTurn);
+        }
+    }
+
+    public void SwitchStageState(StageState state)
+    {
+        switch (state)
+        {
+            case StageState.Lost:
+                OnLost();
+                break;
+
+            case StageState.Won:
+                OnWon();
+                break;
+
+            case StageState.PlayerTurn:
+                OnPlayerTurn();
+                break;
+
+            case StageState.EnemyTurn:
+                OnEnemyTurn();
+                break;
+        }
+
+        stageState = state;
     }
 
 }

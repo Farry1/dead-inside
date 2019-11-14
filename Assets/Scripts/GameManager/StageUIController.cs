@@ -32,9 +32,6 @@ public class StageUIController : MonoBehaviour
     [Header("Ingame Menu")]
     public GameObject InGameMenuContainer;
 
-
-    private StageManager stageManager;
-
     private static StageUIController _instance;
     public static StageUIController Instance { get { return _instance; } }
 
@@ -53,7 +50,7 @@ public class StageUIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        stageManager = StageManager.Instance;
+        
     }
 
     // Update is called once per frame
@@ -64,30 +61,38 @@ public class StageUIController : MonoBehaviour
 
         if (CheckForLose())
         {
-            LosePanel.SetActive(true);
-            StageManager.Instance.stageState = StageManager.StageState.Lost;
+            if (StageManager.Instance.stageState != StageManager.StageState.Lost)
+            {
+                LosePanel.SetActive(true);
+                StageManager.Instance.SwitchStageState(StageManager.StageState.Lost);
+            }
         }
 
         InGameMenu();
 
-        switch (stageManager.stageState)
+        if (StageManager.Instance.stageState != StageManager.StageState.Lost ||
+            StageManager.Instance.stageState != StageManager.StageState.Won)
         {
-            case StageManager.StageState.PlayerTurn:
-                stateIndicator.gameObject.SetActive(true);
-                stateIndicator.text = "Player Turn";
+            switch (StageManager.Instance.stageState)
+            {
+                case StageManager.StageState.PlayerTurn:
+                    stateIndicator.gameObject.SetActive(true);
+                    stateIndicator.text = "Player Turn";
 
-                nextTurnButton.gameObject.SetActive(true);
+                    nextTurnButton.gameObject.SetActive(true);
 
-                break;
-            case StageManager.StageState.EnemyTurn:
-                stateIndicator.gameObject.SetActive(true);
-                stateIndicator.text = "Enemy Turn";
-                break;
-            default:
-                stateIndicator.gameObject.SetActive(false);
-                nextTurnButton.gameObject.SetActive(false);
-                break;
+                    break;
+                case StageManager.StageState.EnemyTurn:
+                    stateIndicator.gameObject.SetActive(true);
+                    stateIndicator.text = "Enemy Turn";
+                    break;
+                default:
+                    stateIndicator.gameObject.SetActive(false);
+                    nextTurnButton.gameObject.SetActive(false);
+                    break;
+            }
         }
+
     }
 
     bool CheckForLose()

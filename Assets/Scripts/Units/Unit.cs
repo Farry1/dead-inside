@@ -62,7 +62,7 @@ public class Unit : MonoBehaviour, ISelectable
     }
 
     protected void ShootProjectile(Node recoilTarget, Vector3 recoilDirection, Vector3 projectileTargetPosition, Node targetNode, Unit targetUnit, Vector3 hitDirection, Node targetPushbackNode)
-    {
+    {   
         GameObject shootFX = Instantiate(equippedRangeWeapon.shootFX, gunbarrel.position, gunbarrel.rotation);
         GameObject simulatedProjectile = Instantiate(equippedRangeWeapon.simulatedProjectile, gunbarrel.position, gunbarrel.rotation);
         GameObject simulatedProjectileTarget = Instantiate(equippedRangeWeapon.projectileTarget, projectileTargetPosition, Quaternion.identity);
