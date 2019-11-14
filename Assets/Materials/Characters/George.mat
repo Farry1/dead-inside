@@ -29,11 +29,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_F1B425B9:
-        m_Texture: {fileID: 2800000, guid: 3b8e1be0cb1b0a14caa825fde120dc87, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6acd3e9a09569eb4997d2a646fc730db, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_F2FE9FC6:
-        m_Texture: {fileID: 2800000, guid: fb76d237db1a6b24d98a3d43c16e13bd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 696db5c10004fc44b9bd255e9c295d5b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -87,11 +87,11 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_E9ED615A: {r: 0.8867924, g: 0.8803152, b: 0.079476655, a: 1}
+    - Color_E9ED615A: {r: 0.745283, g: 0.5613748, b: 0, a: 1}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 85.445015, g: 69.59241, b: 0, a: 0}
+    - _MainColor: {r: 7.129739, g: 6.9630685, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
 --- !u!114 &6674177367264820119
 MonoBehaviour:
