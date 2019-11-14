@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PA_WarriorMat
-  m_Shader: {fileID: -6465566751694194690, guid: da9d363abe5980c4495e1fe0986448eb,
+  m_Shader: {fileID: -6465566751694194690, guid: d84ebcf252f6aeb488ea308e28778cb3,
     type: 3}
   m_ShaderKeywords: _ENVIRONMENTREFLECTIONS_OFF _NORMALMAP
   m_LightmapFlags: 4
@@ -34,11 +34,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_8FBB8D60:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 60963c07e63d7ca48af5762fd211f5d5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_B35EE10A:
         m_Texture: {fileID: 2800000, guid: 73352c6c2e503ab4ab08ecec77d389ac, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_F1B425B9:
+        m_Texture: {fileID: 2800000, guid: 6acd3e9a09569eb4997d2a646fc730db, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_F2FE9FC6:
@@ -101,9 +105,10 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - Color_E9ED615A: {r: 0.48273405, g: 0.84740573, b: 0.9056604, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0, g: 2.670157, b: 2.489256, a: 0}
+    - _MainColor: {r: 0, g: 23.341177, b: 23.968628, a: 0}
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

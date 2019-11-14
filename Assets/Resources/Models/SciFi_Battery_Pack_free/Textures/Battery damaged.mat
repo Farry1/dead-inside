@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Battery damaged
-  m_Shader: {fileID: -6465566751694194690, guid: da9d363abe5980c4495e1fe0986448eb,
+  m_Shader: {fileID: -6465566751694194690, guid: d84ebcf252f6aeb488ea308e28778cb3,
     type: 3}
   m_ShaderKeywords: _EMISSION _NORMALMAP
   m_LightmapFlags: 2
@@ -113,10 +113,11 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - Color_E9ED615A: {r: 1, g: 0.6745283, b: 0.6745283, a: 0}
     - _BaseColor: {r: 0.8455882, g: 0.8455882, b: 0.8455882, a: 1}
     - _Color: {r: 0.8455882, g: 0.8455882, b: 0.8455882, a: 1}
     - _EmissionColor: {r: 0.06911765, g: 0.21323532, b: 0, a: 1}
-    - _MainColor: {r: 4.759381, g: 0, b: 0.2454319, a: 0}
+    - _MainColor: {r: 6.3541465, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
 --- !u!114 &425804179757579961
 MonoBehaviour:
