@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\fmodGameOver.cs" />
+    <Compile Include="Assets\Materials\PostProcessOutline.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Calculations.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Assets\Scripts\Units\UnitAnimation.cs" />
     <Compile Include="Assets\Scripts\Units\UnitFacing.cs" />
     <Compile Include="Assets\Scripts\Units\UnitMovement.cs" />
+    <None Include="Assets\Materials\Outline.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projekte/Unity/Dead Inside (WT)/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
