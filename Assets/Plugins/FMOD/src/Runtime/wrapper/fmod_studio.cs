@@ -157,6 +157,7 @@ namespace FMOD.Studio
     {
         public uint data1;  /* The first half of the ID. */
         public uint data2;  /* The second half of the ID. */
+        public object setValue;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -1344,6 +1345,11 @@ namespace FMOD.Studio
         public bool isValid()
         {
             return hasHandle() && FMOD_Studio_EventInstance_IsValid(this.handle);
+        }
+
+        public void setParameterByID(object gameOver, float v)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
