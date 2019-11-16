@@ -62,7 +62,7 @@ public class Unit : MonoBehaviour, ISelectable
     }
 
     protected void ShootProjectile(Node recoilTarget, Vector3 recoilDirection, Vector3 projectileTargetPosition, Node targetNode, Unit targetUnit, Vector3 hitDirection, Node targetPushbackNode)
-    {   
+    {
         GameObject shootFX = Instantiate(equippedRangeWeapon.shootFX, gunbarrel.position, gunbarrel.rotation);
         GameObject simulatedProjectile = Instantiate(equippedRangeWeapon.simulatedProjectile, gunbarrel.position, gunbarrel.rotation);
         GameObject simulatedProjectileTarget = Instantiate(equippedRangeWeapon.projectileTarget, projectileTargetPosition, Quaternion.identity);
@@ -171,10 +171,14 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void OnSelect()
     {
-        OnUnitSelected();
-
-        if (isPlayerTurn)
+        if (PlayerUnitsController.Instance.selectedUnit != null &&
+            PlayerUnitsController.Instance.selectedUnit.actionState == ActionState.PreparingRangeAttack)
         {
+            //Player Unit is preparing a range attack, so a unit cannot be selected
+        }
+        else if (isPlayerTurn)
+        {
+            OnUnitSelected();
             PlayerUnitsController.Instance.UnselectUnits();
             PlayerUnitsController.Instance.SelectUnit(this);
             SwitchUnitState(UnitState.Selected);
@@ -198,7 +202,6 @@ public class Unit : MonoBehaviour, ISelectable
             {
                 StageUIController.Instance.SetPlayerActionContainer(false);
             }
-
         }
     }
 
