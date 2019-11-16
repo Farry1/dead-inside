@@ -132,7 +132,7 @@ MonoBehaviour:
   initialUnit: {fileID: 0}
   hitDirection: {x: 0, y: 0, z: 0}
   targetPushbackNode: {fileID: 0}
-  hitFX: {fileID: 8583140995928147192, guid: 53b97dacc8ba5144f997359ee4f86633, type: 3}
+  hitFX: {fileID: 472260029485910249, guid: b7eedc5784ec80f4698b718a8491f8b6, type: 3}
 --- !u!1 &3824138824631168781
 GameObject:
   m_ObjectHideFlags: 0

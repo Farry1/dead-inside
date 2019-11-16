@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11301611887564705}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -123,4 +123,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  damage: 0
+  projectilePushAmount: 0
+  projectileType: 0
+  hitNode: {fileID: 0}
+  targetUnit: {fileID: 0}
+  initialUnit: {fileID: 0}
+  hitDirection: {x: 0, y: 0, z: 0}
+  targetPushbackNode: {fileID: 0}
   hitFX: {fileID: 8583140995928147192, guid: 53b97dacc8ba5144f997359ee4f86633, type: 3}
