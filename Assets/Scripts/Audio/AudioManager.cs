@@ -35,7 +35,7 @@ public class AudioManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMusic = FMODUnity.RuntimeManager.CreateInstance("event:/ZeroG_m1_BreakIntoTheScene");
+        GameMusic = FMODUnity.RuntimeManager.CreateInstance("event:/GameMusic");
         GameMusic.start();
     }
 
@@ -47,16 +47,16 @@ public class AudioManager : MonoBehaviour
 
     void WonAudio()
     {
-        GameMusic.setParameterByName("Victory", 1);
+        Debug.Log("Play Win Audio");
     }
 
     void LostAudio()
     {
-        GameMusic.setParameterByName("Death", 1);
+        GameMusic.setParameterByName("GameOver", 1f);
     }
     
     public void ShootSound()
     {
-        Debug.Log("shothere");
+
     }
 }

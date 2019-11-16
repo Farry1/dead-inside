@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\fmodGameOver.cs" />
-    <Compile Include="Assets\Materials\PostProcessOutline.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Calculations.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Assets\Scripts\Units\UnitAnimation.cs" />
     <Compile Include="Assets\Scripts\Units\UnitFacing.cs" />
     <Compile Include="Assets\Scripts\Units\UnitMovement.cs" />
-    <None Include="Assets\Materials\Outline.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
@@ -124,9 +122,6 @@
     </Reference>
     <Reference Include="Unity.ProGrids.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Runtime">
-      <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
@@ -163,9 +158,6 @@
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProBuilder.AddOns.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>

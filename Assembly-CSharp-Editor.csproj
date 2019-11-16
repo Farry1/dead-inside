@@ -99,9 +99,6 @@
     <Reference Include="Unity.ProGrids.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Runtime">
-      <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -137,9 +134,6 @@
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProBuilder.AddOns.Editor">
       <HintPath>D:/Unreal/Git/DeadInside/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
