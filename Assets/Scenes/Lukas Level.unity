@@ -15836,7 +15836,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345bafade9b25794d86561c0d5d9343f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraLookAt: {fileID: 1174773854}
+  initialCameraLookAt: {fileID: 0}
+  rotateAroundGO: {fileID: 1174773854}
   moveSpeed: 200
   zoomSpeed: 300
   minDistance: 5

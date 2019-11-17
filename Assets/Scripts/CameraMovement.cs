@@ -15,6 +15,8 @@ public class CameraMovement : MonoBehaviour
 
     protected float t;
     protected Vector3 startPosition;
+    Quaternion startRotation;
+    Quaternion targetRotation;
     protected Vector3 target;
     protected float timeToReachTarget;
 
@@ -49,19 +51,27 @@ public class CameraMovement : MonoBehaviour
         {
             t += Time.deltaTime / timeToReachTarget;
             transform.position = Vector3.Lerp(startPosition, target, t);
-            transform.LookAt(rotateAroundGO.transform, transform.up);
+            //transform.LookAt(rotateAroundGO.transform, transform.up);
+
+            
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
+
+
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateAroundGO.transform.rotation, t);
         }
     }
 
-    public void SetMoveDestination(Vector3 destination, float time)
+    public void SetMoveDestination(Transform destination, float time)
     {
         t = 0;
         startPosition = transform.position;
+        startRotation = transform.rotation;
         timeToReachTarget = time;
-        target = destination;
+        target = (destination.position + destination.up * 5f);
+        targetRotation = Quaternion.LookRotation(- destination.up);
     }
 
-    public void MoveCameraTo(Vector3 target)
+    public void MoveCameraTo(Transform target)
     {
         SetMoveDestination(target, 0.75f);
         StartCoroutine(CameraMoves());

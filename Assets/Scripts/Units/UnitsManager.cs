@@ -104,7 +104,6 @@ public class UnitsManager : MonoBehaviour
                                 selectedPlayerUnit.PrecalculatePathTo(hitNode);
                                 selectedPlayerUnit.RangeAttack(hitNode);
                             }
-
                         }
                     }
                     break;

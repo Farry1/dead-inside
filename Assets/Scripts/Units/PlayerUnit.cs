@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerUnit : Unit
 {
-    [HideInInspector] public GameObject relatedUIPanel;
+    public GameObject relatedUIPanel;
     
 
     public delegate void ActionStateChange();
@@ -40,7 +40,7 @@ public class PlayerUnit : Unit
         if (isPlayerTurn)
         {
             if (relatedUIPanel != null)
-                relatedUIPanel.transform.Find("TurnsText").GetComponent<Text>().text = currentActionPoints.ToString();
+                relatedUIPanel.transform.Find("APLeftText").GetComponentInChildren<Text>().text = currentActionPoints.ToString();
         }
 
 

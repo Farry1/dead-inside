@@ -108,7 +108,7 @@ public class ProjectedUnitUI : MonoBehaviour
         if (unit.unitState != Unit.UnitState.Selected)
         {
             projectedUnitUI.transform.localScale = Vector3.one * 0.6f;
-            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.9f, 0.8f);
+            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.5f, 0.5f);
         }
         else
         {
