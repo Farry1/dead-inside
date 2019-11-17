@@ -27,12 +27,14 @@ public class ProjectedUnitUI : MonoBehaviour
     {
         StageManager.OnWon += HideProjectedUnitUI;
         StageManager.OnLost += HideProjectedUnitUI;
+        StageUIController.OnIngameMenuOpened += HideProjectedUnitUI;
     }
 
     private void OnDisable()
     {
         StageManager.OnWon -= HideProjectedUnitUI;
         StageManager.OnLost -= HideProjectedUnitUI;
+        StageUIController.OnIngameMenuOpened -= HideProjectedUnitUI;
     }
 
     private void Start()
@@ -62,14 +64,15 @@ public class ProjectedUnitUI : MonoBehaviour
         {
             if (hit.collider.tag == "MainCamera")
             {
-                isVisible = true;
+                if (StageManager.Instance.stageState != StageManager.StageState.IngameMenu)
+                    isVisible = true;
             }
         }
 
         projectedUnitUI.SetActive(isVisible);
 
         Vector3 newPos = Camera.main.WorldToScreenPoint(UIHolder.transform.position);
-        projectedUnitUI.transform.position = newPos + new Vector3(85, 20, 0);
+        projectedUnitUI.transform.position = newPos + new Vector3(135, 45, 0);
 
         UpdateUI();
     }

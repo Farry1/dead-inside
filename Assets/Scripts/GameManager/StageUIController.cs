@@ -32,6 +32,12 @@ public class StageUIController : MonoBehaviour
     [Header("Ingame Menu")]
     public GameObject InGameMenuContainer;
 
+    //Events
+    public delegate void UIChanges();
+    public static event UIChanges OnIngameMenuOpened;
+    public static event UIChanges OnIngameMenuClosed;
+
+
     private static StageUIController _instance;
     public static StageUIController Instance { get { return _instance; } }
 
@@ -172,9 +178,17 @@ public class StageUIController : MonoBehaviour
     {
         InGameMenuContainer.SetActive(toggleIngameMenu);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (StageManager.Instance.stageState == StageManager.StageState.PlayerTurn || StageManager.Instance.stageState == StageManager.StageState.IngameMenu)
         {
-            toggleIngameMenu = !toggleIngameMenu;
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                toggleIngameMenu = !toggleIngameMenu;
+
+                if (toggleIngameMenu)
+                    StageManager.Instance.SwitchStageState(StageManager.StageState.IngameMenu);
+                else
+                    StageManager.Instance.SwitchStageState(StageManager.StageState.PlayerTurn);
+            }
         }
     }
 

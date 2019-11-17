@@ -12,7 +12,7 @@ public class StageManager : MonoBehaviour
     public static event StateChanged OnWon;
 
 
-    public enum StageState { PlayerTurn, EnemyTurn, Lost, Won };
+    public enum StageState { PlayerTurn, EnemyTurn, Lost, Won, IngameMenu };
     public StageState stageState;
 
     private static StageManager _instance;
@@ -55,10 +55,7 @@ public class StageManager : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.StopGameMusic();
-        }
+        AudioManager.Instance.StopGameMusic();
     }
 
     public void InitScene()
@@ -104,6 +101,9 @@ public class StageManager : MonoBehaviour
 
             case StageState.EnemyTurn:
                 OnEnemyTurn();
+                break;
+            case StageState.IngameMenu:
+
                 break;
         }
 
