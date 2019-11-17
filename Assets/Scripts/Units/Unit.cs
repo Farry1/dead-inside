@@ -137,9 +137,11 @@ public class Unit : MonoBehaviour, ISelectable
                 {
                     case ActionState.None:
                         if (rightMouseUp)
-                            PlayerUnitsController.Instance.UnselectUnits();
+                            UnitsManager.Instance.UnselectUnits();
                         break;
+
                 }
+
 
                 break;
         }
@@ -171,16 +173,16 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void OnSelect()
     {
-        if (PlayerUnitsController.Instance.selectedUnit != null &&
-            PlayerUnitsController.Instance.selectedUnit.actionState == ActionState.PreparingRangeAttack)
+        if (UnitsManager.Instance.selectedUnit != null &&
+            UnitsManager.Instance.selectedUnit.actionState == ActionState.PreparingRangeAttack)
         {
             //Player Unit is preparing a range attack, so a unit cannot be selected
         }
         else if (isPlayerTurn)
         {
             OnUnitSelected();
-            PlayerUnitsController.Instance.UnselectUnits();
-            PlayerUnitsController.Instance.SelectUnit(this);
+            UnitsManager.Instance.UnselectUnits();
+            UnitsManager.Instance.SelectUnit(this);
             SwitchUnitState(UnitState.Selected);
 
             StageUIController.Instance.selectedUnitInformationContainer.SetActive(true);
@@ -193,7 +195,7 @@ public class Unit : MonoBehaviour, ISelectable
             StageUIController.Instance.selectedUnitName.text = gameObject.name.ToString();
 
 
-            if (PlayerUnitsController.Instance.selectedUnit.tag == "Player")
+            if (UnitsManager.Instance.selectedUnit.tag == "Player")
             {
                 StageUIController.Instance.SetPlayerActionContainer(true);
                 StageUIController.Instance.CreatePlayerActionMenu(actions);

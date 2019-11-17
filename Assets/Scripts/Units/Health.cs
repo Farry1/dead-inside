@@ -15,7 +15,6 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateUI();
     }
 
     public void Damage(int amount)
@@ -27,13 +26,9 @@ public class Health : MonoBehaviour
     public void Add(int amount)
     {
         health += amount;
-        UpdateUI();
     }
 
-    void UpdateUI()
-    {
-
-    }
+  
 
     void CheckLifeSigns()
     {

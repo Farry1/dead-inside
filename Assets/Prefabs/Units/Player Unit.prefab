@@ -169,10 +169,14 @@ MonoBehaviour:
   maxActionPoints: 2
   currentActionPoints: 2
   maxSteps: 3
+  ignorePushback: 0
   equippedRangeWeapon: {fileID: 0}
   characterPortrait: {fileID: 21300000, guid: 44c34683bb400714d8d55b572b1a4578, type: 3}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
+  OnDie:
+    m_PersistentCalls:
+      m_Calls: []
   relatedUIPanel: {fileID: 0}
   validCrosshairPrefab: {fileID: 1852360556669239233, guid: 4985ad85e3f5907458abc5d0a8d328bf,
     type: 3}
@@ -247,6 +251,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHolder: {fileID: 6245188351812473889}
   UIPrefab: {fileID: 7784013550354445076, guid: e0e55bc276e5bc346a216c89cb4a7bf2,
+    type: 3}
+  singleHealthBar: {fileID: 1727632668466948105, guid: 068450f4102fd014aaaf4986bcfce417,
     type: 3}
 --- !u!1 &8204705327116700284
 GameObject:

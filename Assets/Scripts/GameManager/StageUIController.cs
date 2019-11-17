@@ -98,7 +98,7 @@ public class StageUIController : MonoBehaviour
     bool CheckForLose()
     {
 
-        if (PlayerUnitsController.Instance.units.Count == 0)
+        if (UnitsManager.Instance.playerUnits.Count == 0)
         {
             return true;
         }
@@ -115,7 +115,7 @@ public class StageUIController : MonoBehaviour
     public void CreateUnitPanel()
     {
         Debug.Log("Creating Player Info Panel");
-        foreach (PlayerUnit unit in PlayerUnitsController.Instance.units)
+        foreach (PlayerUnit unit in UnitsManager.Instance.playerUnits)
         {
             if (unitPanelPrefab != null && playerInfoContainer != null)
             {

@@ -132,7 +132,8 @@ public class EnemyUnit : Unit
      * 
      */
     public override void SwitchUnitState(UnitState state)
-    {
+    {       
+
         switch (state)
         {
             case UnitState.Dead:
@@ -146,6 +147,7 @@ public class EnemyUnit : Unit
 
     public override void SwitchActionState(ActionState a)
     {
+
         switch (a)
         {
             case ActionState.None:

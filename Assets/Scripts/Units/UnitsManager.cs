@@ -4,14 +4,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerUnitsController : MonoBehaviour
+public class UnitsManager : MonoBehaviour
 {
-    public List<PlayerUnit> units = new List<PlayerUnit>();
+    public List<PlayerUnit> playerUnits = new List<PlayerUnit>();
+    public List<Unit> allUnits = new List<Unit>();
     [HideInInspector] public Unit selectedUnit = null;
     [HideInInspector] public LineRenderer lineRenderer;
 
-    private static PlayerUnitsController _instance;
-    public static PlayerUnitsController Instance { get { return _instance; } }
+    private static UnitsManager _instance;
+    public static UnitsManager Instance { get { return _instance; } }
 
     bool isPlayerTurn;
 
@@ -46,10 +47,16 @@ public class PlayerUnitsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerUnit[] unitsArray = FindObjectsOfType<PlayerUnit>();
-        foreach (PlayerUnit u in unitsArray)
+        PlayerUnit[] playerUnitsArray = FindObjectsOfType<PlayerUnit>();
+        foreach (PlayerUnit u in playerUnitsArray)
         {
-            units.Add(u);
+            this.playerUnits.Add(u);
+        }
+
+        Unit[] unitsArray = FindObjectsOfType<Unit>();
+        foreach (Unit u in unitsArray)
+        {
+            this.allUnits.Add(u);
         }
 
         StageUIController.Instance.CreateUnitPanel();
@@ -121,7 +128,6 @@ public class PlayerUnitsController : MonoBehaviour
                             PlayerUnit selectedPlayerUnit = selectedUnit.GetComponent<PlayerUnit>();
                             selectedPlayerUnit.Move();
                         }
-
                     }
                 }
             }
@@ -146,20 +152,21 @@ public class PlayerUnitsController : MonoBehaviour
             selectedUnit.OnUnselect();
         }
 
-        lineRenderer.gameObject.SetActive(false);
+        if (lineRenderer != null)
+            lineRenderer.gameObject.SetActive(false);
+
         StageUIController.Instance.SetPlayerActionContainer(false);
         StageUIController.Instance.ClearPlayerActionsPanel();
 
-        Unit[] selectedUnits = units.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
+        Unit[] selectedUnits = allUnits.Where(u => u.unitState == Unit.UnitState.Selected).ToArray();
         foreach (Unit unit in selectedUnits)
         {
-            unit.unitState = Unit.UnitState.Idle;
+            unit.SwitchUnitState(Unit.UnitState.Idle);
         }
 
         selectedUnit = null;
         Dijkstra.Instance.Clear();
     }
-
 
 
     public void SelectUnit(Unit unit)
@@ -170,6 +177,7 @@ public class PlayerUnitsController : MonoBehaviour
     void InitPlayerTurn()
     {
         isPlayerTurn = true;
+        UnselectUnits();
     }
 
     void IsEnemyTurn()

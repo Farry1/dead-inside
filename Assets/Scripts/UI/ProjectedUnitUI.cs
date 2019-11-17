@@ -9,12 +9,16 @@ public class ProjectedUnitUI : MonoBehaviour
     public GameObject UIPrefab;
 
     private GameObject projectedUnitUI;
+    private GameObject healthbar;
+    private Image pointer;
+    [SerializeField] private GameObject singleHealthBar;
+
     Health health;
     Unit unit;
 
     private Text currentHealthText;
     private Text maxHealthText;
-    private Image healthBar;
+    // private Image healthBar;
     private Text apLeftText;
 
     float maxHealth = 1;
@@ -24,17 +28,16 @@ public class ProjectedUnitUI : MonoBehaviour
     private void Start()
     {
         health = GetComponent<Health>();
-        unit = GetComponent<Unit>();        
+        unit = GetComponent<Unit>();
 
         projectedUnitUI = Instantiate(UIPrefab, StageUIController.Instance.projectedUnitUIsContainer.transform);
-        healthBar = projectedUnitUI.transform.Find("Health").Find("HealthBar").GetComponent<Image>();
+        healthbar = projectedUnitUI.transform.Find("Healthbar").gameObject;
         currentHealthText = projectedUnitUI.transform.Find("Health").Find("CurrentHealth").GetComponent<Text>();
         maxHealthText = projectedUnitUI.transform.Find("Health").Find("MaxHealth").GetComponent<Text>();
         apLeftText = projectedUnitUI.transform.Find("AP").Find("APLeft").GetComponent<Text>();
+        pointer = projectedUnitUI.transform.Find("Pointer").GetComponent<Image>();
 
         unit.projectedUnitUI = projectedUnitUI;
-
-        Init();
     }
 
     void Update()
@@ -56,29 +59,62 @@ public class ProjectedUnitUI : MonoBehaviour
         projectedUnitUI.SetActive(isVisible);
 
         Vector3 newPos = Camera.main.WorldToScreenPoint(UIHolder.transform.position);
-        projectedUnitUI.transform.position = newPos;
-
-        projectedUnitUI.GetComponentInChildren<Text>().text = gameObject.name;
+        projectedUnitUI.transform.position = newPos + new Vector3(70, 20, 0);
 
         UpdateUI();
-    }
-
-    private void Init()
-    {
-        maxHealth = health.health;
-        Vector3 healthBarScale = new Vector3((float)health.health / maxHealth, 1, 1);
-        healthBar.transform.localScale = healthBarScale;
-        currentHealthText.text = health.health.ToString();
-        maxHealthText.text = health.health.ToString();
-        apLeftText.text = unit.currentActionPoints.ToString();
     }
 
     //Todo: Call this only at certain events
     private void UpdateUI()
     {
-        Vector3 healthBarScale = new Vector3((float)health.health / maxHealth, 1, 1);
-        healthBar.transform.localScale = healthBarScale;
-        currentHealthText.text = health.health.ToString();
-        apLeftText.text = unit.currentActionPoints.ToString();
+        //Todo: Make this performant!
+
+        Image[] healthBarSingleItems = healthbar.GetComponentsInChildren<Image>();
+
+        foreach (Image img in healthBarSingleItems)
+        {
+            Destroy(img.gameObject);
+        }
+
+        for (int i = 0; i < health.health; i++)
+        {
+            GameObject sh = Instantiate(singleHealthBar, healthbar.transform);
+
+            EnemyUnit enemyUnit = GetComponent<EnemyUnit>();
+            if (enemyUnit != null)
+            {
+                Color color = Color.red;
+
+                if (unit.unitState != Unit.UnitState.Selected)
+                {
+                    color.a = 0.75f;
+                }
+                else
+                {
+                    color.a = 1;
+                }
+
+                sh.GetComponent<Image>().color = color;
+                pointer.color = color;
+            }
+
+            PlayerUnit playerUnit = GetComponent<PlayerUnit>();
+            if (enemyUnit != null)
+            {
+
+            }
+        }
+
+        if (unit.unitState != Unit.UnitState.Selected)
+        {
+            projectedUnitUI.transform.localScale = Vector3.one * 0.6f;
+            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.9f, 0.8f);
+        }
+        else
+        {
+            projectedUnitUI.transform.localScale = Vector3.one;
+            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.5f, 0.5f);
+        }
+
     }
 }

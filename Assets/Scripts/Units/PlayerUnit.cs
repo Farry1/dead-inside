@@ -80,7 +80,7 @@ public class PlayerUnit : Unit
                 }
                 break;
             case UnitState.Dead:
-                PlayerUnitsController.Instance.units.Remove(this);
+                UnitsManager.Instance.playerUnits.Remove(this);
                 Destroy(this.gameObject);
                 break;
         }
@@ -291,8 +291,8 @@ public class PlayerUnit : Unit
             for (int i = 0; i < seg; i++)
             {
                 float t = i / (float)seg;
-                PlayerUnitsController.Instance.lineRenderer.positionCount = seg;
-                PlayerUnitsController.Instance.lineRenderer.SetPositions(vP);
+                UnitsManager.Instance.lineRenderer.positionCount = seg;
+                UnitsManager.Instance.lineRenderer.SetPositions(vP);
             }
         }
     }
@@ -313,7 +313,7 @@ public class PlayerUnit : Unit
                 break;
 
             case UnitState.Dead:
-                PlayerUnitsController.Instance.units.Remove(this);
+                UnitsManager.Instance.playerUnits.Remove(this);
                 Destroy(relatedUIPanel.gameObject);
                 Die();
                 break;
@@ -335,7 +335,7 @@ public class PlayerUnit : Unit
                 {
                     Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
                 }
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                UnitsManager.Instance.lineRenderer.gameObject.SetActive(false);
 
                 break;
 
@@ -345,18 +345,18 @@ public class PlayerUnit : Unit
                 {
                     Dijkstra.Instance.Clear();
                     Dijkstra.Instance.GetNodesInRange(currentNode, maxSteps);
-                    PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(true);
+                    UnitsManager.Instance.lineRenderer.gameObject.SetActive(true);
                 }
                 break;
 
             case ActionState.PreparingRangeAttack:
                 Dijkstra.Instance.Clear();
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                UnitsManager.Instance.lineRenderer.gameObject.SetActive(false);
                 break;
 
             case ActionState.Moving:
                 unitAnimation.PlayMoveAnimation();
-                PlayerUnitsController.Instance.lineRenderer.gameObject.SetActive(false);
+                UnitsManager.Instance.lineRenderer.gameObject.SetActive(false);
                 break;
             case ActionState.Recoil:
                 Dijkstra.Instance.Clear();

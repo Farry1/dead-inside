@@ -26,7 +26,7 @@ public class EnemyAI : MonoBehaviour
 
         Dijkstra.Instance.Clear();
 
-        foreach (PlayerUnit playerUnit in PlayerUnitsController.Instance.units)
+        foreach (PlayerUnit playerUnit in UnitsManager.Instance.playerUnits)
         {
             if (Dijkstra.Instance.GeneratePathTo(enemyUnit.currentNode, playerUnit.currentNode, 255).Count < pathLength)
             {
@@ -41,7 +41,7 @@ public class EnemyAI : MonoBehaviour
 
     public Unit GetPlayerUnitInShootRange()
     {
-        foreach (Unit playerUnit in PlayerUnitsController.Instance.units)
+        foreach (Unit playerUnit in UnitsManager.Instance.playerUnits)
         {
             Vector3 direction = playerUnit.raycastTarget.position - enemyUnit.gunbarrel.position;
             RaycastHit shootHit;

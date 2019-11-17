@@ -9,7 +9,7 @@ public class PlayerMoveAction : Action
     {
         get
         {
-            return PlayerUnitsController.Instance.selectedUnit.GetComponent<PlayerUnit>();
+            return UnitsManager.Instance.selectedUnit.GetComponent<PlayerUnit>();
         }
     }
 

@@ -10,7 +10,7 @@ public class PlayerShootAction : Action
         get
         {
             if (StageManager.Instance.stageState == StageManager.StageState.PlayerTurn)
-                return PlayerUnitsController.Instance.selectedUnit;
+                return UnitsManager.Instance.selectedUnit;
             else
                 return null;
         }

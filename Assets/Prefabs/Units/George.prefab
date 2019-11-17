@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef821ebaad18a01489090615154a0c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 20
+  health: 4
 --- !u!136 &129221650684907091
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -330,6 +330,8 @@ MonoBehaviour:
   UIHolder: {fileID: 6296115702963158096}
   UIPrefab: {fileID: 7784013550354445076, guid: e0e55bc276e5bc346a216c89cb4a7bf2,
     type: 3}
+  singleHealthBar: {fileID: 1727632668466948105, guid: 068450f4102fd014aaaf4986bcfce417,
+    type: 3}
 --- !u!1 &8077186614525944333
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +356,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8077186614525944333}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.281, z: 0}
+  m_LocalPosition: {x: 0, y: 0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6724719437748392475}
@@ -367,6 +369,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6724719437748392475}
     m_Modifications:
+    - target: {fileID: -927199367670048503, guid: ff4ec26d3c00ca94b957f0534afdefd9,
+        type: 3}
+      propertyPath: m_Name
+      value: Ch44_nonPBR
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ff4ec26d3c00ca94b957f0534afdefd9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -421,11 +428,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: ff4ec26d3c00ca94b957f0534afdefd9,
-        type: 3}
-      propertyPath: m_Name
-      value: Ch44_nonPBR
       objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: ff4ec26d3c00ca94b957f0534afdefd9,
         type: 3}
