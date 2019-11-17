@@ -22,7 +22,7 @@ public class CameraMovement : MonoBehaviour
 
     bool cameraMoves = false;
 
-    
+
 
     private void Start()
     {
@@ -32,7 +32,10 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        CameraControl();
+        if (rotateAroundGO == null)
+            rotateAroundGO = initialCameraLookAt;
+
+        CameraControl();       
 
         if (cameraMoves)
         {
@@ -40,7 +43,7 @@ public class CameraMovement : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, target, t);
             //transform.LookAt(rotateAroundGO.transform, transform.up);
 
-            
+
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
 
 
@@ -55,7 +58,7 @@ public class CameraMovement : MonoBehaviour
         startRotation = transform.rotation;
         timeToReachTarget = time;
         target = (destination.position + destination.up * 10f);
-        targetRotation = Quaternion.LookRotation(- destination.up);
+        targetRotation = Quaternion.LookRotation(-destination.up);
     }
 
     public void MoveCameraTo(Transform target)
@@ -86,8 +89,8 @@ public class CameraMovement : MonoBehaviour
     {
 
         if (Vector3.Distance(
-            transform.position, rotateAroundGO.transform.position) <= minDistance &&
-            Input.GetAxis("Mouse ScrollWheel") > 0f)
+        transform.position, rotateAroundGO.transform.position) <= minDistance &&
+        Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
             return;
         }
@@ -103,5 +106,7 @@ public class CameraMovement : MonoBehaviour
             (Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime) * zoomSpeed,
             Space.Self
         );
+
+
     }
 }

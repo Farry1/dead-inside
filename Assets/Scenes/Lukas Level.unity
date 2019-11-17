@@ -21288,7 +21288,7 @@ PrefabInstance:
         type: 3}
       propertyPath: equippedRangeWeapon
       value: 
-      objectReference: {fileID: 11400000, guid: edf4e926acc27f841a451101914edad7,
+      objectReference: {fileID: 11400000, guid: 3c361b8ba935d9a4986fd41f20805920,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 402b899d0e9c059449c179f8d6f2fcb9, type: 3}

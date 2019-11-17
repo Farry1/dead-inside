@@ -64,7 +64,9 @@ public class ProjectedUnitUI : MonoBehaviour
         {
             if (hit.collider.tag == "MainCamera")
             {
-                if (StageManager.Instance.stageState != StageManager.StageState.IngameMenu)
+                if (StageManager.Instance.stageState != StageManager.StageState.IngameMenu &&
+                    StageManager.Instance.stageState != StageManager.StageState.Lost &&
+                    StageManager.Instance.stageState != StageManager.StageState.Won)
                     isVisible = true;
             }
         }
