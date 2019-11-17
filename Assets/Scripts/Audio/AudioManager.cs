@@ -42,7 +42,7 @@ public class AudioManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void WonAudio()
@@ -54,9 +54,14 @@ public class AudioManager : MonoBehaviour
     {
         GameMusic.setParameterByName("GameOver", 1f);
     }
-    
+
     public void ShootSound()
     {
 
+    }
+
+    public void StopGameMusic()
+    {
+        GameMusic.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 }

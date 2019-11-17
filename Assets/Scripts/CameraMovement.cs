@@ -22,20 +22,7 @@ public class CameraMovement : MonoBehaviour
 
     bool cameraMoves = false;
 
-    private static CameraMovement _instance;
-    public static CameraMovement Instance { get { return _instance; } }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
+    
 
     private void Start()
     {
@@ -67,7 +54,7 @@ public class CameraMovement : MonoBehaviour
         startPosition = transform.position;
         startRotation = transform.rotation;
         timeToReachTarget = time;
-        target = (destination.position + destination.up * 5f);
+        target = (destination.position + destination.up * 10f);
         targetRotation = Quaternion.LookRotation(- destination.up);
     }
 
@@ -97,6 +84,7 @@ public class CameraMovement : MonoBehaviour
 
     void ZoomCamera()
     {
+
         if (Vector3.Distance(
             transform.position, rotateAroundGO.transform.position) <= minDistance &&
             Input.GetAxis("Mouse ScrollWheel") > 0f)

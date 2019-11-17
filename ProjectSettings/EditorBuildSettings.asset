@@ -5,10 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/DemoLevel.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 78b921a58cf6702478e5eb0ef8f75eb4
+  - enabled: 1
+    path: Assets/Scenes/SelectLevel.unity
+    guid: 45b441b872739ff4cbe0b3e1038f4891
+  - enabled: 1
+    path: Assets/Scenes/Lars_Scenes/Lars Level 1.unity
+    guid: f88f008fe0a66984982b547f56ded161
+  - enabled: 1
+    path: Assets/Scenes/Lars_Scenes/Satellite.unity
+    guid: 658f285803651ff45a605e21fa42468a
+  - enabled: 1
+    path: Assets/Scenes/Lars_Scenes/Between two Walls.unity
+    guid: 8e4e4ad0cf5a85e4693f5d0d29f3f246
   m_configObjects: {}

@@ -184,8 +184,10 @@ public class Unit : MonoBehaviour, ISelectable
             UnitsManager.Instance.UnselectUnits();
             UnitsManager.Instance.SelectUnit(this);
 
-            CameraMovement.Instance.rotateAroundGO = this.gameObject;
-            CameraMovement.Instance.MoveCameraTo(transform);
+            CameraMovement cm = FindObjectOfType<CameraMovement>();
+
+            cm.rotateAroundGO = this.gameObject;
+            cm.MoveCameraTo(transform);
 
             SwitchUnitState(UnitState.Selected);
 

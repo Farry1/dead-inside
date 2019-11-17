@@ -81,7 +81,7 @@ public class NodeGenerator : MonoBehaviour
                     rayColor = Color.blue;
                 }
 
-                Ray ray = new Ray(node.transform.localPosition, rayDirection);
+                Ray ray = new Ray(node.transform.position, rayDirection);
                 Debug.DrawRay(ray.origin, ray.direction * castDistance, rayColor, 2f);
 
 

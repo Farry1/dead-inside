@@ -46,9 +46,20 @@ public class StageManager : MonoBehaviour
     public void ReloadCurrentScene()
     {
         int scene = SceneManager.GetActiveScene().buildIndex;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        AudioManager.Instance.StopGameMusic();
     }
 
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopGameMusic();
+        }
+    }
 
     public void InitScene()
     {

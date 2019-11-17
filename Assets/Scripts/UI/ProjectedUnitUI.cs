@@ -23,7 +23,17 @@ public class ProjectedUnitUI : MonoBehaviour
 
     float maxHealth = 1;
 
+    private void OnEnable()
+    {
+        StageManager.OnWon += HideProjectedUnitUI;
+        StageManager.OnLost += HideProjectedUnitUI;
+    }
 
+    private void OnDisable()
+    {
+        StageManager.OnWon -= HideProjectedUnitUI;
+        StageManager.OnLost -= HideProjectedUnitUI;
+    }
 
     private void Start()
     {
@@ -116,5 +126,10 @@ public class ProjectedUnitUI : MonoBehaviour
             projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.5f, 0.5f);
         }
 
+    }
+
+    void HideProjectedUnitUI()
+    {
+        projectedUnitUI.SetActive(false);
     }
 }
