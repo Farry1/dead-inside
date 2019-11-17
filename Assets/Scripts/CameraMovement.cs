@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public GameObject cameraLookAt;
+    [HideInInspector] public GameObject initialCameraLookAt;
+    public GameObject rotateAroundGO;
 
     [SerializeField] float moveSpeed = 350;
     [SerializeField] float zoomSpeed = 350;
@@ -12,17 +13,73 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] float minDistance = 2f;
     [SerializeField] float maxDistance = 10f;
 
+    protected float t;
+    protected Vector3 startPosition;
+    protected Vector3 target;
+    protected float timeToReachTarget;
+
+    bool cameraMoves = false;
+
+    private static CameraMovement _instance;
+    public static CameraMovement Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        initialCameraLookAt = rotateAroundGO;
+        startPosition = target = transform.position;
+    }
+
     void Update()
     {
         CameraControl();
+
+        if (cameraMoves)
+        {
+            t += Time.deltaTime / timeToReachTarget;
+            transform.position = Vector3.Lerp(startPosition, target, t);
+            transform.LookAt(rotateAroundGO.transform, transform.up);
+        }
+    }
+
+    public void SetMoveDestination(Vector3 destination, float time)
+    {
+        t = 0;
+        startPosition = transform.position;
+        timeToReachTarget = time;
+        target = destination;
+    }
+
+    public void MoveCameraTo(Vector3 target)
+    {
+        SetMoveDestination(target, 0.75f);
+        StartCoroutine(CameraMoves());
+    }
+
+    IEnumerator CameraMoves()
+    {
+        cameraMoves = true;
+        yield return new WaitForSeconds(0.75f);
+        cameraMoves = false;
     }
 
     void CameraControl()
     {
         if (Input.GetMouseButton(2))
         {
-            transform.RotateAround(cameraLookAt.transform.position, Vector3.up, ((Input.GetAxisRaw("Mouse X") * Time.deltaTime) * moveSpeed));
-            transform.RotateAround(cameraLookAt.transform.position, transform.right, -((Input.GetAxisRaw("Mouse Y") * Time.deltaTime) * moveSpeed));
+            transform.RotateAround(rotateAroundGO.transform.position, Vector3.up, ((Input.GetAxisRaw("Mouse X") * Time.deltaTime) * moveSpeed));
+            transform.RotateAround(rotateAroundGO.transform.position, transform.right, -((Input.GetAxisRaw("Mouse Y") * Time.deltaTime) * moveSpeed));
         }
 
         ZoomCamera();
@@ -31,12 +88,14 @@ public class CameraMovement : MonoBehaviour
     void ZoomCamera()
     {
         if (Vector3.Distance(
-            transform.position, cameraLookAt.transform.position) <= minDistance && 
-            Input.GetAxis("Mouse ScrollWheel") > 0f) {
+            transform.position, rotateAroundGO.transform.position) <= minDistance &&
+            Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
             return;
         }
-        if (Vector3.Distance(transform.position, cameraLookAt.transform.position) >= maxDistance && 
-            Input.GetAxis("Mouse ScrollWheel") < 0f) {
+        if (Vector3.Distance(transform.position, rotateAroundGO.transform.position) >= maxDistance &&
+            Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
             return;
         }
 
@@ -47,8 +106,4 @@ public class CameraMovement : MonoBehaviour
             Space.Self
         );
     }
-
-
-
-
 }

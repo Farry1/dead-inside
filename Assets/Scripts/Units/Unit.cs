@@ -183,6 +183,10 @@ public class Unit : MonoBehaviour, ISelectable
             OnUnitSelected();
             UnitsManager.Instance.UnselectUnits();
             UnitsManager.Instance.SelectUnit(this);
+
+            CameraMovement.Instance.rotateAroundGO = this.gameObject;
+            CameraMovement.Instance.MoveCameraTo((transform.position + transform.up * 5f));
+
             SwitchUnitState(UnitState.Selected);
 
             StageUIController.Instance.selectedUnitInformationContainer.SetActive(true);
@@ -210,7 +214,7 @@ public class Unit : MonoBehaviour, ISelectable
     public virtual void OnUnselect()
     {
         OnUnitDeselected();
-
+        // CameraMovement.Instance.rotateAroundGO = CameraMovement.Instance.initialCameraLookAt;
         StageUIController.Instance.SetPlayerActionContainer(false);
         StageUIController.Instance.selectedUnitInformationContainer.SetActive(false);
     }

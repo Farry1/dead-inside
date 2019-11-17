@@ -86,45 +86,6 @@ public class EnemyUnit : Unit
         unitMovement.DestroyZeroGravityWarning();
     }
 
-    //bool RangeAttack(Unit targetUnit)
-    //{
-    //    unitAnimation.PlayShootAnimation();
-    //    targetUnit.healthController.Damage(equippedRangeWeapon.damage);
-    //    transform.rotation = unitMovement.PlanarRotation(targetUnit.transform.position - currentNode.transform.position);
-    //    GameObject shootprojectile = Instantiate(equippedRangeWeapon.shootFX, gunbarrel.position, gunbarrel.rotation);
-
-    //    //Calculate Recoid Direction and get the node, where the unit would land after a shot
-    //    Vector3 recoilDirection = Node.GetOppositePlanarDirection(currentNode, targetUnit.currentNode);
-
-    //    Node recoilTarget = unitMovement.CalculatePushTarget(equippedRangeWeapon.recoilAmount, recoilDirection, targetUnit.currentNode);
-
-    //    Vector3 shootDirection = Node.GetPlanarDirection(currentNode, targetUnit.currentNode);
-
-    //    Node targetPushbackNode = targetUnit.unitMovement.CalculatePushTarget(equippedRangeWeapon.projectilePushAmount, shootDirection, currentNode);
-    //    if (targetPushbackNode != null)
-    //    {
-    //        targetUnit.StartCoroutine(targetUnit.unitMovement.MoveWithPush(equippedRangeWeapon.projectilePushAmount, shootDirection));
-    //    }
-    //    else
-    //    {
-    //        targetUnit.StartCoroutine(targetUnit.unitMovement.DieLonesomeInSpace(shootDirection));
-    //    }
-
-    //    //If the recoil target is valid, move there
-    //    if (recoilTarget != null)
-    //    {
-    //        unitMovement.ResetPreviousStoredValues();
-    //        StartCoroutine(unitMovement.MoveWithPush(equippedRangeWeapon.recoilAmount, recoilDirection));
-    //        return true;
-    //    }
-    //    //If the recoil target is not valid, die
-    //    else
-    //    {
-    //        unitMovement.ResetPreviousStoredValues();
-    //        StartCoroutine(unitMovement.DieLonesomeInSpace(recoilDirection));
-    //        return false;
-    //    }
-    //}
 
     /*
      * 

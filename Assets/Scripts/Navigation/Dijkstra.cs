@@ -242,7 +242,6 @@ public class Dijkstra : MonoBehaviour
 
             unvisitedNodes.Remove(u);
 
-
             foreach (Node v in u.edges)
             {
                 //This calculates the cost with costs value set up in the Node instance. For real distance use Vector3.Distance().

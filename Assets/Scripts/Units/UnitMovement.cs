@@ -16,6 +16,7 @@ public class UnitMovement : MonoBehaviour
     protected Vector3 startPosition;
     protected Vector3 target;
     protected float timeToReachTarget;
+
     Unit unit;
     List<Node> _currentPath;
     List<Node> currentPath
