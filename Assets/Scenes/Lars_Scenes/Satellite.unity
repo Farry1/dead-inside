@@ -20761,6 +20761,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 473503456, guid: d7bcb99922b324d46939ed5176457291, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 13.400024
+      objectReference: {fileID: 0}
+    - target: {fileID: 473503456, guid: d7bcb99922b324d46939ed5176457291, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -11.469971
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043870252, guid: d7bcb99922b324d46939ed5176457291, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 19.099976
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043870252, guid: d7bcb99922b324d46939ed5176457291, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 29.099976
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7bcb99922b324d46939ed5176457291, type: 3}
 --- !u!1001 &1295583042
@@ -25372,8 +25388,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialCameraLookAt: {fileID: 0}
   rotateAroundGO: {fileID: 1174773854}
-  moveSpeed: 200
-  zoomSpeed: 300
+  moveSpeed: 400
+  zoomSpeed: 600
   minDistance: 5
   maxDistance: 20
 --- !u!114 &1539094045

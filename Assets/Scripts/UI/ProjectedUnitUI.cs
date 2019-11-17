@@ -69,7 +69,7 @@ public class ProjectedUnitUI : MonoBehaviour
         projectedUnitUI.SetActive(isVisible);
 
         Vector3 newPos = Camera.main.WorldToScreenPoint(UIHolder.transform.position);
-        projectedUnitUI.transform.position = newPos + new Vector3(70, 20, 0);
+        projectedUnitUI.transform.position = newPos + new Vector3(85, 20, 0);
 
         UpdateUI();
     }
@@ -118,7 +118,7 @@ public class ProjectedUnitUI : MonoBehaviour
         if (unit.unitState != Unit.UnitState.Selected)
         {
             projectedUnitUI.transform.localScale = Vector3.one * 0.6f;
-            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.5f, 0.5f);
+            projectedUnitUI.GetComponent<RectTransform>().pivot = new Vector3(0.8f, 0.8f);
         }
         else
         {

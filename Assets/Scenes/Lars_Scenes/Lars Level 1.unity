@@ -23355,8 +23355,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialCameraLookAt: {fileID: 0}
   rotateAroundGO: {fileID: 1174773854}
-  moveSpeed: 200
-  zoomSpeed: 300
+  moveSpeed: 400
+  zoomSpeed: 600
   minDistance: 5
   maxDistance: 20
 --- !u!114 &1539094045

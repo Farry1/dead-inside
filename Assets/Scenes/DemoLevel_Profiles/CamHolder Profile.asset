@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27e78b016cc3ee43b22acc31166f10c, type: 3}
   m_Name: PostProcessOutline
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
