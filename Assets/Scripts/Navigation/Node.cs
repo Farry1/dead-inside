@@ -153,7 +153,6 @@ public class Node : MonoBehaviour
 
             if (unit != null)
             {
-                Debug.Log("Calculating Areal Push " + unit.name);
                 unit.unitMovement.CalculatePushTarget(steps, nodeWithDirection.Value, hoveredNode, false);
             }
         }

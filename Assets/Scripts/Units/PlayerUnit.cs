@@ -215,6 +215,7 @@ public class PlayerUnit : Unit
                             {
                                 Node unitTargetNode = unitOnTargetTile.unitMovement.CalculatePushTarget(equippedRangeWeapon.projectilePushAmount, Node.GetPlanarDirection(currentNode, v), v, true);
                                 ShootProjectile(recoilTarget, recoilDirection, unitOnTargetTile.raycastTarget.position, v, unitOnTargetTile, Node.GetPlanarDirection(currentNode, v), unitTargetNode);
+                                currentActionPoints--;
                             }
                             else
                             {
@@ -222,6 +223,7 @@ public class PlayerUnit : Unit
                                 {
                                     ShootProjectile(recoilTarget, recoilDirection, v.transform.position, v, null, Vector3.zero, null);
                                     currentActionPoints--;
+
                                 }
                             }
                         }
