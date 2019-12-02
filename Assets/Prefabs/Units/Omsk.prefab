@@ -249,7 +249,7 @@ MonoBehaviour:
   ignorePushback: 0
   equippedRangeWeapon: {fileID: 11400000, guid: edf4e926acc27f841a451101914edad7,
     type: 2}
-  characterPortrait: {fileID: 21300000, guid: cbf3d7c825806dd46ac6808f1218d708, type: 3}
+  characterPortrait: {fileID: 21300000, guid: 26478f94a91edfe4ba370683b9e1e458, type: 3}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
   OnDie:

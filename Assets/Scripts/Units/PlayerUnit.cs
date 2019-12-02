@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PlayerUnit : Unit
 {
     public GameObject relatedUIPanel;
-    
+
 
     public delegate void ActionStateChange();
     public static event ActionStateChange OnActionStateNone;
@@ -116,7 +116,7 @@ public class PlayerUnit : Unit
             currentPath = Dijkstra.Instance.GeneratePathTo(currentNode, target, maxSteps);
         }
     }
-   
+
 
     Node previousHoveredNode = null;
     Unit previousHoveredUnit = null;
@@ -257,7 +257,7 @@ public class PlayerUnit : Unit
     {
         base.OnSelect();
 
-  
+
     }
 
     private void DrawPath()
@@ -278,10 +278,38 @@ public class PlayerUnit : Unit
             //Draw actual Path
             List<Transform> transforms = new List<Transform>();
 
-            foreach (Node v in currentPath)
+            currentNode = 0;
+
+            if (currentPath.Count > 0)
             {
-                transforms.Add(v.transform);
+                transforms.Add(currentPath[0].transform);
+
+                while (currentNode < currentPath.Count - 1)
+                {
+                    Vector3 start = currentPath[currentNode].transform.position;
+                    Vector3 end = currentPath[currentNode + 1].transform.position;
+                    
+
+                    Vector3 dir = end - start;
+                    Vector3 planarDir = Vector3.ProjectOnPlane(dir, currentPath[currentNode].transform.up);    
+                    planarDir = planarDir.normalized;
+
+                    GameObject extraPos = new GameObject();
+                    extraPos.transform.position = start + planarDir / 2;
+                    transforms.Add(extraPos.transform);
+
+
+                    GameObject pos = new GameObject();
+                    pos.transform.position = end;
+                    transforms.Add(pos.transform);
+
+
+                    currentNode++;
+                }
+
+                transforms.Add(currentPath[currentPath.Count - 1].transform);
             }
+
 
             int seg = transforms.Count();
             Vector3[] vP = new Vector3[transforms.Count()];
