@@ -284,14 +284,15 @@ public class PlayerUnit : Unit
             {
                 transforms.Add(currentPath[0].transform);
 
+                //Todo: Make this without transforms, but vector3. Its transform because of legacy
                 while (currentNode < currentPath.Count - 1)
                 {
                     Vector3 start = currentPath[currentNode].transform.position;
                     Vector3 end = currentPath[currentNode + 1].transform.position;
-                    
+
 
                     Vector3 dir = end - start;
-                    Vector3 planarDir = Vector3.ProjectOnPlane(dir, currentPath[currentNode].transform.up);    
+                    Vector3 planarDir = Vector3.ProjectOnPlane(dir, currentPath[currentNode].transform.up);
                     planarDir = planarDir.normalized;
 
                     GameObject extraPos = new GameObject();
@@ -303,6 +304,8 @@ public class PlayerUnit : Unit
                     pos.transform.position = end;
                     transforms.Add(pos.transform);
 
+                    Destroy(extraPos);
+                    Destroy(pos);
 
                     currentNode++;
                 }

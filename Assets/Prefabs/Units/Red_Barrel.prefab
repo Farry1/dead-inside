@@ -70,6 +70,8 @@ MonoBehaviour:
   characterPortrait: {fileID: 0}
   unitMovement: {fileID: 0}
   projectedUnitUI: {fileID: 0}
+  dieParticles: {fileID: 472260029485910249, guid: b7eedc5784ec80f4698b718a8491f8b6,
+    type: 3}
   OnDie:
     m_PersistentCalls:
       m_Calls:

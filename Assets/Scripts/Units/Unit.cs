@@ -44,6 +44,8 @@ public class Unit : MonoBehaviour, ISelectable
     [HideInInspector] public UnitMovement unitMovement;
     [HideInInspector] public GameObject projectedUnitUI;
 
+    public GameObject dieParticles;
+
     public UnityEvent OnDie;
 
     protected bool isPlayerTurn;
@@ -223,6 +225,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     public virtual void Die()
     {
+        InstantiateDieParticles();
         currentNode.unitOnTile = null;
         unitMovement.DestroyCollisionWarning();
         unitMovement.DestroyZeroGravityWarning();
@@ -269,8 +272,17 @@ public class Unit : MonoBehaviour, ISelectable
 
     }
 
-    public void Explode(int amount)
+    public void PushAdjacentUnits(int amount)
     {
         currentNode.PushAdjacentUnits(amount);
+    }
+
+    public void InstantiateDieParticles()
+    {
+        if (dieParticles != null)
+        {
+            GameObject dp = Instantiate(dieParticles, transform.position, transform.rotation);
+          
+        }
     }
 }

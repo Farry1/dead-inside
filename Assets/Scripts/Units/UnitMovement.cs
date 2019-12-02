@@ -249,7 +249,6 @@ public class UnitMovement : MonoBehaviour
     {
         if (hoveredNode != null && hoveredNode != previousHoveredNode && collisionWarningInstance == null)
         {
-            Debug.Log(gameObject.name + " Collision Warning Instantiate" + hoveredNode);
             collisionWarningInstance = Instantiate(collisionWarningPrefab, pushNode.transform.localPosition + pushDirection * 0.45f, pushNode.transform.localRotation);
         }
     }

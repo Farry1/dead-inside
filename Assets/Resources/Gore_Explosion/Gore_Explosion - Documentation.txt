@@ -1,0 +1,13 @@
+Load "Gore_Explosion.unity" for an example scene, or simply drag the gore explosion Prefab folder (in the Project window) into the Hierarchy window.
+
+Click the left mouse button to trigger the gore explosion.
+
+Have fun!
+
+Thanks for purchasing this asset - please consider rating or writing a review about it. If you have any questions then don't hesitate to get in touch at bendurrant@rivermillstudios.com 
+
+If you use this or any other Rivermill Studios assets in your games then we'd love to know (and help you promote them!).
+
+
+
+

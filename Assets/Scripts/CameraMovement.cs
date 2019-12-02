@@ -63,8 +63,8 @@ public class CameraMovement : MonoBehaviour
 
     public void MoveCameraTo(Transform target)
     {
-        SetMoveDestination(target, 0.75f);
-        StartCoroutine(CameraMoves());
+        //SetMoveDestination(target, 0.75f);
+        //StartCoroutine(CameraMoves());
     }
 
     IEnumerator CameraMoves()
