@@ -48,13 +48,13 @@ public class StageManager : MonoBehaviour
         int scene = SceneManager.GetActiveScene().buildIndex;
         AudioManager.Instance.StopGameMusic();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-        
+
     }
 
     public void LoadScene(string sceneName)
     {
         AudioManager.Instance.StopGameMusic();
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);        
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
     public void InitScene()
@@ -87,6 +87,7 @@ public class StageManager : MonoBehaviour
         switch (state)
         {
             case StageState.Lost:
+                StageUIController.Instance.StartCoroutine(StageUIController.Instance.ShowLosePanel());
                 OnLost();
                 break;
 

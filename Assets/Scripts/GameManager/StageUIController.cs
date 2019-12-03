@@ -69,7 +69,7 @@ public class StageUIController : MonoBehaviour
         {
             if (StageManager.Instance.stageState != StageManager.StageState.Lost)
             {
-                LosePanel.SetActive(true);
+
                 StageManager.Instance.SwitchStageState(StageManager.StageState.Lost);
             }
         }
@@ -195,6 +195,12 @@ public class StageUIController : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+
+    public IEnumerator ShowLosePanel()
+    {
+        yield return new WaitForSeconds(4f);
+        LosePanel.SetActive(true);
     }
 
 }
